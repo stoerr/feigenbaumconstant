@@ -6,7 +6,8 @@ import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 
 /**
- * Helperklasse für generische Typen
+ * Helperklasse für generische Typen.
+ * DOES NOT WORK.
  */
 public abstract class GenericsHelper<T> {
     

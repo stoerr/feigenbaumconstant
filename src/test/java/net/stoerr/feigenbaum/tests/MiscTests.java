@@ -1,7 +1,7 @@
 package net.stoerr.feigenbaum.tests;
 
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
-import net.stoerr.feigenbaum.basic.Utils;
+import net.stoerr.feigenbaum.basic.JScienceUtils;
 
 import junit.framework.TestCase;
 
@@ -21,7 +21,7 @@ public class MiscTests extends TestCase {
     }
     
     public void testOver() {
-        assertEquals(6,Utils.over(4, 2).intValue());
+        assertEquals(6,JScienceUtils.over(4, 2).intValue());
     }
 
 }
