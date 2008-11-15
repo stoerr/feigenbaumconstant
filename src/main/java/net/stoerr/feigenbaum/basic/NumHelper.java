@@ -26,6 +26,8 @@ public interface NumHelper<T extends Field<T>> {
     T one();
 
     T pow(T val, int exp);
+    
+    T abs(T val);
 
     double d(T val);
 
@@ -96,6 +98,10 @@ public interface NumHelper<T extends Field<T>> {
 
         public FloatingPoint v(long l) {
             return FloatingPoint.valueOf(l);
+        }
+
+        public FloatingPoint abs(FloatingPoint val) {
+            return val.abs();
         }
 
     };
