@@ -1,6 +1,8 @@
 package net.stoerr.feigenbaum.basic;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jscience.mathematics.number.LargeInteger;
@@ -9,7 +11,7 @@ import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
-import net.stoerr.feigenbaum.util.Func;
+import net.stoerr.feigenbaum.util.F;
 
 public class JScienceUtils {
 
@@ -31,13 +33,21 @@ public class JScienceUtils {
     /**
      * Erzeugt Vektor Dimension n aus Werten von func von 0 bis n-1.
      */
-    public static <T extends Field<T>> Vector<T> makeVector(int n,
-            Func<Integer, T> func) {
+    public static <T extends Field<T>> DenseVector<T> makeVector(int n,
+            F<Integer, T> func) {
         List<T> l = new ArrayList<T>();
         for (int i = 0; i < n; ++i) {
             l.add(func.call(i));
         }
         return DenseVector.valueOf(l);
+    }
+    
+    public static <T extends Field<T>> List<T> toList(Vector<T> v) {
+        List<T> res = new ArrayList<T>(v.getDimension());
+        for (int i=0; i<v.getDimension(); ++i) {
+            res.add(v.get(i));
+        }
+        return res;
     }
 
 }

@@ -3,7 +3,7 @@ package net.stoerr.feigenbaum.tests;
 import junit.framework.TestCase;
 
 import net.stoerr.feigenbaum.symbolic.UnspecifiedFunction;
-import net.stoerr.feigenbaum.util.Func;
+import net.stoerr.feigenbaum.util.F;
 
 import org.jscience.mathematics.function.Polynomial;
 import org.jscience.mathematics.function.Variable;
@@ -24,7 +24,7 @@ public class FunctionTest extends TestCase {
 
     public void testUnspecifiedFunction() throws Exception {
         Variable<Real> x = new Variable.Global<Real>("x");
-        Variable<Func<Real,Real>> vf = new Variable.Global<Func<Real,Real>>("f");
+        Variable<F<Real,Real>> vf = new Variable.Global<F<Real,Real>>("f");
         UnspecifiedFunction<Real, Real> f = new UnspecifiedFunction<Real, Real>(vf, x);
         System.out.println(f);
         System.out.println(f.differentiate(x));
