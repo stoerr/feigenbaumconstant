@@ -5,17 +5,17 @@ import java.util.List;
 
 import javolution.text.Text;
 
-import net.stoerr.feigenbaum.util.Func;
+import net.stoerr.feigenbaum.util.F;
 
 import org.jscience.mathematics.function.Function;
 import org.jscience.mathematics.function.Variable;
 
 public class UnspecifiedFunction<Arg, Val> extends Function<Arg, Val> {
 
-    private final Variable<Func<Arg, Val>> funcvar;
+    private final Variable<F<Arg, Val>> funcvar;
     private final Variable<Arg>[] vars;
 
-    public UnspecifiedFunction(Variable<Func<Arg, Val>> funcvar, Variable<Arg>... vars) {
+    public UnspecifiedFunction(Variable<F<Arg, Val>> funcvar, Variable<Arg>... vars) {
         this.funcvar = funcvar;
         this.vars = vars;
     }
