@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jscience.mathematics.number.LargeInteger;
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
@@ -63,39 +63,39 @@ public interface NumHelper<T extends Field<T>> {
 
     }
 
-    NumHelper<Real> REAL = new AbstractNumhelper<Real>() {
+    NumHelper<FloatingPoint> REAL = new AbstractNumhelper<FloatingPoint>() {
 
-        public Real v(LargeInteger l) {
-            return Real.valueOf(l, 0, 0);
+        public FloatingPoint v(LargeInteger l) {
+            return FloatingPoint.valueOf(l, 0);
         }
 
-        public Real one() {
-            return Real.ONE;
+        public FloatingPoint one() {
+            return FloatingPoint.ONE;
         }
 
-        public Real zero() {
-            return Real.ZERO;
+        public FloatingPoint zero() {
+            return FloatingPoint.ZERO;
         }
 
-        public Real pow(Real val, int exp) {
+        public FloatingPoint pow(FloatingPoint val, int exp) {
             if (0 == exp)
                 return one();
             return val.pow(exp);
         }
 
-        public double d(Real val) {
+        public double d(FloatingPoint val) {
             return val.doubleValue();
         }
 
-        public Real v(double d) {
+        public FloatingPoint v(double d) {
             if (0 <= d)
-                return Real.valueOf(d);
+                return FloatingPoint.valueOf(d);
             else
-                return Real.valueOf(-d).opposite();
+                return FloatingPoint.valueOf(-d).opposite();
         }
 
-        public Real v(long l) {
-            return Real.valueOf(l);
+        public FloatingPoint v(long l) {
+            return FloatingPoint.valueOf(l);
         }
 
     };

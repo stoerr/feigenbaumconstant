@@ -2,10 +2,10 @@ package net.stoerr.feigenbaum.basic;
 
 import static org.junit.Assert.*;
 
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 import org.junit.Test;
 
-public class NumHelperTest extends AbstractJScienceTest<Real> {
+public class NumHelperTest extends AbstractJScienceTest<FloatingPoint> {
     
     public NumHelperTest() {
         super(NumHelper.REAL);
