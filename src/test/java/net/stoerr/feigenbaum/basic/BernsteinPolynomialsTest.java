@@ -1,6 +1,6 @@
 package net.stoerr.feigenbaum.basic;
 
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.FeigenConstants;
@@ -10,22 +10,22 @@ import static net.stoerr.feigenbaum.FeigenConstants.*;
 
 import junit.framework.TestCase;
 
-public class BernsteinPolynomialsTest extends AbstractJScienceTest<Real> {
+public class BernsteinPolynomialsTest extends AbstractJScienceTest<FloatingPoint> {
 
     public BernsteinPolynomialsTest() {
         super(NumHelper.REAL);
     }
 
-    private BernsteinPolynomials<Real> b2;
-    private BernsteinPolynomials<Real> b3;
-    private BernsteinPolynomials<Real> b5;
+    private BernsteinPolynomials<FloatingPoint> b2;
+    private BernsteinPolynomials<FloatingPoint> b3;
+    private BernsteinPolynomials<FloatingPoint> b5;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        b2 = new BernsteinPolynomials<Real>(2, h);
-        b3 = new BernsteinPolynomials<Real>(3, h);
-        b5 = new BernsteinPolynomials<Real>(5, h);
+        b2 = new BernsteinPolynomials<FloatingPoint>(2, h);
+        b3 = new BernsteinPolynomials<FloatingPoint>(3, h);
+        b5 = new BernsteinPolynomials<FloatingPoint>(5, h);
     }
 
     public void testNth() {
@@ -41,7 +41,7 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<Real> {
         near(b2.polynomials(h.v(0.5)), new double[] { 0.25, 0.5, 0.25 });
     }
 
-    Vector<Real> vec = h.makeVector(new double[] { 4.32, -3.52, 1.24, 0.12 });
+    Vector<FloatingPoint> vec = h.makeVector(new double[] { 4.32, -3.52, 1.24, 0.12 });
 
     private double f(double x) {
         return h.d(b3.value(vec, h.v(x)));
@@ -55,7 +55,7 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<Real> {
         double x = 0.28;
         double e = 0.0000001;
         assertTrue(Math.abs(fa(x) - (f(x + e) - f(x)) / e) < 1e-5);
-        final Vector<Real> vec5 = b5.raiseCoeff(vec);
+        final Vector<FloatingPoint> vec5 = b5.raiseCoeff(vec);
         near(b5.value(vec5, h.v(x)), f(x));
     }
 
@@ -73,10 +73,10 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<Real> {
     /** Try to get a first approximation. */
     public void testApproxStart() {
         final int n = 9;
-        BernsteinPolynomials<Real> b = new BernsteinPolynomials<Real>(n, h);
-        Vector<Real> v = JScienceUtils.makeVector(n + 1,
-                new F<Integer, Real>() {
-                    public Real call(Integer arg) {
+        BernsteinPolynomials<FloatingPoint> b = new BernsteinPolynomials<FloatingPoint>(n, h);
+        Vector<FloatingPoint> v = JScienceUtils.makeVector(n + 1,
+                new F<Integer, FloatingPoint>() {
+                    public FloatingPoint call(Integer arg) {
                         return h.v(fren(1.0 / (n + 1) * arg));
                     }
                 });

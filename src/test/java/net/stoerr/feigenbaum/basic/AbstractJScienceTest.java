@@ -1,6 +1,6 @@
 package net.stoerr.feigenbaum.basic;
 
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.Vector;
 

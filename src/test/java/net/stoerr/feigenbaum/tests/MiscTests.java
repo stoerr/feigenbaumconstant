@@ -1,6 +1,6 @@
 package net.stoerr.feigenbaum.tests;
 
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 
 import net.stoerr.feigenbaum.basic.AbstractJScienceTest;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
@@ -9,7 +9,7 @@ import net.stoerr.feigenbaum.basic.NumHelper;
 
 import junit.framework.TestCase;
 
-public class MiscTests extends AbstractJScienceTest<Real> {
+public class MiscTests extends AbstractJScienceTest<FloatingPoint> {
 
     public MiscTests() {
         super(NumHelper.REAL);
@@ -37,11 +37,11 @@ public class MiscTests extends AbstractJScienceTest<Real> {
     }
     
     public void testPrecision() {
-        Real n1 = h.v(1);
-        Real n10 = h.v(1.0);
-        Real n05 = h.v(0.5);
-        Real n0 = h.v(0);
-        Real n15 = n1.plus(n05);
+        FloatingPoint n1 = h.v(1);
+        FloatingPoint n10 = h.v(1.0);
+        FloatingPoint n05 = h.v(0.5);
+        FloatingPoint n0 = h.v(0);
+        FloatingPoint n15 = n1.plus(n05);
         System.out.println(n15);
     }
 

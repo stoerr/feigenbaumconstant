@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jscience.mathematics.number.LargeInteger;
-import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
