@@ -26,6 +26,7 @@ public class Approximation<T extends Field<T>> {
         this.pol = new BernsteinPolynomials<T>(n, h);
     }
     
+    /** Make a decent initial approximation based on f */
     public Vector<T> initialApproximation(F<T, T> f) {
         final int num = pol.count();
         List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
@@ -40,5 +41,7 @@ public class Approximation<T extends Field<T>> {
         Vector<T> res = matrix.solve(vals);
         return res;
     }
+    
+    
     
 }
