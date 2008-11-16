@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 public class MiscTests extends AbstractJScienceTest<FloatingPoint> {
 
     public MiscTests() {
-        super(NumHelper.REAL);
+        super(NumHelper.FP);
     }
 
     public void testBernstein() {
@@ -43,6 +43,13 @@ public class MiscTests extends AbstractJScienceTest<FloatingPoint> {
         FloatingPoint n0 = h.v(0);
         FloatingPoint n15 = n1.plus(n05);
         System.out.println(n15);
+    }
+    
+    public void testFP() {
+        FloatingPoint n1 = h.zero();
+        FloatingPoint n2 = h.v(0.0001);
+        FloatingPoint nm1 = n1.plus(n2.opposite());
+        near(nm1,-0.0001);
     }
 
 }

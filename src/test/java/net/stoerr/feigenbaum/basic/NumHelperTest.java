@@ -8,7 +8,7 @@ import org.junit.Test;
 public class NumHelperTest extends AbstractJScienceTest<FloatingPoint> {
     
     public NumHelperTest() {
-        super(NumHelper.REAL);
+        super(NumHelper.FP);
     }
 
     @Test

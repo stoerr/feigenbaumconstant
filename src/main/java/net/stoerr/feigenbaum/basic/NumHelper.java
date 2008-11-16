@@ -32,17 +32,18 @@ public interface NumHelper<T extends Field<T>> {
 
     double d(T val);
 
-    Vector<T> makeVector(double[] ds);
+    DenseVector<T> makeVector(double[] ds);
 
-    Vector<T> vectorZero(int dimension);
+    DenseVector<T> vectorZero(int dimension);
+
+    DenseVector<T> vectorUnity(int dimension, int k);
 
     F<T, T> wrap(F<Double, Double> f);
 
     F<Double, Double> unwrap(F<T, T> f);
 
-    abstract class AbstractNumhelper<T extends Field<T>> implements
-            NumHelper<T> {
-        public Vector<T> makeVector(double[] ds) {
+    abstract class AbstractNumhelper<T extends Field<T>> implements NumHelper<T> {
+        public DenseVector<T> makeVector(double[] ds) {
             List<T> l = new ArrayList<T>();
             for (int i = 0; i < ds.length; ++i) {
                 l.add(v(ds[i]));
@@ -66,13 +67,19 @@ public interface NumHelper<T extends Field<T>> {
             };
         }
 
-        public Vector<T> vectorZero(int dimension) {
+        public DenseVector<T> vectorZero(int dimension) {
             return DenseVector.valueOf(Collections.nCopies(dimension, zero()));
+        }
+
+        public DenseVector<T> vectorUnity(int dimension, int k) {
+            List<T> l = Collections.nCopies(dimension, zero());
+            l.set(k, one());
+            return DenseVector.valueOf(l);
         }
 
     }
 
-    NumHelper<FloatingPoint> REAL = new AbstractNumhelper<FloatingPoint>() {
+    NumHelper<FloatingPoint> FP = new AbstractNumhelper<FloatingPoint>() {
 
         public FloatingPoint v(LargeInteger l) {
             return FloatingPoint.valueOf(l, 0);
@@ -87,8 +94,7 @@ public interface NumHelper<T extends Field<T>> {
         }
 
         public FloatingPoint pow(FloatingPoint val, int exp) {
-            if (0 == exp)
-                return one();
+            if (0 == exp) return one();
             return val.pow(exp);
         }
 
@@ -97,10 +103,8 @@ public interface NumHelper<T extends Field<T>> {
         }
 
         public FloatingPoint v(double d) {
-            if (0 <= d)
-                return FloatingPoint.valueOf(d);
-            else
-                return FloatingPoint.valueOf(-d).opposite();
+            if (0 <= d) return FloatingPoint.valueOf(d);
+            else return FloatingPoint.valueOf(-d).opposite();
         }
 
         public FloatingPoint v(long l) {
