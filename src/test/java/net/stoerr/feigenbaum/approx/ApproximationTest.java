@@ -18,7 +18,7 @@ public class ApproximationTest extends AbstractJScienceTest<FloatingPoint> {
     private int digitsold;
 
     public ApproximationTest() {
-        super(NumHelper.REAL);
+        super(NumHelper.FP);
     }
 
     @Override

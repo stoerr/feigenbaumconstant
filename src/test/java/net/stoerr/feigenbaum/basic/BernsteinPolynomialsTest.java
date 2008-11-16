@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 public class BernsteinPolynomialsTest extends AbstractJScienceTest<FloatingPoint> {
 
     public BernsteinPolynomialsTest() {
-        super(NumHelper.REAL);
+        super(NumHelper.FP);
     }
 
     private BernsteinPolynomials<FloatingPoint> b2;

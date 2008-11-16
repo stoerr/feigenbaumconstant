@@ -60,7 +60,7 @@ public class Approximation<T extends Field<T>> {
         Vector<T> res = matrix.solve(vals);
         System.out.println(vals);
         System.out.println(matrix.times(res));
-        return g.minus(res);
+        return g.plus(res.opposite());
     }
     
     public T evaluateApproximation(Vector<T> g) {
@@ -102,12 +102,12 @@ public class Approximation<T extends Field<T>> {
             T xg1 = x.times(g1);
             T gdgxg1 = gd(g(xg1)); // g'(g(x*g(1)))
             DenseVector<T> dxg1 = pol.difpolynomials(xg1);
-            res = res.minus(dxg1.times(gdgxg1));
+            res = res.plus(dxg1.times(gdgxg1).opposite());
             DenseVector<T> d1 = pol.polynomials(one);
             T gx = g(x);
             T gdxg1 = gd(xg1); // g'(x*g(1))
             res = res.plus(d1.times(gx));
-            res = res.minus(d1.times(gdxg1.times(gdgxg1)));
+            res = res.plus(d1.times(gdxg1.times(gdgxg1)).opposite());
             return res;
         }
 
