@@ -72,7 +72,7 @@ public interface NumHelper<T extends Field<T>> {
         }
 
         public DenseVector<T> vectorUnity(int dimension, int k) {
-            List<T> l = Collections.nCopies(dimension, zero());
+            List<T> l = new ArrayList<T>(Collections.nCopies(dimension, zero()));
             l.set(k, one());
             return DenseVector.valueOf(l);
         }
