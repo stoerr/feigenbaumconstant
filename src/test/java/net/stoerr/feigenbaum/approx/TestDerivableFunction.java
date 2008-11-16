@@ -29,7 +29,7 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
         digitsold = FloatingPoint.getDigits();
         // FloatingPoint.setDigits(30);
         b5 = new BernsteinPolynomials<FloatingPoint>(3, h);
-        a = DenseVector.valueOf(new FloatingPoint[] { h.v(4.23), h.v(-3.25), h.v(1.29), h.v(0.37) });
+        a = DenseVector.valueOf(new FloatingPoint[] { h.v(0.23), h.v(-1.25), h.v(0.29), h.v(-0.37) });
     }
 
     @Override
@@ -47,16 +47,17 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
     }
 
     public void testCompose() {
-        final DerivableFunction<FloatingPoint> cfunc = DerivableFunction.makeConstant(h.v(2.91), h);
+        final DerivableFunction<FloatingPoint> cfunc = DerivableFunction.makeConstant(h.v(0.91), h);
         final DerivableFunction<FloatingPoint> xfunc = DerivableFunction.makeIdentity(h);
         final DerivableFunction<FloatingPoint> polfunc = DerivableFunction.makeBernstein(b5);
         final DerivableFunction<FloatingPoint> combifunc = polfunc.compose(cfunc.times(xfunc));
+        final DerivableFunction<FloatingPoint> combi2func = polfunc.compose(combifunc.times(xfunc));
         for (final DerivableFunction<FloatingPoint> testfunc : new DerivableFunction[] { cfunc, xfunc, polfunc,
-                combifunc }) {
+                combifunc, combi2func }) {
             for (final double xd : new double[] { 0, 0.3253, 0.690, 1 }) {
-                FloatingPoint x = h.v(xd);
+                final FloatingPoint x = h.v(xd);
                 Result<FloatingPoint> result = testfunc.call(x, a);
-                System.out.println(xd + "\t" + h.d(result.y) + "\t" + h.d(result.dy));
+                // System.out.println(xd + "\t" + h.d(result.y) + "\t" + h.d(result.dy));
                 F<FloatingPoint, FloatingPoint> f = new F<FloatingPoint, FloatingPoint>() {
                     public FloatingPoint call(FloatingPoint arg) {
                         return testfunc.call(arg, a).y;
@@ -64,6 +65,17 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
                 };
                 FloatingPoint realderiv = derivation(f, x);
                 near(result.dy, realderiv);
+                for (int k = 0; k < a.getDimension(); ++k) {
+                    final int kc = k;
+                    F<FloatingPoint, FloatingPoint> fa = new F<FloatingPoint, FloatingPoint>() {
+                        public FloatingPoint call(FloatingPoint arg) {
+                            final DenseVector<FloatingPoint> av = a.plus(h.vectorUnity(a.getDimension(), kc).times(arg));
+                            return testfunc.call(x, av).y;
+                        }
+                    };
+                    realderiv = derivation(fa, h.zero());
+                    near(result.da.get(kc), realderiv);
+                }
             }
         }
     }

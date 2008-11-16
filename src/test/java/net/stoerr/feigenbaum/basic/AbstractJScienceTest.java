@@ -17,18 +17,15 @@ public abstract class AbstractJScienceTest<T extends Field<T>> extends TestCase 
     }
 
     protected void near(double val, double d) {
-        assertEquals(String.valueOf(val) + " neq " + String.valueOf(d), val, d,
-                eps);
+        assertEquals(val, d, eps);
     }
 
     protected void near(T val, double d) {
-        assertEquals(String.valueOf(val) + " neq " + String.valueOf(d), h
-                .d(val), d, eps);
+        assertEquals(h.d(val), d, eps);
     }
 
     protected void near(T val, T val2) {
-        assertEquals(String.valueOf(val) + " neq " + String.valueOf(val2), h
-                .d(val), h.d(val2), eps);
+        assertEquals(h.d(val), h.d(val2), eps);
     }
 
     protected void near(Vector<T> v, double[] ds) {

@@ -59,7 +59,7 @@ public abstract class DerivableFunction<T extends Field<T>> {
 
             @Override
             public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                return new Result<T>(pol.value(a, x), pol.diffvalue(a, x), pol.difpolynomials(x));
+                return new Result<T>(pol.value(a, x), pol.diffvalue(a, x), pol.polynomials(x));
             }
 
         };
