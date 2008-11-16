@@ -4,6 +4,7 @@
 package net.stoerr.feigenbaum.basic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jscience.mathematics.number.LargeInteger;
@@ -26,12 +27,14 @@ public interface NumHelper<T extends Field<T>> {
     T one();
 
     T pow(T val, int exp);
-    
+
     T abs(T val);
 
     double d(T val);
 
     Vector<T> makeVector(double[] ds);
+
+    Vector<T> vectorZero(int dimension);
 
     F<T, T> wrap(F<Double, Double> f);
 
@@ -61,6 +64,10 @@ public interface NumHelper<T extends Field<T>> {
                     return d(f.call(v(arg)));
                 }
             };
+        }
+
+        public Vector<T> vectorZero(int dimension) {
+            return DenseVector.valueOf(Collections.nCopies(dimension, zero()));
         }
 
     }
