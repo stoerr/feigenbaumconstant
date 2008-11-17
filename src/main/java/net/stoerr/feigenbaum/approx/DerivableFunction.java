@@ -1,6 +1,7 @@
 package net.stoerr.feigenbaum.approx;
 
 import org.jscience.mathematics.structure.Field;
+import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
@@ -23,9 +24,9 @@ public abstract class DerivableFunction<T extends Field<T>> {
 
         public final T dy;
 
-        public final Vector<T> da;
+        public final DenseVector<T> da;
 
-        public Result(T y, T dy, Vector<T> da) {
+        public Result(T y, T dy, DenseVector<T> da) {
             this.y = y;
             this.dy = dy;
             this.da = da;
@@ -84,7 +85,7 @@ public abstract class DerivableFunction<T extends Field<T>> {
 
             @Override
             public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                Result<T> myresult = call(x, a);
+                Result<T> myresult = DerivableFunction.this.call(x, a);
                 return new Result<T>(myresult.y.times(factor), myresult.dy.times(factor), myresult.da.times(factor));
             }
 
@@ -113,7 +114,7 @@ public abstract class DerivableFunction<T extends Field<T>> {
             public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
                 Result<T> o = other.call(x, a);
                 Result<T> m = DerivableFunction.this.call(o.y, a);
-                Vector<T> da = m.da.plus(o.da.times(m.dy));
+                DenseVector<T> da = m.da.plus(o.da.times(m.dy));
                 return new Result<T>(m.y, m.dy.times(o.dy), da);
             }
 

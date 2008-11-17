@@ -52,8 +52,9 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
         final DerivableFunction<FloatingPoint> polfunc = DerivableFunction.makeBernstein(b5);
         final DerivableFunction<FloatingPoint> combifunc = polfunc.compose(cfunc.times(xfunc));
         final DerivableFunction<FloatingPoint> combi2func = polfunc.compose(combifunc.times(xfunc));
+        DerivableFunction<FloatingPoint> feiggl = new DerivableApproximation(b5).feigbaumgl();
         for (final DerivableFunction<FloatingPoint> testfunc : new DerivableFunction[] { cfunc, xfunc, polfunc,
-                combifunc, combi2func }) {
+                combifunc, combi2func, feiggl }) {
             for (final double xd : new double[] { 0, 0.3253, 0.690, 1 }) {
                 final FloatingPoint x = h.v(xd);
                 Result<FloatingPoint> result = testfunc.call(x, a);

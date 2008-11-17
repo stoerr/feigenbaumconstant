@@ -31,7 +31,7 @@ public class Approximation<T extends Field<T>> {
     }
 
     /** Make a decent initial approximation based on f */
-    public Vector<T> initialApproximation(F<T, T> f) {
+    public DenseVector<T> initialApproximation(F<T, T> f) {
         List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
         List<T> values = new ArrayList<T>();
         for (int i = 0; i < num; ++i) {
@@ -41,7 +41,7 @@ public class Approximation<T extends Field<T>> {
         }
         DenseVector<T> vals = DenseVector.valueOf(values);
         DenseMatrix<T> matrix = DenseMatrix.valueOf(rows);
-        Vector<T> res = matrix.solve(vals);
+        DenseVector<T> res = (DenseVector<T>) matrix.solve(vals);
         return res;
     }
 
