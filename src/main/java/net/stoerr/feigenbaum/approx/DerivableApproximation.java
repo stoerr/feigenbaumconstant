@@ -11,12 +11,14 @@ import org.jscience.mathematics.vector.Vector;
 import net.stoerr.feigenbaum.approx.Approximation.FeigenbaumFunction;
 import net.stoerr.feigenbaum.approx.DerivableFunction.Result;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
+import net.stoerr.feigenbaum.basic.LegendrePolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
 
 public class DerivableApproximation<T extends Field<T>> {
-    
+
     private final BernsteinPolynomials<T> pol;
     private final NumHelper<T> h;
+    private volatile List<T> roots = null;
 
     public DerivableApproximation(BernsteinPolynomials<T> pol) {
         this.pol = pol;
@@ -34,13 +36,11 @@ public class DerivableApproximation<T extends Field<T>> {
         return gl;
     }
 
-    public DenseVector<T> improve(DenseVector<T> a) {
+    public DenseVector<T> improve(DenseVector<T> a, List<T> xvals) {
         List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
         List<T> values = new ArrayList<T>();
-        final int num =a.getDimension();
         DerivableFunction<T> gl = feigbaumgl();
-        for (int i = 0; i < num; ++i) {
-            T x = h.v(i * 1.0 / num);
+        for (T x : xvals) {
             Result<T> result = gl.call(x, a);
             values.add(result.y);
             rows.add(result.da);
@@ -53,4 +53,22 @@ public class DerivableApproximation<T extends Field<T>> {
         return a.plus(res.opposite());
     }
 
+    public DenseVector<T> improveLinear(DenseVector<T> a) {
+        final int num = a.getDimension();
+        List<T> xvals = new ArrayList<T>();
+        for (int i = 0; i < num; ++i) {
+            T x = h.v(i * 1.0 / num);
+            xvals.add(x);
+        }
+        return improve(a, xvals);
+    }
+
+    public DenseVector<T> improveLegendre(DenseVector<T> a) {
+        final int num = a.getDimension();
+        if (null == roots) {
+            LegendrePolynomials<T> legendre = new LegendrePolynomials<T>(h, pol.n);
+            roots = legendre.roots(num);
+        }
+        return improve(a, roots);
+    }
 }

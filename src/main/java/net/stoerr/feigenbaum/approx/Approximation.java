@@ -67,10 +67,11 @@ public class Approximation<T extends Field<T>> {
         T res = h.zero();
         FeigenbaumFunction f = new FeigenbaumFunction();
         f.g = g;
-        for (int i = 0; i < num; ++i) {
-            T x = h.v(i * 1.0 / num);
+        for (int i = 0; i <= 2*num; ++i) {
+            T x = h.v(i * 0.5 / num);
             T off = f.offset(g, x);
             res = res.plus(h.abs(off)); 
+            // System.out.println(h.d(x)+"\t"+i+"\t"+h.d(off));
         }
         return res.times(h.v(num).inverse());
     }

@@ -5,6 +5,7 @@ package net.stoerr.feigenbaum.basic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jscience.mathematics.number.LargeInteger;
@@ -41,6 +42,10 @@ public interface NumHelper<T extends Field<T>> {
     F<T, T> wrap(F<Double, Double> f);
 
     F<Double, Double> unwrap(F<T, T> f);
+    
+    Comparator<T> comparator();
+    
+    T sqrt(T x);
 
     abstract class AbstractNumhelper<T extends Field<T>> implements NumHelper<T> {
         public DenseVector<T> makeVector(double[] ds) {
@@ -77,6 +82,20 @@ public interface NumHelper<T extends Field<T>> {
             return DenseVector.valueOf(l);
         }
 
+        public T sqrt(T x) {
+            double dx = d(x);
+            T w = v(Math.sqrt(dx));
+            double off = Double.MAX_VALUE;
+            final T half = one().plus(one()).inverse();
+            while (true) {
+                T wn = x.times(w.inverse()).plus(w).times(half);
+                double offn = Math.abs(d(wn.plus(w.opposite())));
+                if (offn >= 0.7*off) {
+                    return w;
+                }
+                off = offn;
+            }
+        }
     }
 
     NumHelper<FloatingPoint> FP = new AbstractNumhelper<FloatingPoint>() {
@@ -115,6 +134,57 @@ public interface NumHelper<T extends Field<T>> {
             return val.abs();
         }
 
+        public Comparator<FloatingPoint> comparator() {
+            return new Comparator<FloatingPoint>() {
+                public int compare(FloatingPoint arg0, FloatingPoint arg1) {
+                    return arg0.compareTo(arg1);
+                }
+            };
+        }
     };
 
+    NumHelper<ApReal> AP = new AbstractNumhelper<ApReal>() {
+
+        public ApReal v(LargeInteger l) {
+            throw new UnsupportedOperationException();
+        }
+
+        public ApReal one() {
+            return ApReal.ONE;
+        }
+
+        public ApReal zero() {
+            return ApReal.ZERO;
+        }
+
+        public ApReal pow(ApReal val, int exp) {
+            if (0 == exp) return one();
+            return val.pow(exp);
+        }
+
+        public double d(ApReal val) {
+            return val.doubleValue();
+        }
+
+        public ApReal v(double d) {
+            if (0 <= d) return ApReal.valueOf(d);
+            else return ApReal.valueOf(-d).opposite();
+        }
+
+        public ApReal v(long l) {
+            return ApReal.valueOf(l);
+        }
+
+        public ApReal abs(ApReal val) {
+            return val.abs();
+        }
+
+        public Comparator<ApReal> comparator() {
+            return new Comparator<ApReal>() {
+                public int compare(ApReal arg0, ApReal arg1) {
+                    return arg0.compareTo(arg1);
+                }
+            };
+        }
+    };
 }
