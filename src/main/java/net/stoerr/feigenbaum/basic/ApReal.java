@@ -5,13 +5,14 @@ import javolution.text.Text;
 
 import org.apfloat.Apfloat;
 import org.jscience.mathematics.number.Number;
+import org.jscience.mathematics.structure.Field;
 
 /**
  * {@link Number} wrapper for {@link Apfloat}.
  * @author hps
  * @since 16.11.2008
  */
-public class ApReal extends Number<ApReal> {
+public class ApReal extends Number<ApReal> implements Field<ApReal> {
 
     private static final long serialVersionUID = 3870091756068514957L;
 
@@ -92,5 +93,17 @@ public class ApReal extends Number<ApReal> {
 
     public static int getDigits() {
         return DIGITS.get();
+    }
+
+    public ApReal inverse() {
+        return new ApReal(ONE.rep.divide(rep));
+    }
+
+    public ApReal abs() {
+        if (rep.compareTo(ZERO.rep) < 0) {
+            return new ApReal(rep.negate());
+        } else {
+            return this;
+        }
     }
 }

@@ -56,9 +56,15 @@ public class MiscTests extends AbstractJScienceTest<FloatingPoint> {
      * Problem: if (this._exponent > that._exponent) return that.plus(this); public FloatingPoint minus(FloatingPoint
      * that) {
      */
-    public void testBug() {
+    public void testBug1() {
         FloatingPoint r = FloatingPoint.ZERO.minus(FloatingPoint.valueOf(0.1));
         near(r, 0.1);
     }
 
+    public void testBug2() {
+        assertEquals("0.899999999999999967",FloatingPoint.valueOf(0.09).toString());
+        // Das Problem ist durch LargeInteger.digitLength bedingt.
+        // Noch ein Bug: compareTo mit 0.5
+    }
+    
 }

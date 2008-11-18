@@ -22,9 +22,9 @@ public class TestDerivableApproximation extends AbstractJScienceTest<FloatingPoi
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        a = new Approximation<FloatingPoint>(20, h);
+        a = new Approximation<FloatingPoint>(70, h);
         digitsold = FloatingPoint.getDigits();
-        // FloatingPoint.setDigits(30);
+        FloatingPoint.setDigits(150);
     }
 
     @Override
@@ -40,10 +40,13 @@ public class TestDerivableApproximation extends AbstractJScienceTest<FloatingPoi
         FloatingPoint off = a.evaluateApproximation(g);
         System.out.println(off);
         for (int i=0; i<10; ++i) {
-            g = derivap.improve(g);
+            g = derivap.improveLegendre(g);
             off = a.evaluateApproximation(g);
             System.out.println(off);
         }
+        final FloatingPoint alpha = h.sqrt(a.pol.value(g, h.one()).inverse());
+        System.out.println(alpha);
+        System.out.println(alpha.getSignificand());
     }
 
 }
