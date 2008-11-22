@@ -21,9 +21,14 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
      */
     private static final LocalContext.Reference<Integer> DIGITS = new LocalContext.Reference<Integer>(new Integer(20));
 
-    private Apfloat rep;
+    public final Apfloat rep;
 
-    public ApReal(Apfloat rep) {
+    private ApReal(Apfloat rep) {
+        final long scale = rep.scale();
+        final long precision = rep.precision();
+        if (precision < -1 || scale > 50) {
+            throw new IllegalStateException("Scale " + scale + ", precision " + precision);
+        }
         this.rep = rep;
     }
 
@@ -53,9 +58,17 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
         return rep.hashCode();
     }
 
+    private static Apfloat abs(Apfloat num) {
+        if (num.compareTo(Apfloat.ZERO) < 0) {
+            return num.negate();
+        } else {
+            return num;
+        }
+    }
+    
     @Override
     public boolean isLargerThan(ApReal that) {
-        return rep.compareTo(that.rep) > 0;
+        return abs(rep).compareTo(abs(that.rep)) > 0;
     }
 
     @Override
@@ -93,11 +106,11 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
     }
 
     public ApReal inverse() {
-        return new ApReal(one().rep.divide(rep));
+        return new ApReal(new ApReal(new Apfloat(1,getDigits())).rep.divide(rep));
     }
 
     public ApReal abs() {
-        if (rep.compareTo(zero().rep) < 0) {
+        if (rep.compareTo(Apfloat.ZERO) < 0) {
             return new ApReal(rep.negate());
         } else {
             return this;
@@ -105,10 +118,19 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
     }
     
     public static ApReal zero() {
-        return new ApReal(new Apfloat(0,getDigits()));
+        // return new ApReal(new Apfloat(0,getDigits()));
+        return ZERO;
     }
     
     public static ApReal one() {
-        return new ApReal(new Apfloat(1,getDigits()));
+        // return new ApReal(new Apfloat(1,getDigits()));
+        return ONE;
+    }
+    
+    private static ApReal ZERO = new ApReal(Apfloat.ZERO);
+    private static ApReal ONE = new ApReal(Apfloat.ONE);
+
+    public ApReal defaultPrecision() {
+        return new ApReal(rep.precision(getDigits()));
     }
 }

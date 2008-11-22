@@ -16,7 +16,7 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
 
     private int digitsold;
     private BernsteinPolynomials<FloatingPoint> b5;
-    private DenseVector<FloatingPoint> a;
+    DenseVector<FloatingPoint> a;
     private final FloatingPoint epsilon = h.v(0.000001);
 
     public TestDerivableFunction() {

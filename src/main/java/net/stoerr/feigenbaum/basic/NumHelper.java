@@ -11,7 +11,9 @@ import java.util.List;
 import org.jscience.mathematics.number.LargeInteger;
 import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.structure.Field;
+import org.jscience.mathematics.vector.DenseMatrix;
 import org.jscience.mathematics.vector.DenseVector;
+import org.jscience.mathematics.vector.Matrix;
 import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.util.F;
@@ -46,6 +48,15 @@ public interface NumHelper<T extends Field<T>> {
     Comparator<T> comparator();
     
     T sqrt(T x);
+    
+    /** Adjust to default precision. */
+    T adjustPrecision(T x);
+    
+    DenseVector<T> adjustPrecision(Vector<T> v);
+    
+    List<T> adjustPrecision(List<T> vals);
+    
+    DenseMatrix<T> adjustPrecision(DenseMatrix<T> m);
 
     abstract class AbstractNumhelper<T extends Field<T>> implements NumHelper<T> {
         public DenseVector<T> makeVector(double[] ds) {
@@ -96,6 +107,28 @@ public interface NumHelper<T extends Field<T>> {
                 off = offn;
             }
         }
+        
+        public DenseVector<T> adjustPrecision(Vector<T> v) {
+            List<T> res = new ArrayList<T>();
+            for (int i=0; i<v.getDimension(); ++i) {
+                res.add(adjustPrecision(v.get(i)));
+            }
+            return DenseVector.valueOf(res);
+        }
+        
+        public List<T> adjustPrecision(List<T> vals) {
+            List<T> res = new ArrayList<T>();
+            for (T v : vals) res.add(adjustPrecision(v));
+            return res;
+        }
+        
+        public DenseMatrix<T> adjustPrecision(DenseMatrix<T> m) {
+            List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
+            for (int i=0; i<m.getNumberOfRows(); ++i) {
+                rows.add(adjustPrecision(m.getRow(i)));
+            }
+            return DenseMatrix.valueOf(rows);
+        }
     }
 
     NumHelper<FloatingPoint> FP = new AbstractNumhelper<FloatingPoint>() {
@@ -140,6 +173,10 @@ public interface NumHelper<T extends Field<T>> {
                     return arg0.compareTo(arg1);
                 }
             };
+        }
+        
+        public FloatingPoint adjustPrecision(FloatingPoint x) {
+            return x;
         }
     };
 
@@ -186,5 +223,10 @@ public interface NumHelper<T extends Field<T>> {
                 }
             };
         }
+        
+        public ApReal adjustPrecision(ApReal x) {
+            return x.defaultPrecision();
+        }
     };
+
 }
