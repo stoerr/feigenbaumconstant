@@ -150,11 +150,11 @@ public interface NumHelper<T extends Field<T>> {
         }
 
         public ApReal one() {
-            return ApReal.ONE;
+            return ApReal.one();
         }
 
         public ApReal zero() {
-            return ApReal.ZERO;
+            return ApReal.zero();
         }
 
         public ApReal pow(ApReal val, int exp) {

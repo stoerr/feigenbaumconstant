@@ -13,6 +13,7 @@ import net.stoerr.feigenbaum.approx.DerivableFunction.Result;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.LegendrePolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
+import net.stoerr.feigenbaum.basic.Pair;
 
 public class DerivableApproximation<T extends Field<T>> {
 
@@ -37,6 +38,16 @@ public class DerivableApproximation<T extends Field<T>> {
     }
 
     public DenseVector<T> improve(DenseVector<T> a, List<T> xvals) {
+        Pair<DenseMatrix<T>, DenseVector<T>> sys = equationSystem(a, xvals);
+        DenseVector<T> vals = sys.y;
+        DenseMatrix<T> matrix = sys.x;
+        Vector<T> res = matrix.solve(vals);
+        // System.out.println(vals);
+        // System.out.println(matrix.times(res));
+        return a.plus(res.opposite());
+    }
+
+    public Pair<DenseMatrix<T>, DenseVector<T>> equationSystem(DenseVector<T> a, List<T> xvals) {
         List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
         List<T> values = new ArrayList<T>();
         DerivableFunction<T> gl = feigbaumgl();
@@ -47,28 +58,25 @@ public class DerivableApproximation<T extends Field<T>> {
         }
         DenseVector<T> vals = DenseVector.valueOf(values);
         DenseMatrix<T> matrix = DenseMatrix.valueOf(rows);
-        Vector<T> res = matrix.solve(vals);
-        // System.out.println(vals);
-        // System.out.println(matrix.times(res));
-        return a.plus(res.opposite());
+        return Pair.make(matrix, vals);
     }
 
-    public DenseVector<T> improveLinear(DenseVector<T> a) {
-        final int num = a.getDimension();
+    public List<T> getBernsteinMaxima() {
+        final int num = pol.n + 1;
         List<T> xvals = new ArrayList<T>();
         for (int i = 0; i < num; ++i) {
             T x = h.v(i * 1.0 / num);
             xvals.add(x);
         }
-        return improve(a, xvals);
+        return xvals;
     }
 
-    public DenseVector<T> improveLegendre(DenseVector<T> a) {
-        final int num = a.getDimension();
+    public List<T> getLegendreRoots() {
         if (null == roots) {
-            LegendrePolynomials<T> legendre = new LegendrePolynomials<T>(h, pol.n);
-            roots = legendre.roots(num);
+            LegendrePolynomials<T> legendre = new LegendrePolynomials<T>(h, pol.n + 1);
+            roots = legendre.roots(pol.n + 1);
         }
-        return improve(a, roots);
+        return roots;
     }
+
 }

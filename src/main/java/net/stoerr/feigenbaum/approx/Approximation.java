@@ -10,6 +10,7 @@ import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
+import net.stoerr.feigenbaum.basic.Pair;
 import net.stoerr.feigenbaum.util.F;
 
 /**
@@ -45,6 +46,7 @@ public class Approximation<T extends Field<T>> {
         return res;
     }
 
+    /** Does not work. */
     public Vector<T> improveApproximation(Vector<T> g) {
         List<DenseVector<T>> rows = new ArrayList<DenseVector<T>>();
         List<T> values = new ArrayList<T>();
@@ -55,22 +57,26 @@ public class Approximation<T extends Field<T>> {
             values.add(f.offset(g, x));
             rows.add(f.variation(x));
         }
-        DenseVector<T> vals = DenseVector.valueOf(values);
-        DenseMatrix<T> matrix = DenseMatrix.valueOf(rows);
+        DenseVector<T> vals1 = DenseVector.valueOf(values);
+        DenseMatrix<T> matrix1 = DenseMatrix.valueOf(rows);
+        Pair<DenseMatrix<T>,DenseVector<T>> p = Pair.make(matrix1, vals1);
+        DenseMatrix<T> matrix = p.x;
+        DenseVector<T> vals = p.y;
+
         Vector<T> res = matrix.solve(vals);
         System.out.println(vals);
         System.out.println(matrix.times(res));
         return g.plus(res.opposite());
     }
-    
+
     public T evaluateApproximation(Vector<T> g) {
         T res = h.zero();
         FeigenbaumFunction f = new FeigenbaumFunction();
         f.g = g;
-        for (int i = 0; i <= 2*num; ++i) {
+        for (int i = 0; i <= 2 * num; ++i) {
             T x = h.v(i * 0.5 / num);
             T off = f.offset(g, x);
-            res = res.plus(h.abs(off)); 
+            res = res.plus(h.abs(off));
             // System.out.println(h.d(x)+"\t"+i+"\t"+h.d(off));
         }
         return res.times(h.v(num).inverse());

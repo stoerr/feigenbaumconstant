@@ -24,7 +24,7 @@ public class BernsteinPolynomials<T extends Field<T>> {
         factors = JScienceUtils.makeVector(n + 1, new F<Integer, T>() {
 
             public T call(Integer arg) {
-                return conv.v(JScienceUtils.over(n, arg));
+                return JScienceUtils.over(n, arg, h);
             }
         });
     }
