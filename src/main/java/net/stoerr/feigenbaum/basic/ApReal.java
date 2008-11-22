@@ -16,9 +16,6 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
 
     private static final long serialVersionUID = 3870091756068514957L;
 
-    public static final ApReal ZERO = new ApReal(Apfloat.ZERO);
-    public static final ApReal ONE = new ApReal(Apfloat.ONE);
-
     /**
      * Holds precision for new numbers
      */
@@ -96,14 +93,22 @@ public class ApReal extends Number<ApReal> implements Field<ApReal> {
     }
 
     public ApReal inverse() {
-        return new ApReal(ONE.rep.divide(rep));
+        return new ApReal(one().rep.divide(rep));
     }
 
     public ApReal abs() {
-        if (rep.compareTo(ZERO.rep) < 0) {
+        if (rep.compareTo(zero().rep) < 0) {
             return new ApReal(rep.negate());
         } else {
             return this;
         }
+    }
+    
+    public static ApReal zero() {
+        return new ApReal(new Apfloat(0,getDigits()));
+    }
+    
+    public static ApReal one() {
+        return new ApReal(new Apfloat(1,getDigits()));
     }
 }

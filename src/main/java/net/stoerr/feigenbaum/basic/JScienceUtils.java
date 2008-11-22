@@ -29,6 +29,22 @@ public class JScienceUtils {
         }
         return mul.divide(div);
     }
+    
+    public static <T extends Field<T>> T over(int n, int m, NumHelper<T> h) {
+        T mul = h.one();
+        if (m > n / 2) {
+            m = n - m;
+        }
+        for (int i = n - m + 1; i <= n; ++i) {
+            mul = mul.times(h.v(i));
+        }
+        T div = h.one();
+        for (int i = 2; i <= m; ++i) {
+            div = div.times(h.v(i));
+        }
+        return mul.times(div.inverse());
+    }
+
 
     /**
      * Erzeugt Vektor Dimension n aus Werten von func von 0 bis n-1.
