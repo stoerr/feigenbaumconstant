@@ -8,6 +8,8 @@ import org.jscience.mathematics.function.Polynomial;
 import org.jscience.mathematics.function.Term;
 import org.jscience.mathematics.function.Variable;
 import org.jscience.mathematics.structure.Field;
+import org.jscience.mathematics.vector.DenseVector;
+import org.jscience.mathematics.vector.Vector;
 
 /**
  * (n+1) p(n+1) = (2*n+1)*x*p(n)-n*p(n-1)
@@ -15,7 +17,7 @@ import org.jscience.mathematics.structure.Field;
  * @since 17.11.2008
  * @param <T>
  */
-public class LegendrePolynomials<T extends Field<T>> {
+public class LegendrePolynomials<T extends Field<T>> implements Basefunctions<T> {
 
     public final NumHelper<T> h;
     public final Variable<T> x;
@@ -23,7 +25,7 @@ public class LegendrePolynomials<T extends Field<T>> {
     public final List<Polynomial<T>> pol;
     public final List<Polynomial<T>> dpol;
 
-    public LegendrePolynomials(NumHelper<T> h, int n) {
+    public LegendrePolynomials(int n, NumHelper<T> h) {
         this.h = h;
         this.x = new Variable.Global<T>("x");
         this.px = Polynomial.valueOf(h.one(), x);
@@ -85,17 +87,59 @@ public class LegendrePolynomials<T extends Field<T>> {
     private T taylorroot(T w1, final Polynomial<T> p, final Polynomial<T> dp) {
         T w = w1;
         double off = Double.MAX_VALUE;
-        while(true) {
+        while (true) {
             T y = p.evaluate(w);
             T dy = dp.evaluate(w);
             T wn = w.plus(y.times(dy.inverse()).opposite());
             double offn = Math.abs(h.d(y));
-            if (offn >= off/2) {
-                return w;
-            }
+            if (offn >= off / 2) { return w; }
             w = wn;
             off = offn;
         }
+    }
+
+    public int count() {
+        return pol.size();
+    }
+
+    public DenseVector<T> functionValues(T x) {
+        List<T> res = new ArrayList<T>();
+        for (Polynomial<T> p : pol) {
+            if (0 == p.getVariables().size()) {
+                res.add(p.evaluate());
+            } else {
+                res.add(p.evaluate(x));
+            }
+        }
+        return DenseVector.valueOf(res);
+    }
+
+    public DenseVector<T> difValues(T x) {
+        List<T> res = new ArrayList<T>();
+        for (Polynomial<T> p : dpol) {
+            if (0 == p.getVariables().size()) {
+                res.add(p.evaluate());
+            } else {
+                res.add(p.evaluate(x));
+            }
+        }
+        return DenseVector.valueOf(res);
+    }
+
+    public T nth(T x, int m) {
+        return pol.get(m).evaluate(x);
+    }
+
+    public T value(Vector<T> coeff, T x) {
+        return coeff.times(functionValues(x));
+    }
+
+    public T diffvalue(Vector<T> coeff, T x) {
+        return coeff.times(difValues(x));
+    }
+
+    public NumHelper<T> getHelper() {
+        return h;
     }
 
 }

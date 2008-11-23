@@ -16,8 +16,8 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<FloatingPoint
         super(NumHelper.FP);
     }
 
-    private BernsteinPolynomials<FloatingPoint> b2;
-    private BernsteinPolynomials<FloatingPoint> b3;
+    private Basefunctions<FloatingPoint> b2;
+    private Basefunctions<FloatingPoint> b3;
     private BernsteinPolynomials<FloatingPoint> b5;
 
     @Override
@@ -38,7 +38,7 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<FloatingPoint
     }
 
     public void testPolynomials() {
-        near(b2.polynomials(h.v(0.5)), new double[] { 0.25, 0.5, 0.25 });
+        near(b2.functionValues(h.v(0.5)), new double[] { 0.25, 0.5, 0.25 });
     }
 
     Vector<FloatingPoint> vec = h.makeVector(new double[] { 4.32, -3.52, 1.24, 0.12 });
@@ -73,7 +73,7 @@ public class BernsteinPolynomialsTest extends AbstractJScienceTest<FloatingPoint
     /** Try to get a first approximation. */
     public void testApproxStart() {
         final int n = 9;
-        BernsteinPolynomials<FloatingPoint> b = new BernsteinPolynomials<FloatingPoint>(n, h);
+        Basefunctions<FloatingPoint> b = new BernsteinPolynomials<FloatingPoint>(n, h);
         Vector<FloatingPoint> v = JScienceUtils.makeVector(n + 1,
                 new F<Integer, FloatingPoint>() {
                     public FloatingPoint call(Integer arg) {

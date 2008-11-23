@@ -10,18 +10,21 @@ import org.jscience.mathematics.vector.DenseVector;
 import net.stoerr.feigenbaum.approx.Approximation;
 import net.stoerr.feigenbaum.approx.DerivableApproximation;
 import net.stoerr.feigenbaum.basic.ApReal;
+import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
+import net.stoerr.feigenbaum.basic.LegendrePolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
 import net.stoerr.feigenbaum.basic.Pair;
 
 public class AnalyzeMatrix {
 
     private NumHelper<ApReal> h = NumHelper.AP;
-    private Approximation<ApReal> a = new Approximation<ApReal>(40, h);
+    // private Approximation<ApReal> a = new Approximation<ApReal>(new BernsteinPolynomials<ApReal>(40, h));
+    private Approximation<ApReal> a = new Approximation<ApReal>(new LegendrePolynomials<ApReal>(20, h));
     private DerivableApproximation<ApReal> derivap = new DerivableApproximation<ApReal>(a.pol);
 
     /** */
     public static void main(String[] args) {
-        ApReal.setDigits(150);
+        ApReal.setDigits(100);
         new AnalyzeMatrix().run1();
     }
 

@@ -4,7 +4,7 @@ import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
-import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
+import net.stoerr.feigenbaum.basic.Basefunctions;
 import net.stoerr.feigenbaum.basic.NumHelper;
 
 /**
@@ -55,12 +55,12 @@ public abstract class DerivableFunction<T extends Field<T>> {
         };
     }
 
-    public static <T extends Field<T>> DerivableFunction<T> makeBernstein(final BernsteinPolynomials<T> pol) {
+    public static <T extends Field<T>> DerivableFunction<T> makeBernstein(final Basefunctions<T> pol) {
         return new DerivableFunction<T>() {
 
             @Override
             public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                return new Result<T>(pol.value(a, x), pol.diffvalue(a, x), pol.polynomials(x));
+                return new Result<T>(pol.value(a, x), pol.diffvalue(a, x), pol.functionValues(x));
             }
 
         };
