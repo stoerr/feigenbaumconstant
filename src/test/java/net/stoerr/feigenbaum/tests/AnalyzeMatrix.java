@@ -19,7 +19,7 @@ public class AnalyzeMatrix {
 
     private NumHelper<ApReal> h = NumHelper.AP;
     // private Approximation<ApReal> a = new Approximation<ApReal>(new BernsteinPolynomials<ApReal>(40, h));
-    private Approximation<ApReal> a = new Approximation<ApReal>(new LegendrePolynomials<ApReal>(20, h));
+    private Approximation<ApReal> a = new Approximation<ApReal>(new LegendrePolynomials<ApReal>(40, h));
     private DerivableApproximation<ApReal> derivap = new DerivableApproximation<ApReal>(a.pol);
 
     /** */
@@ -85,7 +85,8 @@ public class AnalyzeMatrix {
             DenseVector<ApReal> r = m.getRow(i);
             for (int j = 0; j < r.getDimension(); ++j) {
                 double v = Math.abs(h.d(r.get(j)));
-                int d = (int) Math.round(9.49 * v / max);
+                // int d = (int) Math.round(9.49 * v / max);
+                int d = (int) Math.round(Math.log(9e8*v/max+1)/Math.log(10));
                 System.out.print(" " + d);
             }
             System.out.println();
