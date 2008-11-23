@@ -10,6 +10,7 @@ import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.approx.Approximation.FeigenbaumFunction;
 import net.stoerr.feigenbaum.approx.DerivableFunction.Result;
+import net.stoerr.feigenbaum.basic.Basefunctions;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.LegendrePolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
@@ -17,13 +18,13 @@ import net.stoerr.feigenbaum.basic.Pair;
 
 public class DerivableApproximation<T extends Field<T>> {
 
-    private final BernsteinPolynomials<T> pol;
+    private final Basefunctions<T> pol;
     private final NumHelper<T> h;
     private volatile List<T> roots = null;
 
-    public DerivableApproximation(BernsteinPolynomials<T> pol) {
+    public DerivableApproximation(Basefunctions<T> pol) {
         this.pol = pol;
-        this.h = pol.h;
+        this.h = pol.getHelper();
     }
 
     public DerivableFunction<T> feigbaumgl() {
@@ -62,7 +63,7 @@ public class DerivableApproximation<T extends Field<T>> {
     }
 
     public List<T> getBernsteinMaxima() {
-        final int num = pol.n + 1;
+        final int num = pol.count();
         List<T> xvals = new ArrayList<T>();
         for (int i = 0; i < num; ++i) {
             T x = h.v(i * 1.0 / num);
@@ -73,8 +74,8 @@ public class DerivableApproximation<T extends Field<T>> {
 
     public List<T> getLegendreRoots() {
         if (null == roots) {
-            LegendrePolynomials<T> legendre = new LegendrePolynomials<T>(h, pol.n + 1);
-            roots = legendre.roots(pol.n + 1);
+            LegendrePolynomials<T> legendre = new LegendrePolynomials<T>(pol.count(), h);
+            roots = legendre.roots(pol.count());
         }
         return roots;
     }

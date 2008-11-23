@@ -8,6 +8,9 @@ import org.jscience.mathematics.vector.DenseMatrix;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
+import sun.org.mozilla.javascript.internal.BaseFunction;
+
+import net.stoerr.feigenbaum.basic.Basefunctions;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
 import net.stoerr.feigenbaum.basic.Pair;
@@ -21,13 +24,13 @@ public class Approximation<T extends Field<T>> {
 
     public final NumHelper<T> h;
 
-    public final BernsteinPolynomials<T> pol;
+    public final Basefunctions<T> pol;
 
     private final int num;
 
-    public Approximation(int n, NumHelper<T> h) {
-        this.h = h;
-        this.pol = new BernsteinPolynomials<T>(n, h);
+    public Approximation(Basefunctions<T> pol) {
+        this.h = pol.getHelper();
+        this.pol = pol;
         num = pol.count();
     }
 
@@ -37,11 +40,13 @@ public class Approximation<T extends Field<T>> {
         List<T> values = new ArrayList<T>();
         for (int i = 0; i < num; ++i) {
             T x = h.v(i * 1.0 / num);
-            rows.add(pol.polynomials(x));
+            rows.add(pol.functionValues(x));
             values.add(f.call(x));
         }
         DenseVector<T> vals = DenseVector.valueOf(values);
+        vals = h.adjustPrecision(vals);
         DenseMatrix<T> matrix = DenseMatrix.valueOf(rows);
+        matrix = h.adjustPrecision(matrix);
         DenseVector<T> res = (DenseVector<T>) matrix.solve(vals);
         return res;
     }
@@ -105,12 +110,12 @@ public class Approximation<T extends Field<T>> {
 
         public DenseVector<T> variation(T x) {
             final T g1 = g(one);
-            DenseVector<T> res = pol.polynomials(x).times(g1);
+            DenseVector<T> res = pol.functionValues(x).times(g1);
             T xg1 = x.times(g1);
             T gdgxg1 = gd(g(xg1)); // g'(g(x*g(1)))
-            DenseVector<T> dxg1 = pol.difpolynomials(xg1);
+            DenseVector<T> dxg1 = pol.difValues(xg1);
             res = res.plus(dxg1.times(gdgxg1).opposite());
-            DenseVector<T> d1 = pol.polynomials(one);
+            DenseVector<T> d1 = pol.functionValues(one);
             T gx = g(x);
             T gdxg1 = gd(xg1); // g'(x*g(1))
             res = res.plus(d1.times(gx));

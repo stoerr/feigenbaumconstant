@@ -20,7 +20,7 @@ public class TestLegendrePolynomials extends AbstractJScienceTest<FloatingPoint>
     @Override
     @Before
     public void setUp() throws Exception {
-        l = new LegendrePolynomials<FloatingPoint>(h,10);
+        l = new LegendrePolynomials<FloatingPoint>(10, h);
     }
 
     public void testPol() {

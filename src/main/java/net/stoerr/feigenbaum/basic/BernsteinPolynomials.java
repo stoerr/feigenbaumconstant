@@ -10,7 +10,7 @@ import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.util.F;
 
-public class BernsteinPolynomials<T extends Field<T>> {
+public class BernsteinPolynomials<T extends Field<T>> implements Basefunctions<T> {
 
     public final DenseVector<T> factors;
 
@@ -29,6 +29,9 @@ public class BernsteinPolynomials<T extends Field<T>> {
         });
     }
 
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#nth(T, int)
+     */
     public T nth(T x, int m) {
         if (m < 0 || m > n)
             return h.zero();
@@ -38,8 +41,10 @@ public class BernsteinPolynomials<T extends Field<T>> {
         return val;
     }
 
-    /** DenseVector of the polynomials for x */
-    public DenseVector<T> polynomials(T x) {
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#polynomials(T)
+     */
+    public DenseVector<T> functionValues(T x) {
         List<T> res = JScienceUtils.toList(factors);
         T v = h.one();
         for (int i = 1; i <= n; ++i) {
@@ -55,9 +60,11 @@ public class BernsteinPolynomials<T extends Field<T>> {
         return DenseVector.valueOf(res);
     }
 
-    /** DenseVector of the first derivations of the polynomials. */
-    public DenseVector<T> difpolynomials(T x) {
-        final DenseVector<T> pol = polynomials(x);
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#difpolynomials(T)
+     */
+    public DenseVector<T> difValues(T x) {
+        final DenseVector<T> pol = functionValues(x);
         return JScienceUtils.makeVector(n + 1, new F<Integer, T>() {
             public T call(Integer m) {
                 T val = h.v(2 * m - n).times(pol.get(m));
@@ -72,14 +79,18 @@ public class BernsteinPolynomials<T extends Field<T>> {
         });
     }
 
-    /** Value of approximation with coefficients coeff */
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#value(org.jscience.mathematics.vector.Vector, T)
+     */
     public T value(Vector<T> coeff, T x) {
-        return coeff.times(polynomials(x));
+        return coeff.times(functionValues(x));
     }
 
-    /** Value of first derivation of approximation with coefficients coeff */
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#diffvalue(org.jscience.mathematics.vector.Vector, T)
+     */
     public T diffvalue(Vector<T> coeff, T x) {
-        return coeff.times(difpolynomials(x));
+        return coeff.times(difValues(x));
     }
 
     /** Extends the coefficients vector to a higher degree */
@@ -108,8 +119,14 @@ public class BernsteinPolynomials<T extends Field<T>> {
         return DenseVector.valueOf(l);
     }
 
-    /** The actual number of the polynomials */
+    /* (non-Javadoc)
+     * @see net.stoerr.feigenbaum.basic.Basefunctions#count()
+     */
     public int count() {
         return n+1;
+    }
+
+    public NumHelper<T> getHelper() {
+        return h;
     }
 }
