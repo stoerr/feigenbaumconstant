@@ -4,6 +4,7 @@ import static net.stoerr.feigenbaum.FeigenConstants.FREN;
 
 import java.util.List;
 
+import org.apfloat.ApfloatContext;
 import org.jscience.mathematics.vector.DenseMatrix;
 import org.jscience.mathematics.vector.DenseVector;
 
@@ -19,12 +20,13 @@ public class AnalyzeMatrix {
 
     private NumHelper<ApReal> h = NumHelper.AP;
     // private Approximation<ApReal> a = new Approximation<ApReal>(new BernsteinPolynomials<ApReal>(40, h));
-    private Approximation<ApReal> a = new Approximation<ApReal>(new LegendrePolynomials<ApReal>(40, h));
+    private Approximation<ApReal> a = new Approximation<ApReal>(new LegendrePolynomials<ApReal>(20, h));
     private DerivableApproximation<ApReal> derivap = new DerivableApproximation<ApReal>(a.pol);
 
     /** */
     public static void main(String[] args) {
         ApReal.setDigits(100);
+        ApfloatContext.getContext().setDefaultRadix(2);
         new AnalyzeMatrix().run1();
     }
 
@@ -35,6 +37,7 @@ public class AnalyzeMatrix {
         List<ApReal> vals = derivap.getBernsteinMaxima();
         vals = h.adjustPrecision(vals);
         Pair<DenseMatrix<ApReal>, DenseVector<ApReal>> sys = derivap.equationSystem(g, vals);
+        System.out.println(sys.y);
         DenseMatrix<ApReal> m = sys.x;
         m = h.adjustPrecision(m);
         // System.out.println(sys.x.inverse());
