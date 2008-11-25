@@ -17,16 +17,16 @@ import net.stoerr.feigenbaum.basic.NumHelper;
 public abstract class DerivableFunction<T extends Field<T>> {
 
     /** The main method to calculate the result. */
-    public abstract Result<T> call(T x, Vector<T> a);
+    public abstract CallResult<T> call(T x, Vector<T> a);
 
-    public static class Result<T extends Field<T>> {
+    public static class CallResult<T extends Field<T>> {
         public final T y;
 
         public final T dy;
 
         public final DenseVector<T> da;
 
-        public Result(T y, T dy, DenseVector<T> da) {
+        public CallResult(T y, T dy, DenseVector<T> da) {
             this.y = y;
             this.dy = dy;
             this.da = da;
@@ -37,8 +37,8 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                return new Result<T>(val, h.zero(), h.vectorZero(a.getDimension()));
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                return new CallResult<T>(val, h.zero(), h.vectorZero(a.getDimension()));
             }
 
         };
@@ -48,8 +48,8 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                return new Result<T>(x, h.one(), h.vectorZero(a.getDimension()));
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                return new CallResult<T>(x, h.one(), h.vectorZero(a.getDimension()));
             }
 
         };
@@ -59,8 +59,8 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                return new Result<T>(pol.value(a, x), pol.diffvalue(a, x), pol.functionValues(x));
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                return new CallResult<T>(pol.value(a, x), pol.diffvalue(a, x), pol.functionValues(x));
             }
 
         };
@@ -70,10 +70,10 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                Result<T> myresult = DerivableFunction.this.call(x, a);
-                Result<T> otherresult = other.call(x, a);
-                return new Result<T>(myresult.y.plus(otherresult.y), myresult.dy.plus(otherresult.dy),
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                CallResult<T> myresult = DerivableFunction.this.call(x, a);
+                CallResult<T> otherresult = other.call(x, a);
+                return new CallResult<T>(myresult.y.plus(otherresult.y), myresult.dy.plus(otherresult.dy),
                         myresult.da.plus(otherresult.da));
             }
 
@@ -84,9 +84,9 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                Result<T> myresult = DerivableFunction.this.call(x, a);
-                return new Result<T>(myresult.y.times(factor), myresult.dy.times(factor), myresult.da.times(factor));
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                CallResult<T> myresult = DerivableFunction.this.call(x, a);
+                return new CallResult<T>(myresult.y.times(factor), myresult.dy.times(factor), myresult.da.times(factor));
             }
 
         };
@@ -96,10 +96,10 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                Result<T> m = DerivableFunction.this.call(x, a);
-                Result<T> o = other.call(x, a);
-                return new Result<T>(m.y.times(o.y), m.dy.times(o.y).plus(m.y.times(o.dy)), m.da.times(o.y).plus(
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                CallResult<T> m = DerivableFunction.this.call(x, a);
+                CallResult<T> o = other.call(x, a);
+                return new CallResult<T>(m.y.times(o.y), m.dy.times(o.y).plus(m.y.times(o.dy)), m.da.times(o.y).plus(
                         o.da.times(m.y)));
             }
 
@@ -111,11 +111,11 @@ public abstract class DerivableFunction<T extends Field<T>> {
         return new DerivableFunction<T>() {
 
             @Override
-            public net.stoerr.feigenbaum.approx.DerivableFunction.Result<T> call(T x, Vector<T> a) {
-                Result<T> o = other.call(x, a);
-                Result<T> m = DerivableFunction.this.call(o.y, a);
+            public net.stoerr.feigenbaum.approx.DerivableFunction.CallResult<T> call(T x, Vector<T> a) {
+                CallResult<T> o = other.call(x, a);
+                CallResult<T> m = DerivableFunction.this.call(o.y, a);
                 DenseVector<T> da = m.da.plus(o.da.times(m.dy));
-                return new Result<T>(m.y, m.dy.times(o.dy), da);
+                return new CallResult<T>(m.y, m.dy.times(o.dy), da);
             }
 
         };
