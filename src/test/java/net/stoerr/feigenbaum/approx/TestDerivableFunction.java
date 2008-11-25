@@ -4,7 +4,7 @@ import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.structure.Field;
 import org.jscience.mathematics.vector.DenseVector;
 
-import net.stoerr.feigenbaum.approx.DerivableFunction.Result;
+import net.stoerr.feigenbaum.approx.DerivableFunction.CallResult;
 import net.stoerr.feigenbaum.basic.AbstractJScienceTest;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
@@ -57,7 +57,7 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
                 combifunc, combi2func, feiggl }) {
             for (final double xd : new double[] { 0, 0.3253, 0.690, 1 }) {
                 final FloatingPoint x = h.v(xd);
-                Result<FloatingPoint> result = testfunc.call(x, a);
+                CallResult<FloatingPoint> result = testfunc.call(x, a);
                 // System.out.println(xd + "\t" + h.d(result.y) + "\t" + h.d(result.dy));
                 F<FloatingPoint, FloatingPoint> f = new F<FloatingPoint, FloatingPoint>() {
                     public FloatingPoint call(FloatingPoint arg) {

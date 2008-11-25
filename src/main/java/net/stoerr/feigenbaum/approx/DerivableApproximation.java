@@ -9,7 +9,7 @@ import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
 import net.stoerr.feigenbaum.approx.Approximation.FeigenbaumFunction;
-import net.stoerr.feigenbaum.approx.DerivableFunction.Result;
+import net.stoerr.feigenbaum.approx.DerivableFunction.CallResult;
 import net.stoerr.feigenbaum.basic.Basefunctions;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.LegendrePolynomials;
@@ -53,7 +53,7 @@ public class DerivableApproximation<T extends Field<T>> {
         List<T> values = new ArrayList<T>();
         DerivableFunction<T> gl = feigbaumgl();
         for (T x : xvals) {
-            Result<T> result = gl.call(x, a);
+            CallResult<T> result = gl.call(x, a);
             values.add(result.y);
             rows.add(result.da);
         }
