@@ -49,7 +49,7 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
     public void testCompose() {
         final DerivableFunction<FloatingPoint> cfunc = DerivableFunction.makeConstant(h.v(0.91), h);
         final DerivableFunction<FloatingPoint> xfunc = DerivableFunction.makeIdentity(h);
-        final DerivableFunction<FloatingPoint> polfunc = DerivableFunction.makeBernstein(b5);
+        final DerivableFunction<FloatingPoint> polfunc = DerivableFunction.makeBased(b5);
         final DerivableFunction<FloatingPoint> combifunc = polfunc.compose(cfunc.times(xfunc));
         final DerivableFunction<FloatingPoint> combi2func = polfunc.compose(combifunc.times(xfunc));
         DerivableFunction<FloatingPoint> feiggl = new DerivableApproximation(b5).feigbaumgl();
@@ -65,7 +65,7 @@ public class TestDerivableFunction extends AbstractJScienceTest<FloatingPoint> {
                     }
                 };
                 FloatingPoint realderiv = derivation(f, x);
-                near(result.dy, realderiv);
+                near(result.dx, realderiv);
                 for (int k = 0; k < a.getDimension(); ++k) {
                     final int kc = k;
                     F<FloatingPoint, FloatingPoint> fa = new F<FloatingPoint, FloatingPoint>() {
