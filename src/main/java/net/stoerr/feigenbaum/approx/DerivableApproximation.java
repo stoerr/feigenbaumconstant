@@ -29,7 +29,7 @@ public class DerivableApproximation<T extends Field<T>> {
 
     public DerivableFunction<T> feigbaumgl() {
         DerivableFunction<T> one = DerivableFunction.makeConstant(h.one(), h);
-        DerivableFunction<T> f = DerivableFunction.makeBernstein(pol);
+        DerivableFunction<T> f = DerivableFunction.makeBased(pol);
         DerivableFunction<T> f1 = f.compose(one);
         DerivableFunction<T> x = DerivableFunction.makeIdentity(h);
         DerivableFunction<T> f1fx = f1.times(f.compose(x));
