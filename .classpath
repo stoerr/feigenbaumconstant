@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/apfloat-1.4.2/lib/apfloat.jar" sourcepath="lib/apfloat-1.4.2/source">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/hps-feigenbaum/lib/apfloat-1.4.2.zip!/docs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jscience-4.3/jscience.jar" sourcepath="lib/jscience-4.3/src">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/hps-feigenbaum/lib/jscience-4.3.1-bin.zip!/jscience-4.3/api"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
