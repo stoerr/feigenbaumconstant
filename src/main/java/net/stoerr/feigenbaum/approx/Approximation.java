@@ -8,8 +8,6 @@ import org.jscience.mathematics.vector.DenseMatrix;
 import org.jscience.mathematics.vector.DenseVector;
 import org.jscience.mathematics.vector.Vector;
 
-import sun.org.mozilla.javascript.internal.BaseFunction;
-
 import net.stoerr.feigenbaum.basic.Basefunctions;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
 import net.stoerr.feigenbaum.basic.NumHelper;
