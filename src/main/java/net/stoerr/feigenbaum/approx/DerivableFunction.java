@@ -101,7 +101,8 @@ public abstract class DerivableFunction<T extends Field<T>> {
                 for (int i = 0; i < pol.count(); ++i) { // FIXME
 
                 }
-                return new Dir2nd<T>(pol.value(a, x), first, h.zero(), h.vectorZero(a.getDimension()));
+                throw new UnsupportedOperationException("FIXME Not implemented yet.");
+                // return new Dir2nd<T>(pol.value(a, x), first, h.zero(), h.vectorZero(a.getDimension()));
             }
         };
     }
@@ -163,8 +164,9 @@ public abstract class DerivableFunction<T extends Field<T>> {
                 final T dupl = my.dx.times(o.dx);
                 final T second = my.dxx.times(o.y).plus(dupl.plus(dupl)).plus(my.y.times(o.dxx));
                 Vector<T> ya = my.da.times(o.y).plus(o.da.times(my.y));
-                Vector<T> yay;
-                Vector<T> yaa;
+                Vector<T> yay = null;
+                Vector<T> yaa = null;
+                if (0 == 0) throw new UnsupportedOperationException("FIXME Not implemented yet.");
                 return new Dir2nd<T>(my.y.times(o.y), my.dx.times(o.y).plus(my.y.times(o.dx)), second, ya, yay, yaa);
             }
         };
@@ -187,7 +189,8 @@ public abstract class DerivableFunction<T extends Field<T>> {
                 Dir2nd<T> g = other.directional2nd(x, a, da);
                 Dir2nd<T> f = DerivableFunction.this.directional2nd(g.y, a, da);
                 final T second = g.dx.times(g.dx).times(f.dxx).plus(g.dxx.times(f.dx));
-                return new Dir2nd<T>(f.y, g.dx.times(f.dx), second);
+                // return new Dir2nd<T>(f.y, g.dx.times(f.dx), second);
+                throw new UnsupportedOperationException("FIXME Not implemented yet.");
             }
         };
     }
