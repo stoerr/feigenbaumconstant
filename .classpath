@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="lib/jscience-4.3/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jscience-4.3/lib/javolution.jar" sourcepath="lib/javolution-5.2.6-src.zip"/>
+	<classpathentry kind="lib" path="lib/jscience-4.3/lib/geoapi.jar"/>
+	<classpathentry kind="lib" path="lib/jscience-4.3/colapi.jar"/>
 	<classpathentry kind="lib" path="lib/apfloat-1.4.2/lib/apfloat.jar" sourcepath="lib/apfloat-1.4.2/source">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/hps-feigenbaum/lib/apfloat-1.4.2.zip!/docs"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jscience-4.3/lib/geoapi.jar"/>
-	<classpathentry kind="lib" path="lib/jscience-4.3/lib/javolution.jar"/>
-	<classpathentry kind="lib" path="lib/jscience-4.3/colapi.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="lib" path="lib/jscience-4.3/jscience.jar"/>
+	<classpathentry kind="output" path="eclipse_classes"/>
 </classpath>
