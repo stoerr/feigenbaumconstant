@@ -184,11 +184,13 @@ public final class FloatingPoint extends Number<FloatingPoint> implements
     public static FloatingPoint valueOf(double doubleValue) {
         if (doubleValue == 0.0)
             return FloatingPoint.ZERO;
+        if (doubleValue == 1.0)
+            return FloatingPoint.ONE;
         if (Double.isNaN(doubleValue) || Double.isInfinite(doubleValue))
             return FloatingPoint.NaN;
 
         // Find the exponent e such as: value == x.xxx * 10^e
-        int e = MathLib.floorLog10(doubleValue) - 18 + 1; // 18 digits significand.
+        int e = MathLib.floorLog10(MathLib.abs(doubleValue)) - 18 + 1; // 18 digits significand.
         long significand = MathLib.toLongPow10(doubleValue, -e);
         return FloatingPoint.valueOf(significand, e);
     }

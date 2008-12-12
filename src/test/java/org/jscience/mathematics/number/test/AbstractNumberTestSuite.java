@@ -51,8 +51,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
         _testvalues = new ArrayList<Pair<Double, T>>();
         _testvalues.add(Pair.make(0.0, _helper.getZero()));
         _testvalues.add(Pair.make(1.0, _helper.getOne()));
-        // for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234, -9876 }) {
-        for (double d : new double[] { 0.0, 1.0, 0.09, 0.9, 1.1, 1234 }) {
+        for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234, -9876 }) {
             info("Adding Testvalue " + d);
             _testvalues.add(Pair.make(d, _helper.valueOf(d)));
         }

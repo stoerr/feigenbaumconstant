@@ -48,9 +48,9 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
     void compareresult() {
         final double result = _value.doubleValue();
         if (0 == _expected) {
-            assertTrue(getDescription().toString(), AbstractNumberTestSuite.eps > MathLib.abs(result));
+            assertTrue(getDescription().toString() + " but got " + result, AbstractNumberTestSuite.eps > MathLib.abs(result));
         } else {
-            assertTrue(getDescription().toString(), AbstractNumberTestSuite.eps > MathLib.abs(result / _expected - 1));
+            assertTrue(getDescription().toString() + " but got " + result, AbstractNumberTestSuite.eps > MathLib.abs(result / _expected - 1));
         }
     }
     
