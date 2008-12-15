@@ -9,17 +9,24 @@ import javolution.testing.TestSuite;
 import static javolution.testing.TestContext.*;
 
 public class LargeIntegerTestSuite extends TestSuite {
-    
+
     protected final NumberHelper<LargeInteger> helper = NumberHelper.LARGEINTEGER;
 
     @Override
     public void run() {
-        TestContext.info("Test Suite for LargeInteger");
-        TestContext.test(zeroTest);
+        info("Test Suite for LargeInteger");
+        test(zeroTest);
+        test(bitLengthTest);
+        test(digitLengthTest);
     }
-    
+
     public static void main(String[] args) {
-        new LargeIntegerTestSuite().run();
+        enter(REGRESSION);
+        try {
+            new LargeIntegerTestSuite().run();
+        } finally {
+            exit();
+        }
     }
 
     private TestCase zeroTest = new TestCase() {
@@ -33,7 +40,47 @@ public class LargeIntegerTestSuite extends TestSuite {
                 throw new RuntimeException(e);
             }
         }
-        
+
+    };
+
+    private TestCase bitLengthTest = new TestCase() {
+
+        @Override
+        public void execute() {
+            assertEquals(0, LargeInteger.ZERO.bitLength());
+            assertEquals(1, LargeInteger.ONE.bitLength());
+            long val = 2;
+            int len = 2;
+            while (val < Long.MAX_VALUE / 2) {
+                LargeInteger l = LargeInteger.valueOf(val);
+                assertEquals(l.toString(), len, l.bitLength());
+                assertEquals(l.toString(), len, l.plus(helper.getOne()).bitLength());
+                assertEquals(l.toString(), len - 1, l.plus(helper.getOne().opposite()).bitLength());
+                val *= 2;
+                len++;
+            }
+        }
+
+    };
+
+    private TestCase digitLengthTest = new TestCase() {
+
+        @Override
+        public void execute() {
+            assertEquals(1, LargeInteger.ZERO.digitLength());
+            assertEquals(1, LargeInteger.ONE.digitLength());
+            long val = 10;
+            int len = 2;
+            while (val < Long.MAX_VALUE / 10) {
+                LargeInteger l = LargeInteger.valueOf(val);
+                assertEquals(l.toString(), len, l.digitLength());
+                assertEquals(l.toString(), len, l.plus(LargeInteger.ONE).digitLength());
+                assertEquals(l.toString(), len - 1, l.plus(LargeInteger.ONE.opposite()).digitLength());
+                val *= 10;
+                len++;
+            }
+        }
+
     };
 
 }

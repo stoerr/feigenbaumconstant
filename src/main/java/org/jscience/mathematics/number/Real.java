@@ -200,7 +200,7 @@ public final class Real extends Number<Real> implements Field<Real> {
         if (Double.isNaN(doubleValue) || Double.isInfinite(doubleValue))
             return Real.NaN;
         // Find the exponent e such as: value == x.xxx * 10^e
-        int e = MathLib.floorLog10(doubleValue) - 18 + 1; // 18 digits significand.
+        int e = MathLib.floorLog10(MathLib.abs(doubleValue)) - 18 + 1; // 18 digits significand.
         long significand = MathLib.toLongPow10(doubleValue, -e);
         int error = (int) MathLib.toLongPow10(Math.ulp(doubleValue), -e) + 1;
         return Real.valueOf(LargeInteger.valueOf(significand), error, e);
@@ -230,6 +230,9 @@ public final class Real extends Number<Real> implements Field<Real> {
      *         a parsable real.
      */
     public static Real valueOf(CharSequence chars) throws NumberFormatException {
+        if ('-' == chars.charAt(0)) {
+            return valueOf(chars.subSequence(1, chars.length())).opposite();
+        }
         Text txt = Text.valueOf(chars); // TODO Use TextFormat...
         if ((txt.length() == 3) && (txt.indexOf("NaN", 0) == 0))
             return NaN;

@@ -22,7 +22,6 @@ public class FloatingPointTestSuite extends AbstractNumberTestSuite<FloatingPoin
     public void run() {
         info("Test Suite for FloatingPoint");
         super.run();
-        test(zeroTest);
     }
 
     public static void main(String[] args) {
@@ -34,21 +33,5 @@ public class FloatingPointTestSuite extends AbstractNumberTestSuite<FloatingPoin
             exit();
         }
     }
-
-    private TestCase zeroTest = new TestCase() {
-
-        @Override
-        public void execute() {
-            try {
-                FloatingPoint val = _helper.getOne();
-                System.out.println(val);
-                val = _helper.valueOf(0.12);
-                System.out.println(val);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    };
 
 }

@@ -2,9 +2,11 @@ package org.jscience.mathematics.number.test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.jscience.mathematics.number.Float64;
 import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.number.LargeInteger;
 import org.jscience.mathematics.number.Number;
+import org.jscience.mathematics.number.Real;
 
 /**
  * Quick and dirty implementation of the missing abstraction for the Numbersets (that is, we turn the static methods
@@ -75,4 +77,6 @@ public class NumberHelper<T extends Number<T>> {
 
     public static final NumberHelper<LargeInteger> LARGEINTEGER = getInstance(LargeInteger.class);
     public static final NumberHelper<FloatingPoint> FLOATINGPOINT = getInstance(FloatingPoint.class);
+    public static final NumberHelper<Real> REAL = getInstance(Real.class);
+    public static final NumberHelper<Float64> FLOAT64 = getInstance(Float64.class);
 }
