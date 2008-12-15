@@ -38,12 +38,22 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
             });
         }
         for (final Pair<Double, T> p : _testvalues) {
-            test(new AbstractNumberTest<T>("Testing toString / valueOf(String) ", p._x, _helper) {
+            test(new AbstractNumberTest<T>("Testing toString / valueOf(String) " + p, p._x, _helper) {
                 @Override
                 T operation() throws Exception {
                     return _helper.valueOf(p._y.toString());
                 }
             });
+        }
+        for (final Pair<Double, T> p : _testvalues) {
+            for (final Pair<Double, T> q : _testvalues) {
+                test(new AbstractNumberTest<T>("Testing plus " + p._x + "," + q._x, p._x + q._x, _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return p._y.plus(q._y);
+                    }
+                });
+            }
         }
     }
 

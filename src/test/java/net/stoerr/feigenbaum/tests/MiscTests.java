@@ -1,6 +1,7 @@
 package net.stoerr.feigenbaum.tests;
 
 import org.jscience.mathematics.number.FloatingPoint;
+import org.jscience.mathematics.number.LargeInteger;
 
 import net.stoerr.feigenbaum.basic.AbstractJScienceTest;
 import net.stoerr.feigenbaum.basic.BernsteinPolynomials;
@@ -69,11 +70,21 @@ public class MiscTests extends AbstractJScienceTest<FloatingPoint> {
         // Noch ein Bug: compareTo mit 0.5
     }
     
+    public final void testBug4() {
+        LargeInteger m = LargeInteger.valueOf(9);
+        assertEquals(3,LargeInteger.valueOf(8).bitLength());
+        assertEquals(1, m.digitLength());
+    }
+    
     public void testBug3() {
         assertEquals(-1,new Double(0).compareTo(0.5));
         assertEquals(-1,FloatingPoint.ZERO.compareTo(FloatingPoint.valueOf(0.5)));
         assertEquals(1,new Double(1).compareTo(0.5));
         assertEquals(1,FloatingPoint.ONE.compareTo(FloatingPoint.valueOf(0.5)));
+    }
+
+    public void testBug5() {
+        assertEquals(-0.1, FloatingPoint.valueOf("-0.1").doubleValue());
     }
     
 }

@@ -447,11 +447,11 @@ public final class LargeInteger extends Number<LargeInteger> {
      */
     public int digitLength() {
         int bitLength = this.bitLength();
-        int min = (int) (bitLength * BITS_TO_DIGITS) + 1;
-        int max = (int) ((bitLength + 1) * BITS_TO_DIGITS) + 1;
+        int min = (int) ((bitLength-1) * BITS_TO_DIGITS) + 1;
+        int max = (int) (bitLength * BITS_TO_DIGITS) + 1;
         if (min == max)
             return min;
-        return (LargeInteger.ONE.times10pow(min + 1).isLargerThan(this)) ? min
+        return (LargeInteger.ONE.times10pow(min).isLargerThan(this)) ? min
                 : min + 1;
     }
 
