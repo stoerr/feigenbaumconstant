@@ -1,20 +1,21 @@
 package net.stoerr.feigenbaum.tests;
 
-import java.io.File;
+import static javolution.context.Context.enter;
+import static javolution.context.Context.exit;
+import static javolution.testing.TestContext.REGRESSION;
+import static javolution.testing.TestContext.test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javolution.testing.TestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
+import org.jscience.mathematics.number.test.AllNumberTests;
 import org.jscience.mathematics.number.test.FloatingPointTestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import static javolution.testing.TestContext.*;
 
 @RunWith(Parameterized.class)
 public class JavolutionJUnit4Adapter {
@@ -44,7 +45,7 @@ public class JavolutionJUnit4Adapter {
 
     @Parameters
     public static Collection<TestCase[]> data() {
-        FloatingPointTestSuite fp = new FloatingPointTestSuite();
+        AllNumberTests fp = new AllNumberTests();
         List<TestCase> tests = fp.getTestCases();
         Collection<TestCase[]> res = new ArrayList<TestCase[]>();
         for (TestCase t : tests) {
