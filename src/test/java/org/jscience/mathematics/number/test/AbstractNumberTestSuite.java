@@ -55,6 +55,26 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
+        for (final Pair<Double, T> p : _testvalues) {
+            for (final Pair<Double, T> q : _testvalues) {
+                test(new AbstractNumberTest<T>("Testing minus " + p._x + "," + q._x, p._x - q._x, _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return p._y.minus(q._y);
+                    }
+                });
+            }
+        }
+        for (final Pair<Double, T> p : _testvalues) {
+            for (final Pair<Double, T> q : _testvalues) {
+                test(new AbstractNumberTest<T>("Testing times " + p._x + "," + q._x, p._x * q._x, _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return p._y.times(q._y);
+                    }
+                });
+            }
+        }
     }
 
     void makeTestValues() {
