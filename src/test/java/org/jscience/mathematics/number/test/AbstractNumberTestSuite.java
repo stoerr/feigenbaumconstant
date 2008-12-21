@@ -5,6 +5,7 @@ import static javolution.context.LogContext.info;
 import java.util.ArrayList;
 import java.util.List;
 
+import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 import javolution.testing.TestContext;
 import javolution.testing.TestSuite;
@@ -101,6 +102,18 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
             });
         }
         testEquals();
+        info("  pow");
+        for (final Pair<Double, T> p : getTestValues()) {
+            for (final int exp : new Integer[] { 1, 3, 7, 8, 9 }) {
+                test(new AbstractNumberTest<T>("Testing pow " + p + ", " + exp, MathLib.pow(p._x, exp), _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return p._y.pow(exp);
+                    }
+                });
+            }
+        }
+        testEquals();
     }
 
     protected void testEquals() {
@@ -127,7 +140,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
             _testValues = new ArrayList<Pair<Double, T>>();
             _testValues.add(Pair.make(0.0, _helper.getZero()));
             _testValues.add(Pair.make(1.0, _helper.getOne()));
-            for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234, -9876 }) {
+            for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -9876.5432 }) {
                 _testValues.add(Pair.make(d, _helper.valueOf(d)));
             }
         }
