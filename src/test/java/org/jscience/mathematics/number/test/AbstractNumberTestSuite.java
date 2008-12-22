@@ -3,7 +3,6 @@ package org.jscience.mathematics.number.test;
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
 import static javolution.testing.TestContext.test;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,8 @@ import org.jscience.mathematics.number.Number;
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 import javolution.testing.TestSuite;
+
+import static javolution.testing.TestContext.*;
 
 /**
  * Common tests for all {@link Number} classes.
