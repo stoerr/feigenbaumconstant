@@ -12,7 +12,7 @@ import javolution.testing.TestSuite;
 
 import static javolution.testing.TestContext.*;
 
-public class FloatingPointTestSuite extends AbstractNumberTestSuite<FloatingPoint> {
+public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint> {
 
     public FloatingPointTestSuite() {
         super(NumberHelper.FLOATINGPOINT);
