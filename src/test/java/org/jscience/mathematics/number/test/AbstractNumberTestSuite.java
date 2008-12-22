@@ -3,9 +3,12 @@ package org.jscience.mathematics.number.test;
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
 import static javolution.testing.TestContext.test;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.number.Number;
 
 import javolution.lang.MathLib;
@@ -25,8 +28,24 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
         _helper = helper;
     }
 
-    protected abstract List<Pair<Double, T>> getTestValues();
+    private List<Pair<Double, T>> _testValues;
 
+    protected final List<Pair<Double, T>> getTestValues() {
+        if (null == _testValues) {
+            _testValues = new ArrayList<Pair<Double, T>>();
+            initTestValues(_testValues);
+        }
+        return _testValues;
+
+    }
+
+    /** Generates a list of values to test with, along with their value as double. */
+    protected abstract void initTestValues(List<Pair<Double, T>> values);
+
+    /**
+     * Calls all tests defined here. <br>
+     * Attention: when subclassing do not forget to call super.run()!
+     */
     @Override
     public void run() {
         info(getClass().toString());
@@ -41,6 +60,11 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
         testPow();
         testEquals();
         testIsLargerThan();
+        testDivide();
+        testAbs();
+        testIsPositive();
+        testIsNegative();
+        testIsZero();
     }
 
     protected void testToString() {
@@ -146,17 +170,25 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
             });
         }
     }
+    
+    /** The maximum admissible number; at most {@link Double#MAX_VALUE} - we cannot test for more here.  */
+    protected double getMaxNumber() {
+        return Double.MAX_VALUE;
+    }
 
     protected void testPow() {
         info("  pow");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final int exp : new Integer[] { 1, 3, 7, 8, 9 }) {
-                test(new AbstractNumberTest<T>("Testing pow " + p + ", " + exp, MathLib.pow(p._x, exp), _helper) {
-                    @Override
-                    T operation() throws Exception {
-                        return p._y.pow(exp);
-                    }
-                });
+                final double pow = MathLib.pow(p._x, exp);
+                if (getMaxNumber() >= MathLib.abs(pow)) {
+                    test(new AbstractNumberTest<T>("Testing pow " + p + ", " + exp, pow, _helper) {
+                        @Override
+                        T operation() throws Exception {
+                            return p._y.pow(exp);
+                        }
+                    });
+                }
             }
         }
     }
@@ -189,4 +221,67 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
         }
     }
 
+    protected void testDivide() {
+        info("  divide");
+        for (final Pair<Double, T> p : getTestValues()) {
+            for (final Pair<Double, T> q : getTestValues()) {
+                if (0 != q._x) {
+                    test(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, p._x / q._x, _helper) {
+                        @Override
+                        T operation() throws Exception {
+                            return _helper.invokeMethod("divide", p._y, q._y);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    protected void testAbs() {
+        info("  abs");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new AbstractNumberTest<T>("Testing abs " + p, MathLib.abs(p._x), _helper) {
+                @Override
+                T operation() throws Exception {
+                    return _helper.invokeMethod("abs", p._y);
+                }
+            });
+        }
+    }
+
+    protected void testIsPositive() {
+        info("  isPositive");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    assertTrue(p.toString(), p._x > 0 == _helper.invokeBooleanMethod("isPositive", p._y));
+                }
+            });
+        }
+    }
+
+    protected void testIsNegative() {
+        info("  isNegative");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    assertTrue(p.toString(), p._x < 0 == _helper.invokeBooleanMethod("isNegative", p._y));
+                }
+            });
+        }
+    }
+
+    protected void testIsZero() {
+        info("  isZero");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    assertTrue(p.toString(), (p._x == 0) == _helper.invokeBooleanMethod("isZero", p._y));
+                }
+            });
+        }
+    }
 }

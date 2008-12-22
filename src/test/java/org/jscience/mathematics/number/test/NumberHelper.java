@@ -4,11 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import javolution.lang.MathLib;
 
-import org.jscience.mathematics.number.Float64;
-import org.jscience.mathematics.number.FloatingPoint;
-import org.jscience.mathematics.number.LargeInteger;
+import org.jscience.mathematics.number.*;
 import org.jscience.mathematics.number.Number;
-import org.jscience.mathematics.number.Real;
 
 /**
  * Quick and dirty implementation of the missing abstraction for the Numbersets (that is, we turn the static methods
@@ -30,69 +27,97 @@ public class NumberHelper<T extends Number<T>> {
         numberClass = clazz;
     }
 
-    public static <T extends Number<T>> NumberHelper<T> getInstance(Class<T> clazz) {
-        return new NumberHelper<T>(clazz);
+    /** Returns the value of a static field */
+    public T invokeStaticField(String method) {
+        try {
+            return (T) numberClass.getDeclaredField(method).get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public T getOne() {
-        try {
-            return (T) numberClass.getDeclaredField("ONE").get(null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return invokeStaticField("ONE");
     }
 
     public T getZero() {
-        try {
-            return (T) numberClass.getDeclaredField("ZERO").get(null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        return invokeStaticField("ZERO");
     }
 
     public T getNaN() {
+        return invokeStaticField("NaN");
+    }
+
+    /** Invokes a static method with one argument */
+    public <Arg> T invokeStaticMethod(String method, Class<Arg> clazz, Arg arg) {
         try {
-            return (T) numberClass.getDeclaredField("NaN").get(null);
+            return (T) numberClass.getDeclaredMethod(method, clazz).invoke(null, arg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public T valueOf(double d) {
-        try {
-            return (T) numberClass.getDeclaredMethod("valueOf", double.class).invoke(null, d);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return invokeStaticMethod("valueOf", double.class, d);
     }
 
     public T valueOf(CharSequence s) {
+        return invokeStaticMethod("valueOf", CharSequence.class, s);
+    }
+
+    /** Invokes a method without arguments on arg */
+    public T invokeMethod(String method, T arg) {
         try {
-            return (T) numberClass.getDeclaredMethod("valueOf", CharSequence.class).invoke(null, s);
+            return (T) numberClass.getDeclaredMethod(method).invoke(arg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public static final NumberHelper<LargeInteger> LARGEINTEGER = new NumberHelper<LargeInteger>(LargeInteger.class) {
+    /** Invokes a method with one other argument of type T on arg1, arg2 */
+    public T invokeMethod(String method, T arg1, T arg2) {
+        try {
+            return (T) numberClass.getDeclaredMethod(method, numberClass).invoke(arg1, arg2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /** Invokes a method without argument on arg */
+    public boolean invokeBooleanMethod(String method, T arg) {
+        try {
+            return (Boolean) numberClass.getDeclaredMethod(method).invoke(arg);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    protected static class IntegerHelper<T extends Number<T>> extends NumberHelper<T> {
+
+        protected IntegerHelper(Class<T> clazz) {
+            super(clazz);
+        }
+
         /**
-         * We approximate this with {@link LargeInteger#valueOf(long)}
-         * @see org.jscience.mathematics.number.test.NumberHelper#valueOf(double)
+         * We approximate this with valueOf(long).
          */
         @Override
-        public LargeInteger valueOf(double d) {
+        public T valueOf(double d) {
             try {
-                return (LargeInteger) numberClass.getDeclaredMethod("valueOf", long.class).invoke(null,
-                        MathLib.round(d));
+                return (T) numberClass.getDeclaredMethod("valueOf", long.class).invoke(null, MathLib.round(d));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
-    };
-    public static final NumberHelper<FloatingPoint> FLOATINGPOINT = getInstance(FloatingPoint.class);
-    public static final NumberHelper<Real> REAL = getInstance(Real.class);
-    public static final NumberHelper<Float64> FLOAT64 = getInstance(Float64.class);
+    }
+
+    public static final NumberHelper<LargeInteger> LARGEINTEGER = new IntegerHelper<LargeInteger>(LargeInteger.class);
+    public static final NumberHelper<Integer64> INTEGER64 = new IntegerHelper<Integer64>(Integer64.class);
+
+    public static final NumberHelper<FloatingPoint> FLOATINGPOINT = new NumberHelper<FloatingPoint>(FloatingPoint.class);
+    public static final NumberHelper<Real> REAL = new NumberHelper<Real>(Real.class);
+    public static final NumberHelper<Float64> FLOAT64 = new NumberHelper<Float64>(Float64.class);
 }

@@ -40,8 +40,11 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
     @Override
     public final void validate() {
         super.validate();
-        assertEquals(null, _exception);
-        assertTrue(null != _value);
+        if (null != _exception) {
+            _exception.printStackTrace();
+        }
+        assertEquals(getDescription().toString(), null, _exception);
+        assertTrue(getDescription() + ": no value received" , null != _value);
         compareresult();
     }
 

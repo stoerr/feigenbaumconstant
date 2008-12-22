@@ -28,24 +28,52 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
         super(helper);
     }
 
-    List<Pair<Double, T>> _testValues;
-
     @Override
-    protected List<Pair<Double, T>> getTestValues() {
-        if (null == _testValues) {
-            _testValues = new ArrayList<Pair<Double, T>>();
-            _testValues.add(Pair.make(0.0, _helper.getZero()));
-            _testValues.add(Pair.make(1.0, _helper.getOne()));
-            for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -1234.5678, -9876.5432 }) {
-                _testValues.add(Pair.make(d, _helper.valueOf(d)));
-            }
+    protected void initTestValues(List<Pair<Double, T>> values) {
+        values.add(Pair.make(0.0, _helper.getZero()));
+        values.add(Pair.make(1.0, _helper.getOne()));
+        for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -1234.5678, -9876.5432 }) {
+            values.add(Pair.make(d, _helper.valueOf(d)));
         }
-        return _testValues;
     }
 
+    /**
+     * Calls all tests defined here. <br>
+     * Attention: when subclassing do not forget to call super.run()!
+     */
     @Override
     public void run() {
         super.run();
+        testInverse();
+        testSqrt();
+    }
+
+    protected void testInverse() {
+        info("  inverse");
+        for (final Pair<Double, T> p : getTestValues()) {
+            if (0 != p._x) {
+                test(new AbstractNumberTest<T>("Testing inverse " + p, 1.0 / p._x, _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return _helper.invokeMethod("inverse", p._y);
+                    }
+                });
+            }
+        }
+    }
+
+    protected void testSqrt() {
+        info("  sqrt");
+        for (final Pair<Double, T> p : getTestValues()) {
+            if (0 < p._x) { // FIXME Another Bug: 0 should work but does not.
+                test(new AbstractNumberTest<T>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return _helper.invokeMethod("sqrt", p._y);
+                    }
+                });
+            }
+        }
     }
 
 }

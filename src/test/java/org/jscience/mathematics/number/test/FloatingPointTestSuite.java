@@ -10,7 +10,9 @@ import javolution.testing.TestCase;
 import javolution.testing.TestContext;
 import javolution.testing.TestSuite;
 
+import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.*;
+import static org.junit.Assert.assertTrue;
 
 public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint> {
 
@@ -20,7 +22,6 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
 
     @Override
     public void run() {
-        info("Test Suite for FloatingPoint");
         super.run();
     }
 
