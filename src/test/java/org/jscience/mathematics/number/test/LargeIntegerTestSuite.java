@@ -1,5 +1,6 @@
 package org.jscience.mathematics.number.test;
 
+import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.number.LargeInteger;
 
 import javolution.testing.TestCase;
@@ -8,12 +9,15 @@ import javolution.testing.TestSuite;
 
 import static javolution.testing.TestContext.*;
 
-public class LargeIntegerTestSuite extends TestSuite {
-
-    protected final NumberHelper<LargeInteger> helper = NumberHelper.LARGEINTEGER;
+public class LargeIntegerTestSuite extends AbstractNumberTestSuite<LargeInteger> {
+    
+    public LargeIntegerTestSuite() {
+        super(NumberHelper.LARGEINTEGER);
+    }
 
     @Override
     public void run() {
+        super.run();
         info("Test Suite for LargeInteger");
         test(zeroTest);
         test(bitLengthTest);
@@ -34,7 +38,7 @@ public class LargeIntegerTestSuite extends TestSuite {
         @Override
         public void execute() {
             try {
-                LargeInteger val = helper.getOne();
+                LargeInteger val = _helper.getOne();
                 System.out.println(val);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -54,8 +58,8 @@ public class LargeIntegerTestSuite extends TestSuite {
             while (val < Long.MAX_VALUE / 2) {
                 LargeInteger l = LargeInteger.valueOf(val);
                 assertEquals(l.toString(), len, l.bitLength());
-                assertEquals(l.toString(), len, l.plus(helper.getOne()).bitLength());
-                assertEquals(l.toString(), len - 1, l.plus(helper.getOne().opposite()).bitLength());
+                assertEquals(l.toString(), len, l.plus(_helper.getOne()).bitLength());
+                assertEquals(l.toString(), len - 1, l.plus(_helper.getOne().opposite()).bitLength());
                 val *= 2;
                 len++;
             }
