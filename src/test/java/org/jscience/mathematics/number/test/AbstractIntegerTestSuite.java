@@ -26,6 +26,7 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
     protected void initTestValues(List<Pair<Double, T>> values) {
         values.add(Pair.make(0.0, _helper.getZero()));
         values.add(Pair.make(1.0, _helper.getOne()));
+        values.add(Pair.make(0.0, _helper.valueOf(12345).minus(_helper.valueOf(12345))));
         for (double d : new double[] { 0, 1, -1, 33, 12345678, -12345678, 87654321 }) {
             values.add(Pair.make(d, _helper.valueOf(d)));
         }
@@ -34,6 +35,7 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
     /**
      * This is different for integers than for Floating points. TODO: should it really be (long)(p._x/q._x)?
      */
+    @Override
     protected void testDivide() {
         info("  divide");
         for (final Pair<Double, T> p : getTestValues()) {
