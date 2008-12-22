@@ -9,7 +9,7 @@ import javolution.testing.TestSuite;
 
 import static javolution.testing.TestContext.*;
 
-public class LargeIntegerTestSuite extends AbstractNumberTestSuite<LargeInteger> {
+public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger> {
     
     public LargeIntegerTestSuite() {
         super(NumberHelper.LARGEINTEGER);
@@ -22,15 +22,6 @@ public class LargeIntegerTestSuite extends AbstractNumberTestSuite<LargeInteger>
         test(zeroTest);
         test(bitLengthTest);
         test(digitLengthTest);
-    }
-
-    public static void main(String[] args) {
-        enter(REGRESSION);
-        try {
-            new LargeIntegerTestSuite().run();
-        } finally {
-            exit();
-        }
     }
 
     private TestCase zeroTest = new TestCase() {

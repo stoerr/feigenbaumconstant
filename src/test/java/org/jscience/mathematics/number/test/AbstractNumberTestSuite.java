@@ -1,44 +1,49 @@
 package org.jscience.mathematics.number.test;
 
 import static javolution.context.LogContext.info;
+import static javolution.testing.TestContext.assertEquals;
+import static javolution.testing.TestContext.test;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javolution.lang.MathLib;
-import javolution.testing.TestCase;
-import javolution.testing.TestContext;
-import javolution.testing.TestSuite;
 
 import org.jscience.mathematics.number.Number;
 
-import static javolution.testing.TestContext.*;
+import javolution.lang.MathLib;
+import javolution.testing.TestCase;
+import javolution.testing.TestSuite;
 
+/**
+ * Common tests for all {@link Number} classes.
+ * @author hps
+ * @param <T>
+ */
 public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestSuite {
 
-    public static final double eps = 1e-7;
+    protected final NumberHelper<T> _helper;
 
-    final NumberHelper<T> _helper;
-    final Class _numberClass;
-    List<Pair<Double, T>> _testValues;
-
-    AbstractNumberTestSuite(NumberHelper<T> helper) {
+    protected AbstractNumberTestSuite(NumberHelper<T> helper) {
         _helper = helper;
-        _numberClass = helper.getNumberClass();
     }
+
+    protected abstract List<Pair<Double, T>> getTestValues();
 
     @Override
     public void run() {
         info(getClass().toString());
-        info("  doubleValue");
-        for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing doubleValue ", p._x, _helper) {
-                @Override
-                T operation() throws Exception {
-                    return p._y;
-                }
-            });
-        }
+        testToString();
+        testDoubleValue();
+        testPlus();
+        testMinus();
+        testTimes();
+        testCompareTo();
+        testOpposite();
+        testEquals();
+        testPow();
+        testEquals();
+        testIsLargerThan();
+    }
+
+    protected void testToString() {
         info("  toString, valueOf(String)");
         for (final Pair<Double, T> p : getTestValues()) {
             test(new AbstractNumberTest<T>("Testing toString / valueOf(String) " + p, p._x, _helper) {
@@ -48,6 +53,33 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 }
             });
         }
+    }
+
+    protected void testDoubleValue() {
+        info("  doubleValue");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new AbstractNumberTest<T>("Testing doubleValue ", p._x, _helper) {
+                @Override
+                T operation() throws Exception {
+                    return p._y;
+                }
+            });
+        }
+    }
+
+    protected void testLongValue() {
+        info("  longValue");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new AbstractNumberTest<T>("Testing longValue ", p._x, _helper) {
+                @Override
+                T operation() throws Exception {
+                    return _helper.valueOf(p._y.longValue());
+                }
+            });
+        }
+    }
+
+    protected void testPlus() {
         info("  plus");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
@@ -59,6 +91,9 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
+    }
+
+    protected void testMinus() {
         info("  minus");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
@@ -70,6 +105,9 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
+    }
+
+    protected void testTimes() {
         info("  times");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
@@ -81,6 +119,9 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
+    }
+
+    protected void testCompareTo() {
         info("  compareTo");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
@@ -92,6 +133,9 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
+    }
+
+    protected void testOpposite() {
         info("  opposite");
         for (final Pair<Double, T> p : getTestValues()) {
             test(new AbstractNumberTest<T>("Testing opposite " + p, -p._x, _helper) {
@@ -101,7 +145,9 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 }
             });
         }
-        testEquals();
+    }
+
+    protected void testPow() {
         info("  pow");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final int exp : new Integer[] { 1, 3, 7, 8, 9 }) {
@@ -113,7 +159,6 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 });
             }
         }
-        testEquals();
     }
 
     protected void testEquals() {
@@ -123,28 +168,25 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
                 test(new TestCase() {
                     @Override
                     public void execute() {
-                        try {
-                            assertEquals(p + "," + q, p._x.equals(q._x), p._y.equals(q._y));
-                        } catch (Throwable t) {
-                            boolean cmp = p._y.equals(q._y);
-                            assertEquals(p + "," + q, p._x.equals(q._x), cmp);
-                        }
+                        assertEquals(p + "," + q, p._x.equals(q._x), p._y.equals(q._y));
                     }
                 });
             }
         }
     }
 
-    protected List<Pair<Double, T>> getTestValues() {
-        if (null == _testValues) {
-            _testValues = new ArrayList<Pair<Double, T>>();
-            _testValues.add(Pair.make(0.0, _helper.getZero()));
-            _testValues.add(Pair.make(1.0, _helper.getOne()));
-            for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -9876.5432 }) {
-                _testValues.add(Pair.make(d, _helper.valueOf(d)));
+    protected void testIsLargerThan() {
+        info("  isLargerThan");
+        for (final Pair<Double, T> p : getTestValues()) {
+            for (final Pair<Double, T> q : getTestValues()) {
+                test(new TestCase() {
+                    @Override
+                    public void execute() {
+                        assertEquals(p + "," + q, MathLib.abs(p._x) > MathLib.abs(q._x), p._y.isLargerThan(q._y));
+                    }
+                });
             }
         }
-        return _testValues;
     }
 
 }

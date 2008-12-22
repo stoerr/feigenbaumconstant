@@ -16,10 +16,10 @@ public class AllNumberTests extends TestSuite {
     /** Here all test suites of the package org.jscience.mathematics.number should be executed. */
     @Override
     public void run() {
-        new FloatingPointTestSuite().run();
         new LargeIntegerTestSuite().run();
-        new RealTestSuite().run();
         new Float64TestSuite().run();
+        new FloatingPointTestSuite().run();
+        new RealTestSuite().run();
     }
 
     /** Executes all testsuites as regression tests. */

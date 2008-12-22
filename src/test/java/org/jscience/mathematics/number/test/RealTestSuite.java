@@ -7,7 +7,7 @@ import javolution.testing.TestCase;
 
 import org.jscience.mathematics.number.Real;
 
-public class RealTestSuite extends AbstractNumberTestSuite<Real> {
+public class RealTestSuite extends AbstractFloatTestSuite<Real> {
 
     public RealTestSuite() {
         super(NumberHelper.REAL);

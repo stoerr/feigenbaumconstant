@@ -2,6 +2,8 @@ package org.jscience.mathematics.number.test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import javolution.lang.MathLib;
+
 import org.jscience.mathematics.number.Float64;
 import org.jscience.mathematics.number.FloatingPoint;
 import org.jscience.mathematics.number.LargeInteger;
@@ -15,6 +17,7 @@ import org.jscience.mathematics.number.Real;
  * @since 11.12.2008
  * @param <T>
  */
+@SuppressWarnings("unchecked")
 public class NumberHelper<T extends Number<T>> {
 
     protected final Class<T> numberClass;
@@ -63,7 +66,6 @@ public class NumberHelper<T extends Number<T>> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public T valueOf(CharSequence s) {
@@ -75,7 +77,21 @@ public class NumberHelper<T extends Number<T>> {
 
     }
 
-    public static final NumberHelper<LargeInteger> LARGEINTEGER = getInstance(LargeInteger.class);
+    public static final NumberHelper<LargeInteger> LARGEINTEGER = new NumberHelper<LargeInteger>(LargeInteger.class) {
+        /**
+         * We approximate this with {@link LargeInteger#valueOf(long)}
+         * @see org.jscience.mathematics.number.test.NumberHelper#valueOf(double)
+         */
+        @Override
+        public LargeInteger valueOf(double d) {
+            try {
+                return (LargeInteger) numberClass.getDeclaredMethod("valueOf", long.class).invoke(null,
+                        MathLib.round(d));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    };
     public static final NumberHelper<FloatingPoint> FLOATINGPOINT = getInstance(FloatingPoint.class);
     public static final NumberHelper<Real> REAL = getInstance(Real.class);
     public static final NumberHelper<Float64> FLOAT64 = getInstance(Float64.class);
