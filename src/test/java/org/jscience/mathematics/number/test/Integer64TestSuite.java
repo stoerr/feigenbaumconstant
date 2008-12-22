@@ -1,11 +1,21 @@
 package org.jscience.mathematics.number.test;
 
-import org.jscience.mathematics.number.Float64;
+import static javolution.context.LogContext.info;
+import static javolution.testing.TestContext.test;
+import javolution.lang.MathLib;
 
-public class Float64TestSuite extends AbstractFloatTestSuite<Float64> {
+import org.jscience.mathematics.number.Integer64;
+import org.jscience.mathematics.number.LargeInteger;
 
-    public Float64TestSuite() {
-        super(NumberHelper.FLOAT64);
+public class Integer64TestSuite extends AbstractIntegerTestSuite<Integer64> {
+
+    public Integer64TestSuite() {
+        super(NumberHelper.INTEGER64);
+    }
+
+    @Override
+    protected double getMaxNumber() {
+        return MathLib.pow(2, 63);
     }
 
     /**

@@ -16,8 +16,9 @@ public class AllNumberTests extends TestSuite {
     /** Here all test suites of the package org.jscience.mathematics.number should be executed. */
     @Override
     public void run() {
-        new LargeIntegerTestSuite().run();
+        new Integer64TestSuite().run();
         new Float64TestSuite().run();
+        new LargeIntegerTestSuite().run();
         new FloatingPointTestSuite().run();
         new RealTestSuite().run();
     }
@@ -32,5 +33,5 @@ public class AllNumberTests extends TestSuite {
             exit();
         }
     }
-    
+
 }

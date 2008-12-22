@@ -6,6 +6,8 @@ import static javolution.testing.TestContext.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javolution.lang.MathLib;
+
 import org.jscience.mathematics.number.Number;
 
 /**
@@ -20,19 +22,36 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
         super(helper);
     }
 
-    List<Pair<Double, T>> _testValues;
-
     @Override
-    protected List<Pair<Double, T>> getTestValues() {
-        if (null == _testValues) {
-            _testValues = new ArrayList<Pair<Double, T>>();
-            _testValues.add(Pair.make(0.0, _helper.getZero()));
-            _testValues.add(Pair.make(1.0, _helper.getOne()));
-            for (double d : new double[] { 0, 1, -1, 33, 12345678, -12345678, 87654321 }) {
-                _testValues.add(Pair.make(d, _helper.valueOf(d)));
+    protected void initTestValues(List<Pair<Double, T>> values) {
+        values.add(Pair.make(0.0, _helper.getZero()));
+        values.add(Pair.make(1.0, _helper.getOne()));
+        for (double d : new double[] { 0, 1, -1, 33, 12345678, -12345678, 87654321 }) {
+            values.add(Pair.make(d, _helper.valueOf(d)));
+        }
+    }
+
+    /**
+     * This is different for integers than for Floating points. TODO: should it really be (long)(p._x/q._x)?
+     */
+    protected void testDivide() {
+        info("  divide");
+        for (final Pair<Double, T> p : getTestValues()) {
+            for (final Pair<Double, T> q : getTestValues()) {
+                if (0 != q._x) {
+                    double expected = p._x / q._x;
+                    expected = 0 > expected ? -MathLib.floor(-expected) : MathLib.floor(expected);
+                    test(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, expected, _helper) {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        T operation() throws Exception {
+                            Class<T> cl = (Class<T>) p._y.getClass();
+                            return (T) cl.getMethod("divide", cl).invoke(p._y, q._y);
+                        }
+                    });
+                }
             }
         }
-        return _testValues;
     }
-    
+
 }

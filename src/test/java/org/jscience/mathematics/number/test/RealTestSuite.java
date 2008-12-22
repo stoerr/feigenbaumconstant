@@ -38,4 +38,11 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
         }
     }
 
+    /**
+     * Overridden to do nothing since it has no isZero().
+     */
+    @Override
+    protected void testIsZero() {
+        // not there 8-{
+    }
 }
