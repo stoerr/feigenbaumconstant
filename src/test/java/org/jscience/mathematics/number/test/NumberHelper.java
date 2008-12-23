@@ -35,6 +35,20 @@ public class NumberHelper<T extends Number<T>> {
         numberClass = clazz;
     }
 
+    /**
+     * Makes a {@link RuntimeException} of e and throws it. If it is an {@link Error} it is just rethrown as well, if it
+     * is an {@link InvocationTargetException} we throw the cause to get rid of the annoying wrapping.
+     */
+    private RuntimeException rethrowException(Throwable t) {
+        if (t instanceof RuntimeException) throw (RuntimeException) t;
+        if (t instanceof InvocationTargetException) {
+            InvocationTargetException te = (InvocationTargetException) t;
+            throw rethrowException(te.getTargetException());
+        }
+        if (t instanceof Error) { throw (Error) t; }
+        throw new RuntimeException(t.toString(), t);
+    }
+
     /** Returns the value of a static field */
     public T invokeStaticField(String method) {
         try {
@@ -61,7 +75,7 @@ public class NumberHelper<T extends Number<T>> {
         try {
             return (T) numberClass.getDeclaredMethod(method, clazz).invoke(null, arg);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw rethrowException(e);
         }
     }
 
@@ -78,7 +92,7 @@ public class NumberHelper<T extends Number<T>> {
         try {
             return (T) numberClass.getDeclaredMethod(method).invoke(arg);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw rethrowException(e);
         }
 
     }
@@ -88,7 +102,7 @@ public class NumberHelper<T extends Number<T>> {
         try {
             return (T) numberClass.getDeclaredMethod(method, numberClass).invoke(arg1, arg2);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw rethrowException(e);
         }
 
     }
@@ -98,7 +112,7 @@ public class NumberHelper<T extends Number<T>> {
         try {
             return (Boolean) numberClass.getDeclaredMethod(method).invoke(arg);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw rethrowException(e);
         }
 
     }

@@ -376,6 +376,7 @@ public final class FloatingPoint extends Number<FloatingPoint> implements
     public FloatingPoint sqrt() {
         if (this == NaN)
             return NaN;
+        if (isZero()) return ZERO;
         int pow10 = DIGITS.get() * 2 - _significand.digitLength();
         int exp = _exponent - pow10;
         if ((exp & 1) == 1) { // Ensures that exp is even.
