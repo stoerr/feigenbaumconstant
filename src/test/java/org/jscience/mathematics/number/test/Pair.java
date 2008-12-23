@@ -9,7 +9,7 @@
 package org.jscience.mathematics.number.test;
 
 /**
- * A simple helper class that holds a pair of objects.
+ * A simple helper class that holds an immutable pair of objects.
  * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  * @since 11.12.2008
  * @param <T1> the type of the first object
@@ -17,8 +17,11 @@ package org.jscience.mathematics.number.test;
  */
 public final class Pair<T1, T2> {
 
-    final T1 _x;
-    final T2 _y;
+    /** The first object. */
+    public final T1 _x;
+
+    /** The second object. */
+    public final T2 _y;
 
     /** Please use {@link #make(Object, Object)}. */
     private Pair(T1 x, T2 y) {

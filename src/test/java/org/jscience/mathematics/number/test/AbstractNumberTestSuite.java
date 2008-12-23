@@ -18,7 +18,6 @@ import java.util.List;
 
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;
-import javolution.testing.TestSuite;
 
 import org.jscience.mathematics.number.Number;
 
@@ -31,7 +30,7 @@ import org.jscience.mathematics.number.Number;
  * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  * @param <T> the type of number to test
  */
-public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestSuite {
+public abstract class AbstractNumberTestSuite<T extends Number<T>> extends AbstractTestSuite {
 
     protected final NumberHelper<T> _helper;
 
@@ -52,31 +51,6 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
 
     /** Generates a list of values to test with, along with their value as double. */
     protected abstract void initTestValues(List<Pair<Double, T>> values);
-
-    /**
-     * Calls all tests defined here. <br>
-     * Attention: when subclassing do not forget to call super.run()!
-     */
-    @Override
-    public void run() {
-        info(getClass().toString());
-        testToString();
-        testDoubleValue();
-        testPlus();
-        testMinus();
-        testTimes();
-        testCompareTo();
-        testOpposite();
-        testEquals();
-        testPow();
-        testEquals();
-        testIsLargerThan();
-        testDivide();
-        testAbs();
-        testIsPositive();
-        testIsNegative();
-        testIsZero();
-    }
 
     protected void testToString() {
         info("  toString, valueOf(String)");
@@ -105,12 +79,14 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
     protected void testLongValue() {
         info("  longValue");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing longValue ", p._x, _helper) {
-                @Override
-                T operation() throws Exception {
-                    return _helper.valueOf(p._y.longValue());
-                }
-            });
+            if (Math.abs(p._x) < Long.MAX_VALUE) {
+                test(new AbstractNumberTest<T>("Testing longValue ", (long) p._x.doubleValue(), _helper) {
+                    @Override
+                    T operation() throws Exception {
+                        return _helper.valueOf(p._y.longValue());
+                    }
+                });
+            }
         }
     }
 
