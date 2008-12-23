@@ -13,6 +13,7 @@ import static javolution.testing.TestContext.test;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.FloatingPoint;
+import org.jscience.mathematics.number.LargeInteger;
 
 /**
  * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link FloatingPoint} and some further
@@ -34,17 +35,18 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     @Override
     public void run() {
         super.run();
-        testIsZero(); // testRound();
+        testIsZero();
+        testRound();
     }
 
-    /** FIXME unused. */
-    protected void FIXMEtestRound() {
+    protected void testRound() {
         info("  round");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
             test(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper) {
                 @Override
                 FloatingPoint operation() throws Exception {
-                    return FloatingPoint.valueOf(p._y.round(), 0);
+                    final LargeInteger rounded = p._y.round();
+                    return FloatingPoint.valueOf(rounded, 0);
                 }
             });
         }

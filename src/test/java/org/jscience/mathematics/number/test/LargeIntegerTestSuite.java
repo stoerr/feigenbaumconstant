@@ -19,12 +19,29 @@ import javolution.testing.TestSuite;
 
 import static javolution.testing.TestContext.*;
 
+/**
+ * <p>
+ * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link LargeInteger} and some further
+ * tests that are specific to {@link LargeInteger}.
+ * </p>
+ * <p>
+ * TODO: Test the special values LargeInteger.FIVE, LargeInteger.LONG_MIN_VALUE, LargeInteger.ONE, LargeInteger.ZERO
+ * etc. but we are in the wrong package. 8-}
+ * </p>
+ * @since 23.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ */
 public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger> {
 
+    /** Sets the {@link NumberHelper}. */
     public LargeIntegerTestSuite() {
         super(NumberHelper.LARGEINTEGER);
     }
 
+    /**
+     * Extends by some large test values out of the general integer range.
+     * @see org.jscience.mathematics.number.test.AbstractIntegerTestSuite#initTestValues(java.util.List)
+     */
     @Override
     protected void initTestValues(List<Pair<Double, LargeInteger>> values) {
         super.initTestValues(values);
@@ -34,6 +51,10 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
     }
 
+    /**
+     * Calls all tests defined here. <br>
+     * Attention: when subclassing do not forget to call super.run()!
+     */
     @Override
     public void run() {
         super.run();
@@ -42,7 +63,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         test(digitLengthTest);
     }
 
-    private TestCase bitLengthTest = new TestCase() {
+    private final TestCase bitLengthTest = new TestCase() {
 
         @Override
         public void execute() {
@@ -62,7 +83,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     };
 
-    private TestCase digitLengthTest = new TestCase() {
+    private final TestCase digitLengthTest = new TestCase() {
 
         @Override
         public void execute() {
