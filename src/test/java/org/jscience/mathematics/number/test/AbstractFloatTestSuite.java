@@ -1,3 +1,11 @@
+/*
+ * JScience - Java(TM) Tools and Libraries for the Advancement of Sciences.
+ * Copyright (C) 2007 - JScience (http://jscience.org/)
+ * All rights reserved.
+ * 
+ * Permission to use, copy, modify, and distribute this software is
+ * freely granted, provided that this notice is preserved.
+ */
 package org.jscience.mathematics.number.test;
 
 import static javolution.context.LogContext.info;
@@ -15,19 +23,21 @@ import org.jscience.mathematics.number.Number;
 import static javolution.testing.TestContext.*;
 
 /**
- * Common tests for all floating point {@link Number} classes.
- * @author hps
+ * Additional tests for all floating point {@link Number} classes that are not covered in
+ * {@link AbstractNumberTestSuite}.
  * @since 22.12.2008
- * @param <T>
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ * @param <T> the type of number to test
  */
 public abstract class AbstractFloatTestSuite<T extends Number<T>> extends AbstractNumberTestSuite<T> {
-
-    public static final double eps = 1e-7;
 
     AbstractFloatTestSuite(NumberHelper<T> helper) {
         super(helper);
     }
 
+    /**
+     * Generates some floating point testvalues suitable in range for all floating point classes.
+     */
     @Override
     protected void initTestValues(List<Pair<Double, T>> values) {
         values.add(Pair.make(0.0, _helper.getZero()));

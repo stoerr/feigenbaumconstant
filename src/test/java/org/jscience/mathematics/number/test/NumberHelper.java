@@ -1,3 +1,11 @@
+/*
+ * JScience - Java(TM) Tools and Libraries for the Advancement of Sciences.
+ * Copyright (C) 2007 - JScience (http://jscience.org/)
+ * All rights reserved.
+ * 
+ * Permission to use, copy, modify, and distribute this software is
+ * freely granted, provided that this notice is preserved.
+ */
 package org.jscience.mathematics.number.test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +38,7 @@ public class NumberHelper<T extends Number<T>> {
     /** Returns the value of a static field */
     public T invokeStaticField(String method) {
         try {
-            return (T) numberClass.getDeclaredField(method).get(null);
+            return (T) numberClass.getField(method).get(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,5 +1,10 @@
-/**
- * Hans-Peter Störr, 11.12.2008
+/*
+ * JScience - Java(TM) Tools and Libraries for the Advancement of Sciences.
+ * Copyright (C) 2007 - JScience (http://jscience.org/)
+ * All rights reserved.
+ * 
+ * Permission to use, copy, modify, and distribute this software is
+ * freely granted, provided that this notice is preserved.
  */
 package org.jscience.mathematics.number.test;
 
@@ -14,6 +19,10 @@ import javolution.testing.TestCase;
 import org.jscience.mathematics.number.Number;
 
 public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
+    
+    /** The maximum allowable relative difference of the result from the expected result. */
+    public static final double eps = 1e-9;
+    
     final double _expected;
     final NumberHelper<T> _helper;
     final String _description;
@@ -51,9 +60,9 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
     void compareresult() {
         final double result = _value.doubleValue();
         if (0 == _expected) {
-            assertTrue(getDescription().toString() + " but got " + result, AbstractFloatTestSuite.eps > MathLib.abs(result));
+            assertTrue(getDescription().toString() + " but got " + result, eps > MathLib.abs(result));
         } else {
-            assertTrue(getDescription().toString() + " but got " + result, AbstractFloatTestSuite.eps > MathLib.abs(result / _expected - 1));
+            assertTrue(getDescription().toString() + " but got " + result, eps > MathLib.abs(result / _expected - 1));
         }
     }
     
