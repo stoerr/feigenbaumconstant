@@ -10,13 +10,11 @@ package org.jscience.mathematics.number.test;
 
 import static javolution.context.Context.enter;
 import static javolution.context.Context.exit;
-import static javolution.testing.TestContext.REGRESSION;
-import javolution.context.LogContext;
 import javolution.testing.TestSuite;
 
 /**
  * Executes all testsuites for org.jscience.mathematics.number.
- * @author hps
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  * @since 14.12.2008
  */
 public class AllNumberTests extends TestSuite {

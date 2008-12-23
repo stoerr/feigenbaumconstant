@@ -16,12 +16,23 @@ import javolution.testing.TestCase;
 
 import org.jscience.mathematics.number.Real;
 
+/**
+ * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Real} and some further tests that
+ * are specific to {@link Real}.
+ * @since 23.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ */
 public class RealTestSuite extends AbstractFloatTestSuite<Real> {
 
+    /** Sets the {@link NumberHelper}. */
     public RealTestSuite() {
         super(NumberHelper.REAL);
     }
-    
+
+    /**
+     * Calls all tests defined here. <br>
+     * Attention: when subclassing do not forget to call super.run()!
+     */
     @Override
     public void run() {
         super.run();
@@ -60,7 +71,7 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
     protected void testIsZero() {
         // not there 8-{
     }
-    
+
     protected void testRound() {
         info("  round");
         for (final Pair<Double, Real> p : getTestValues()) {
@@ -73,4 +84,22 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
         }
     }
 
+    /**
+     * With {@link Real} we cannot take the square root of an inexact zero.
+     * @see org.jscience.mathematics.number.test.AbstractFloatTestSuite#testSqrt()
+     */
+    @Override
+    protected void testSqrt() {
+        info("  sqrt");
+        for (final Pair<Double, Real> p : getTestValues()) {
+            if (0 < p._x || p._y == _helper.getZero()) {
+                test(new AbstractNumberTest<Real>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper) {
+                    @Override
+                    Real operation() throws Exception {
+                        return _helper.invokeMethod("sqrt", p._y);
+                    }
+                });
+            }
+        }
+    }
 }

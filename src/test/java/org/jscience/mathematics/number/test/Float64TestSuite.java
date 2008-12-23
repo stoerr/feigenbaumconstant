@@ -10,8 +10,15 @@ package org.jscience.mathematics.number.test;
 
 import org.jscience.mathematics.number.Float64;
 
+/**
+ * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Float64} and some further tests
+ * that are specific to {@link Float64}.
+ * @since 23.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ */
 public class Float64TestSuite extends AbstractFloatTestSuite<Float64> {
 
+    /** Sets the needed helper class. */
     public Float64TestSuite() {
         super(NumberHelper.FLOAT64);
     }

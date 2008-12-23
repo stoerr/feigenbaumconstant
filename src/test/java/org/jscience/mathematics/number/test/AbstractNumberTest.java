@@ -18,23 +18,36 @@ import javolution.testing.TestCase;
 
 import org.jscience.mathematics.number.Number;
 
+/**
+ * A testcase that executes an operation and compares the {@link Number#doubleValue()} of the result with a given
+ * expected result. If the expected result is 0 we check that the result should be less than {@link #EPSILON}, otherwise
+ * the quotient should differ by at most {@link #EPSILON} from 1.
+ * @since 22.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ * @param <T> the type of number to test
+ */
 public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
-    
+
     /** The maximum allowable relative difference of the result from the expected result. */
-    public static final double eps = 1e-9;
-    
+    public static final double EPSILON = 1e-9;
+
     final double _expected;
     final NumberHelper<T> _helper;
     final String _description;
     T _value;
     Exception _exception;
-    
-    AbstractNumberTest(String description, double expected, NumberHelper<T> helper) {
+
+    /** Sets the expected values. */
+    public AbstractNumberTest(String description, double expected, NumberHelper<T> helper) {
         _expected = expected;
         _helper = helper;
         _description = description;
     }
 
+    /**
+     * Calls {@link #operation()} and catches Exceptions for later validation.
+     * @see javolution.testing.TestCase#execute()
+     */
     @Override
     public final void execute() {
         try {
@@ -46,6 +59,10 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
         }
     }
 
+    /**
+     * Checks that there was no exception and that the result is approximately equal to the expected result.
+     * @see javolution.testing.TestCase#validate()
+     */
     @Override
     public final void validate() {
         super.validate();
@@ -53,22 +70,26 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
             _exception.printStackTrace();
         }
         assertEquals(getDescription().toString(), null, _exception);
-        assertTrue(getDescription() + ": no value received" , null != _value);
+        assertTrue(getDescription() + ": no value received", null != _value);
         compareresult();
     }
 
     void compareresult() {
         final double result = _value.doubleValue();
         if (0 == _expected) {
-            assertTrue(getDescription().toString() + " but got " + result, eps > MathLib.abs(result));
+            assertTrue(getDescription().toString() + " but got " + result, EPSILON > MathLib.abs(result));
         } else {
-            assertTrue(getDescription().toString() + " but got " + result, eps > MathLib.abs(result / _expected - 1));
+            assertTrue(getDescription().toString() + " but got " + result,
+                    EPSILON > MathLib.abs(result / _expected - 1));
         }
     }
-    
+
+    /**
+     * @see javolution.testing.TestCase#getDescription()
+     */
     @Override
     public CharSequence getDescription() {
-        return _description + " expecting " + _expected; 
+        return _description + " expecting " + _expected;
     }
 
     /** Should return the value of the operation to test and set _expected to the expected value. */

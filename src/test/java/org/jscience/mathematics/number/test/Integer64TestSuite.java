@@ -8,15 +8,19 @@
  */
 package org.jscience.mathematics.number.test;
 
-import static javolution.context.LogContext.info;
-import static javolution.testing.TestContext.test;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.Integer64;
-import org.jscience.mathematics.number.LargeInteger;
 
+/**
+ * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Integer64} and some further tests
+ * that are specific to {@link Integer64}.
+ * @since 23.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ */
 public class Integer64TestSuite extends AbstractIntegerTestSuite<Integer64> {
 
+    /** Sets the needed helper class. */
     public Integer64TestSuite() {
         super(NumberHelper.INTEGER64);
     }
