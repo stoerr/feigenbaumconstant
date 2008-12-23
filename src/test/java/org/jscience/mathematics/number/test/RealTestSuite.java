@@ -3,6 +3,7 @@ package org.jscience.mathematics.number.test;
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
 import static javolution.testing.TestContext.test;
+import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 
 import org.jscience.mathematics.number.Real;
@@ -45,4 +46,18 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
     protected void testIsZero() {
         // not there 8-{
     }
+    
+    /** FIXME unused */
+    protected void testRound() {
+        info("  round");
+        for (final Pair<Double, Real> p : getTestValues()) {
+            test(new AbstractNumberTest<Real>("Testing round " + p, MathLib.round(p._x), _helper) {
+                @Override
+                Real operation() throws Exception {
+                    return Real.valueOf(p._y.round(), 0, 0);
+                }
+            });
+        }
+    }
+
 }
