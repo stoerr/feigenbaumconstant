@@ -10,24 +10,26 @@ package org.jscience.mathematics.number.test;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
+import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jscience.mathematics.number.FloatingPoint;
-import org.jscience.mathematics.number.Number;
-
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 import javolution.testing.TestSuite;
 
-import static javolution.testing.TestContext.*;
+import org.jscience.mathematics.number.Number;
 
 /**
- * Common tests for all {@link Number} classes.
- * @author hps
- * @param <T>
+ * This class contains tests that can be run for all {@link Number} subclasses. The result of the {@link Number}
+ * operation is compared with the result of the same operation on double values, which should give roughly the same
+ * result. Of course, this does not check wether all digits are correct, but catches many errors already. You might want
+ * to add tests for the full precision.
+ * @since 22.12.2008
+ * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
+ * @param <T> the type of number to test
  */
 public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestSuite {
 
@@ -179,8 +181,8 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends TestS
             });
         }
     }
-    
-    /** The maximum admissible number; at most {@link Double#MAX_VALUE} - we cannot test for more here.  */
+
+    /** The maximum admissible number; at most {@link Double#MAX_VALUE} - we cannot test for more here. */
     protected double getMaxNumber() {
         return Double.MAX_VALUE;
     }
