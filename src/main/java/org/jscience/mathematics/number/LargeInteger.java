@@ -158,8 +158,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      */
     static final LargeInteger FIVE = new LargeInteger(1);
     static {
-        LONG_MIN_VALUE._words[1] = 5;
-        LONG_MIN_VALUE._size = 1;
+        FIVE._words[0] = 5;
+        FIVE._size = 1;
     }
 
     /**

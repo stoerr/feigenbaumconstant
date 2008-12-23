@@ -21,6 +21,12 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
     public RealTestSuite() {
         super(NumberHelper.REAL);
     }
+    
+    @Override
+    public void run() {
+        super.run();
+        testRound();
+    }
 
     /**
      * The implementation of Real.equals differs from the usual implementation since Real are not only a value but an
@@ -55,7 +61,6 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
         // not there 8-{
     }
     
-    /** FIXME unused */
     protected void testRound() {
         info("  round");
         for (final Pair<Double, Real> p : getTestValues()) {

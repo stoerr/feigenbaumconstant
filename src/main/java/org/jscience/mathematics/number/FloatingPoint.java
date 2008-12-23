@@ -260,7 +260,7 @@ public final class FloatingPoint extends Number<FloatingPoint> implements
     public LargeInteger round() {
         if (this == NaN)
             throw new ArithmeticException("Cannot convert NaN to integer value");
-        LargeInteger half = LargeInteger.FIVE.times10pow(_exponent - 1);
+        LargeInteger half = LargeInteger.FIVE.times10pow(-_exponent-1);
         return isNegative() ? _significand.minus(half).times10pow(_exponent)
                 : _significand.plus(half).times10pow(_exponent);
     }
