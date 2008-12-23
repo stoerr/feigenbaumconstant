@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.jscience.mathematics.number.FloatingPoint;
 
 import javolution.context.LogContext;
+import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 import javolution.testing.TestContext;
 import javolution.testing.TestSuite;
@@ -23,6 +24,7 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     @Override
     public void run() {
         super.run();
+        // testRound();
     }
 
     public static void main(String[] args) {
@@ -35,4 +37,16 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
         }
     }
 
+    /** FIXME unused */
+    protected void testRound() {
+        info("  round");
+        for (final Pair<Double, FloatingPoint> p : getTestValues()) {
+            test(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper) {
+                @Override
+                FloatingPoint operation() throws Exception {
+                    return FloatingPoint.valueOf(p._y.round(),0);
+                }
+            });
+        }
+    }
 }
