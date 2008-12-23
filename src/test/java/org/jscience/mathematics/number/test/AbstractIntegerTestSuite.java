@@ -11,7 +11,6 @@ package org.jscience.mathematics.number.test;
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javolution.lang.MathLib;
@@ -26,10 +25,14 @@ import org.jscience.mathematics.number.Number;
  */
 public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends AbstractNumberTestSuite<T> {
 
+    /** Sets the {@link NumberHelper} to use. */
     AbstractIntegerTestSuite(NumberHelper<T> helper) {
         super(helper);
     }
 
+    /**
+     * Generates some integer point testvalues suitable in range for all integer classes.
+     */
     @Override
     protected void initTestValues(List<Pair<Double, T>> values) {
         values.add(Pair.make(0.0, _helper.getZero()));
@@ -41,7 +44,7 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
     }
 
     /**
-     * This is different for integers than for Floating points. TODO: should it really be (long)(p._x/q._x)?
+     * This is different for integers than for Floating points.
      */
     @Override
     protected void testDivide() {

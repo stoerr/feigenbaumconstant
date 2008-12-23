@@ -9,18 +9,13 @@
 package org.jscience.mathematics.number.test;
 
 import static javolution.context.LogContext.info;
+import static javolution.testing.TestContext.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javolution.lang.MathLib;
-import javolution.testing.TestCase;
-import javolution.testing.TestContext;
-import javolution.testing.TestSuite;
 
 import org.jscience.mathematics.number.Number;
-
-import static javolution.testing.TestContext.*;
 
 /**
  * Additional tests for all floating point {@link Number} classes that are not covered in
@@ -76,7 +71,7 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
     protected void testSqrt() {
         info("  sqrt");
         for (final Pair<Double, T> p : getTestValues()) {
-            if (0 < p._x) { // FIXME Another Bug: 0 should work but does not.
+            if (0 <= p._x) {
                 test(new AbstractNumberTest<T>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper) {
                     @Override
                     T operation() throws Exception {

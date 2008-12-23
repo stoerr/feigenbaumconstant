@@ -608,6 +608,7 @@ public final class Real extends Number<Real> implements Field<Real> {
     public Real sqrt() {
         if (this == NaN)
             return NaN;
+        if (this == ZERO) return ZERO;
         if (this.isExact())
             return this.toInexact().sqrt();
         LargeInteger thisMin = this._significand.minus(this._error);
