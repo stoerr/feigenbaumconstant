@@ -50,18 +50,6 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
     }
 
-    /**
-     * Calls all tests defined here. <br>
-     * Attention: when subclassing do not forget to call super.run()!
-     */
-    @Override
-    public void run() {
-        super.run();
-        info("Test Suite for LargeInteger");
-        testBitLength();
-        testDigitLength();
-    }
-
     protected void testDigitLength() {
         test(new TestCase() {
             @Override

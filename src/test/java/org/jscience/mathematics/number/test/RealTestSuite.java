@@ -30,16 +30,6 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
     }
 
     /**
-     * Calls all tests defined here. <br>
-     * Attention: when subclassing do not forget to call super.run()!
-     */
-    @Override
-    public void run() {
-        super.run();
-        testRound();
-    }
-
-    /**
      * The implementation of Real.equals differs from the usual implementation since Real are not only a value but an
      * error as well. This means that Real.ONE.equals(Real.valueOf(1.0)) is false, since Real.valueOf(1.0) has an error
      * of 23.

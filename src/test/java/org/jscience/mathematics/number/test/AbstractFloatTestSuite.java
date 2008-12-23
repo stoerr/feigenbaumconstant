@@ -43,17 +43,6 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
         }
     }
 
-    /**
-     * Calls all tests defined here. <br>
-     * Attention: when subclassing do not forget to call super.run()!
-     */
-    @Override
-    public void run() {
-        super.run();
-        testInverse();
-        testSqrt();
-    }
-
     protected void testInverse() {
         info("  inverse");
         for (final Pair<Double, T> p : getTestValues()) {

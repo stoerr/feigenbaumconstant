@@ -28,17 +28,6 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
         super(NumberHelper.FLOATINGPOINT);
     }
 
-    /**
-     * Calls all tests defined here. <br>
-     * Attention: when subclassing do not forget to call super.run()!
-     */
-    @Override
-    public void run() {
-        super.run();
-        testIsZero();
-        testRound();
-    }
-
     protected void testRound() {
         info("  round");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
