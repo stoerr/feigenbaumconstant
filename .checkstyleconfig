@@ -17,7 +17,9 @@
             <property name="suppressLoadErrors" value="true"/>
         </module>
         <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocVariable">
+            <property name="scope" value="public"/>
+        </module>
         <module name="JavadocStyle"/>
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
@@ -33,7 +35,9 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
         <module name="FileLength"/>
-        <module name="LineLength"/>
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
         <module name="EmptyForIteratorPad"/>
@@ -66,7 +70,9 @@
         <module name="HiddenField"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows">
             <property name="logLoadErrors" value="true"/>
@@ -74,13 +80,14 @@
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
-        <module name="DesignForExtension"/>
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <module name="FinalParameters">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="GenericIllegalRegexp">
             <property name="severity" value="ignore"/>
             <property name="format" value="\s+$"/>
