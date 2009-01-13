@@ -91,6 +91,17 @@ public class NumberHelper<T extends Number<T>> {
         return invokeStaticMethod("valueOf", double.class, d);
     }
 
+    /** Provides access to the static valueOf(long) method. */
+    public T valueOf(long l) {
+        try {
+            return invokeStaticMethod("valueOf", long.class, l);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof NoSuchMethodException) {
+                return valueOf((double) l);
+            } else throw e;
+        }
+    }
+
     /** Provides access to the static valueOf(CharSequence) method. */
     public T valueOf(CharSequence s) {
         return invokeStaticMethod("valueOf", CharSequence.class, s);
