@@ -1225,7 +1225,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     public int hashCode() {
         long code = 0;
         for (int i = _size - 1; i >= 0; i--) {
-            code = code * 31 + _words[i];
+            code = (code * 1050537101 + _words[i]) % 1327144033;
         }
         return _isNegative ? -(int) code : (int) code;
     }

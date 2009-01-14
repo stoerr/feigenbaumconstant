@@ -10,6 +10,7 @@ package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
+import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
 import java.util.List;
@@ -50,7 +51,32 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
     }
 
+    /** Tests that the hashCode is equal to mod(1327144033). */
+    protected void testHashcode2() {
+        info(" hashCode2");
+        final long p = 1327144033;
+        final LargeInteger pi = LargeInteger.valueOf(p);
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                assertEquals("-1", LargeInteger.valueOf(-1), LargeInteger.valueOf(LargeInteger.valueOf(-1).hashCode()));
+                final LargeInteger two = LargeInteger.valueOf(2);
+                LargeInteger v = LargeInteger.ONE;
+                long expectedHash = 1;
+                for (int i = 1; i < 99; ++i) {
+                    final int hashCode = v.hashCode();
+                    assertEquals("" + i, v.mod(pi), LargeInteger.valueOf(hashCode));
+                    v = v.times(two);
+                    expectedHash = (expectedHash * 2) % p;
+                }
+                LargeInteger l = LargeInteger.valueOf("8478329283923484839827239782987591381");
+                assertEquals(l.mod(pi), LargeInteger.valueOf(l.hashCode()));
+            }
+        });
+    }
+
     protected void testDigitLength() {
+        info(" digitLength");
         test(new TestCase() {
             @Override
             public void execute() {

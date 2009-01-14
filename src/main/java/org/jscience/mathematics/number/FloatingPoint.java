@@ -484,7 +484,13 @@ public final class FloatingPoint extends Number<FloatingPoint> implements
      * @return the hash code value.
      */
     public int hashCode() {
-        return _significand.hashCode() - _exponent;
+        if (isZero()) return 0;
+        if (isNaN()) return 483929293; // some random number
+        final long p = 1327144033;
+        long code = _significand.hashCode();
+        // FIXME
+        return (int) code;
+
     }
 
     /**
