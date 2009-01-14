@@ -4,4 +4,8 @@ significant.mod(1327144033)*mod(10**exponent,1327144033)
 
 LargeInteger.hashCode geändert
  
- 
+
+Evtl:. LargeInteger._words should be modulo 
+1000000000000000000 instead of 2**63 == 
+9223372036854775808
+

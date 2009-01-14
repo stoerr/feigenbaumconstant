@@ -283,9 +283,6 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
                         final int qhash = q._y.hashCode();
                         if (p._y.equals(q._y)) {
                             assertEquals(p + "," + q, phash, qhash);
-                            // FIXME The AP Implementations are broken here - equal() values of different 
-                            // precisions have different hashcodes.
-                            // I don't know yet how to fix this.
                         } else {
                             assertTrue(p + "," + q, phash != qhash);
                         }

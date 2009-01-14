@@ -1224,6 +1224,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      */
     public int hashCode() {
         long code = 0;
+        // 1327144033 is just an appropriately large prime;
+        // 1050537101 is 263 mod 1327144033 . The result is this.mod(1327144033) .
         for (int i = _size - 1; i >= 0; i--) {
             code = (code * 1050537101 + _words[i]) % 1327144033;
         }

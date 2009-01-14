@@ -486,11 +486,26 @@ public final class FloatingPoint extends Number<FloatingPoint> implements
     public int hashCode() {
         if (isZero()) return 0;
         if (isNaN()) return 483929293; // some random number
-        final long p = 1327144033;
+        // This is a random prime - the same as in LargeInteger.hashCode()
+        // We return _significand.mod(p).times(10.pow(-exp) mod p)
+        final long p = 1327144033;  
         long code = _significand.hashCode();
-        // FIXME
+        int exp = _exponent;
+        long mult;
+        if (0 > exp) {
+            mult = 398143210; // modInverse of 10 mod p
+            exp = -exp;
+        } else {
+            mult = 10;
+        }
+        while (0 != exp) {
+            if (1 == exp % 2) {
+                code = (code * mult) % p;                
+            }
+            mult = (mult * mult) % p;
+            exp = exp / 2;
+        }
         return (int) code;
-
     }
 
     /**
