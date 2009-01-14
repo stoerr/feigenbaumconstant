@@ -1,0 +1,4 @@
+FloatingPoint.hashCode:
+significant.mod(1327144033)*mod(10**exponent,1327144033)
+1327144033 is a random prime 
+ 
