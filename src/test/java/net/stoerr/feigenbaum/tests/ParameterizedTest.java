@@ -12,7 +12,7 @@ import java.util.List;
 
 import javolution.testing.TestCase;
 
-import org.jscience.mathematics.number.test.AllNumberTests;
+import org.jscience.mathematics.number.AllNumberTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;

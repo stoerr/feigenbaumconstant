@@ -6,10 +6,14 @@
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
-package org.jscience.mathematics.number.test;
+package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.test;
+
+import java.util.List;
+
+import javolution.context.LocalContext;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.FloatingPoint;
@@ -26,6 +30,17 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     /** Sets the needed helper class. */
     public FloatingPointTestSuite() {
         super(NumberHelper.FLOATINGPOINT);
+    }
+
+    /**
+     * We add a couple of values with different precision.
+     * @see org.jscience.mathematics.number.AbstractFloatTestSuite#initTestValues(java.util.List)
+     */
+    @Override
+    protected void initTestValues(List<Pair<Double, FloatingPoint>> values) {
+        super.initTestValues(values);
+        values.add(Pair.make(0.7234938, FloatingPoint.valueOf("0.7234938")));
+        values.add(Pair.make(0.7234938, FloatingPoint.valueOf("0.72349380000000000000000000000000000000")));
     }
 
     protected void testRound() {

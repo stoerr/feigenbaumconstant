@@ -6,7 +6,7 @@
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
-package org.jscience.mathematics.number.test;
+package org.jscience.mathematics.number;
 
 import static javolution.context.Context.enter;
 import static javolution.context.Context.exit;

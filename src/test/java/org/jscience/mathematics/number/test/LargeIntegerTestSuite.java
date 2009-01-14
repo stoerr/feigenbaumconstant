@@ -6,7 +6,7 @@
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
-package org.jscience.mathematics.number.test;
+package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
@@ -39,7 +39,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     /**
      * Extends by some large test values out of the general integer range.
-     * @see org.jscience.mathematics.number.test.AbstractIntegerTestSuite#initTestValues(java.util.List)
+     * @see org.jscience.mathematics.number.AbstractIntegerTestSuite#initTestValues(java.util.List)
      */
     @Override
     protected void initTestValues(List<Pair<Double, LargeInteger>> values) {

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javolution.testing.TestCase;
 
-import org.jscience.mathematics.number.test.FloatingPointTestSuite;
+import org.jscience.mathematics.number.FloatingPointTestSuite;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

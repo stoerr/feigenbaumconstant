@@ -6,7 +6,7 @@
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
-package org.jscience.mathematics.number.test;
+package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
@@ -76,7 +76,7 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
 
     /**
      * With {@link Real} we cannot take the square root of an inexact zero.
-     * @see org.jscience.mathematics.number.test.AbstractFloatTestSuite#testSqrt()
+     * @see org.jscience.mathematics.number.AbstractFloatTestSuite#testSqrt()
      */
     @Override
     protected void testSqrt() {

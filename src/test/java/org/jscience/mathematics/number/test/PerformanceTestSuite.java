@@ -1,4 +1,4 @@
-package org.jscience.mathematics.number.test;
+package org.jscience.mathematics.number;
 
 import static javolution.context.Context.enter;
 import static javolution.context.Context.exit;
