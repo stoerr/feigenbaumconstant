@@ -29,7 +29,7 @@ import org.jscience.mathematics.number.Number;
 public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
 
     /** The maximum allowable relative difference of the result from the expected result. */
-    public static final double EPSILON = 1e-9;
+    protected double EPSILON = 1e-9;
 
     final double _expected;
     final NumberHelper<T> _helper;

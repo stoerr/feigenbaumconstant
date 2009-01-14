@@ -38,7 +38,8 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
         values.add(Pair.make(0.0, _helper.getZero()));
         values.add(Pair.make(1.0, _helper.getOne()));
         values.add(Pair.make(0.0, _helper.valueOf(1234.9384).minus(_helper.valueOf(1234.9384))));
-        for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -1234.5678, -9876.5432 }) {
+        for (double d : new double[] { 0.0, 1.0, 0.1, 0.9, -0.1, -0.9, 1.1, 1234.5678, -1234.5678, -9876.5432,
+                394239234954323349.0 }) {
             values.add(Pair.make(d, _helper.valueOf(d)));
         }
     }
