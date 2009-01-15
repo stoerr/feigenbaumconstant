@@ -1,16 +1,4 @@
-FloatingPoint.hashCode:
-significant.mod(1327144033)*mod(10**exponent,1327144033)
-1327144033 is a random prime
-
-LargeInteger.hashCode geändert
- 
-
 Evtl:. LargeInteger._words should be modulo 
 1000000000000000000 instead of 2**63 == 
 9223372036854775808
-
-
-Done: 
-Number.java
-FloatingPoint.java
-Calculus implizit.
+Or better: words should be int modulo 1000000000 . 
