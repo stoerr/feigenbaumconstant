@@ -10,11 +10,7 @@ Evtl:. LargeInteger._words should be modulo
 9223372036854775808
 
 
-java.io.StringWriter wr = new java.io.StringWriter();
-javolution.xml.XMLObjectWriter w = javolution.xml.XMLObjectWriter.newInstance(wr);
-w.write(FloatingPoint.valueOf("4343.23"));
-w.close();
-wr.toString()
-(java.lang.String) <?xml version="1.0" ?><org.jscience.mathematics.number.FloatingPoint value="0.434323E4"/>
-
-javolution.xml.XMLObjectReader.newInstance(new java.io.StringReader(""))
+Done: 
+Number.java
+FloatingPoint.java
+Calculus implizit.

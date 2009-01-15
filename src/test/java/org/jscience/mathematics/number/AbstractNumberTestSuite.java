@@ -13,13 +13,15 @@ import static javolution.testing.TestContext.assertEquals;
 import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;
-
-import org.jscience.mathematics.number.Number;
+import javolution.xml.XMLObjectReader;
+import javolution.xml.XMLObjectWriter;
 
 /**
  * This class contains tests that can be run for all {@link Number} subclasses. The result of the {@link Number}
@@ -337,5 +339,25 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
                 });
             }
         }
+    }
+    
+    protected void testXMLEncoding() {
+        info("  XML");
+        for (final Pair<Double, T> p : getTestValues()) {
+            test(new AbstractNumberTest<T>("Testing XML " + p, p._x, _helper) {
+                @Override
+                T operation() throws Exception {
+                    StringWriter wr = new StringWriter();
+                    XMLObjectWriter w = XMLObjectWriter.newInstance(wr);
+                    w.write(p._y);
+                    w.close();
+                    String xml = wr.toString();
+                    final StringReader rd = new StringReader(xml);
+                    XMLObjectReader r = XMLObjectReader.newInstance(rd);
+                    T res = r.read();
+                    return res;
+                }
+            });
+        }        
     }
 }

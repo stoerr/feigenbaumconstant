@@ -15,13 +15,13 @@ import java.util.List;
 
 import javolution.context.LocalContext;
 import javolution.lang.MathLib;
-
-import org.jscience.mathematics.number.FloatingPoint;
-import org.jscience.mathematics.number.LargeInteger;
+import javolution.testing.TestCase;
+import javolution.testing.TestContext;
 
 /**
  * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link FloatingPoint} and some further
- * tests that are specific to {@link FloatingPoint}.
+ * tests that are specific to {@link FloatingPoint}. <br>
+ * We omit getExponent, getSignificand, times(long) since these are trivial.
  * @since 23.12.2008
  * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  */
@@ -51,6 +51,31 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
                 FloatingPoint operation() throws Exception {
                     final LargeInteger rounded = p._y.round();
                     return FloatingPoint.valueOf(rounded, 0);
+                }
+            });
+        }
+    }
+    
+    protected void testSetDigits() {
+        info("  setDigits");
+        for (final Pair<Double, FloatingPoint> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    FloatingPoint v1 = FloatingPoint.valueOf(0.123);
+                    try {
+                        LocalContext.enter();
+                        FloatingPoint.setDigits(50);
+                        FloatingPoint v2 = v1.inverse();
+                        final int dl = v2.getSignificand().digitLength();
+                        TestContext.assertTrue("" + dl, 50 == dl);
+                    } finally {
+                        LocalContext.exit();
+                    }
+                    // now we should have a different digitlength
+                    FloatingPoint v2 = v1.inverse();
+                    final int dl = v2.getSignificand().digitLength();
+                    TestContext.assertTrue("" + dl, 50 != dl);
                 }
             });
         }
