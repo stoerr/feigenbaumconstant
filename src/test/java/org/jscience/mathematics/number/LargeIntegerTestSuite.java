@@ -153,4 +153,21 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
     }
 
+    protected void testToByteArray() {
+        info(" toByteArray");
+        for (final Pair<Double, LargeInteger> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    byte[] buf = new byte[1000]; // large enough for everything.
+                    for (int i = 0; i < buf.length; ++i)
+                        buf[i] = 42; // must not matter
+                    final int offset = 16;
+                    int num = p._y.toByteArray(buf, offset);
+                    assertEquals("" + p, p._y, LargeInteger.valueOf(buf, offset, num));
+                }
+            });
+        }
+    }
+
 }
