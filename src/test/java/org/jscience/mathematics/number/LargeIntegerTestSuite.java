@@ -10,14 +10,12 @@ package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
-import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javolution.testing.TestCase;
-
-import org.jscience.mathematics.number.LargeInteger;
 
 /**
  * <p>
@@ -115,6 +113,44 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 }
             }
         });
+    }
+
+    protected void testHexadecimal() {
+        info(" hexadecimal");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                assertEquals("6a8af7ae5a6759aa49fa43b8b4cd49cf655e41795ba270e613a557", LargeInteger.valueOf(
+                        "43829182938374882394282398298374848392872392839238754323223782743").toText(16).toString());
+                assertEquals("43829182938374882394282398298374848392872392839238754323223782743", LargeInteger.valueOf(
+                        "6a8af7ae5a6759aa49fa43b8b4cd49cf655e41795ba270e613a557", 16).toString());
+            }
+        });
+        for (final int radix : new int[] { 2, 10, 16, 36 }) {
+            for (final Pair<Double, LargeInteger> p : getTestValues()) {
+                test(new TestCase() {
+                    @Override
+                    public void execute() {
+                        String val = p._y.toText(radix).toString();
+                        assertEquals("hexadecimal " + p, p._y, LargeInteger.valueOf(val, radix));
+                    }
+                });
+            }
+        }
+    }
+
+    protected void testBigInteger() {
+        info(" biginteger");
+        for (final Pair<Double, LargeInteger> p : getTestValues()) {
+            test(new TestCase() {
+                @Override
+                public void execute() {
+                    String val = p._y.toString();
+                    final BigInteger bi = new BigInteger(val);
+                    assertEquals("" + p, p._y, LargeInteger.valueOf(bi));
+                }
+            });
+        }
     }
 
 }

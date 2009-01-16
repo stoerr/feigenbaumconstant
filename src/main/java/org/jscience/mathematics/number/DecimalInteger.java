@@ -8,10 +8,10 @@
  */
 package org.jscience.mathematics.number;
 
-import static org.jscience.mathematics.number.Calculus.MASK_31;
-import static org.jscience.mathematics.number.Calculus.MASK_63;
-import static org.jscience.mathematics.number.Calculus.MASK_8;
-import static org.jscience.mathematics.number.Calculus.compare;
+import static org.jscience.mathematics.number.CalculusDecimal.MASK_31;
+import static org.jscience.mathematics.number.CalculusDecimal.MASK_63;
+import static org.jscience.mathematics.number.CalculusDecimal.MASK_8;
+import static org.jscience.mathematics.number.CalculusDecimal.compare;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ import javolution.text.TextFormat.Cursor;
 import javolution.xml.XMLFormat;
 import javolution.xml.stream.XMLStreamException;
 
-import org.jscience.mathematics.number.Calculus.MultiplyLogic;
+import org.jscience.mathematics.number.CalculusDecimal.MultiplyLogic;
 
 /**
  * <p> This class represents an immutable integer number of arbitrary size.</p>
@@ -54,7 +54,7 @@ import org.jscience.mathematics.number.Calculus.MultiplyLogic;
  * @see <a href="http://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">
  *      Wikipedia: Arbitrary-precision Arithmetic</a>
  */
-public final class LargeInteger extends Number<LargeInteger> {
+public final class DecimalInteger extends Number<DecimalInteger> {
 
     /**
      * Holds the certainty required when testing for primality
@@ -68,34 +68,34 @@ public final class LargeInteger extends Number<LargeInteger> {
      * Holds the format for large integers (decimal representation by default).
      * 
      * @see #parse(CharSequence, int, TextFormat.Cursor)
-     * @see #format(LargeInteger, int, Appendable)
+     * @see #format(DecimalInteger, int, Appendable)
      */
-    static final TextFormat<LargeInteger> DECIMAL_FORMAT =
-            new TextFormat<LargeInteger>() {
+    static final TextFormat<DecimalInteger> DECIMAL_FORMAT =
+            new TextFormat<DecimalInteger>() {
 
                 @Override
-                public Appendable format(LargeInteger li, Appendable out)
+                public Appendable format(DecimalInteger li, Appendable out)
                         throws IOException {
-                    return LargeInteger.format(li, 10, out);
+                    return DecimalInteger.format(li, 10, out);
                 }
 
                 @Override
-                public LargeInteger parse(CharSequence csq, Cursor cursor) {
-                    return LargeInteger.parse(csq, 10, cursor);
+                public DecimalInteger parse(CharSequence csq, Cursor cursor) {
+                    return DecimalInteger.parse(csq, 10, cursor);
                 }
             };
     static {
-        TextFormat.setInstance(LargeInteger.class, DECIMAL_FORMAT);
+        TextFormat.setInstance(DecimalInteger.class, DECIMAL_FORMAT);
     }
 
     /**
      * Holds factory for LargeInteger with variable size arrays.
      */
-    private static final ArrayFactory<LargeInteger> ARRAY_FACTORY = new ArrayFactory<LargeInteger>() {
+    private static final ArrayFactory<DecimalInteger> ARRAY_FACTORY = new ArrayFactory<DecimalInteger>() {
 
         @Override
-        protected LargeInteger create(int capacity) {
-            return new LargeInteger(capacity);
+        protected DecimalInteger create(int capacity) {
+            return new DecimalInteger(capacity);
         }
 
     };
@@ -103,11 +103,11 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * Holds the factory for LargeInteger with no intrinsic array (wrapper instances).
      */
-    private static final ObjectFactory<LargeInteger> NO_ARRAY_FACTORY = new ObjectFactory<LargeInteger>() {
+    private static final ObjectFactory<DecimalInteger> NO_ARRAY_FACTORY = new ObjectFactory<DecimalInteger>() {
 
         @Override
-        protected LargeInteger create() {
-            return new LargeInteger();
+        protected DecimalInteger create() {
+            return new DecimalInteger();
         }
 
     };
@@ -117,21 +117,21 @@ public final class LargeInteger extends Number<LargeInteger> {
      * This representation consists of a simple <code>value</code> attribute
      * holding the {@link #toText() textual} representation.
      */
-    static final XMLFormat<LargeInteger> XML = new XMLFormat<LargeInteger>(
-            LargeInteger.class) {
+    static final XMLFormat<DecimalInteger> XML = new XMLFormat<DecimalInteger>(
+            DecimalInteger.class) {
 
         @Override
-        public LargeInteger newInstance(Class<LargeInteger> cls,
+        public DecimalInteger newInstance(Class<DecimalInteger> cls,
                 InputElement xml) throws XMLStreamException {
-            return LargeInteger.valueOf(xml.getAttribute("value"));
+            return DecimalInteger.valueOf(xml.getAttribute("value"));
         }
 
-        public void write(LargeInteger li, OutputElement xml)
+        public void write(DecimalInteger li, OutputElement xml)
                 throws XMLStreamException {
             xml.setAttribute("value", li.toText());
         }
 
-        public void read(InputElement xml, LargeInteger li) {
+        public void read(InputElement xml, DecimalInteger li) {
             // Nothing to do, immutable.
         }
     };
@@ -139,12 +139,12 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * The large integer representing the additive identity.
      */
-    public static final LargeInteger ZERO = new LargeInteger(1);
+    public static final DecimalInteger ZERO = new DecimalInteger(1);
 
     /**
      * The large integer representing the multiplicative identity.
      */
-    public static final LargeInteger ONE = new LargeInteger(1);
+    public static final DecimalInteger ONE = new DecimalInteger(1);
     static {
         ONE._words[0] = 1;
         ONE._size = 1;
@@ -153,7 +153,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * Holds Long.MIN_VALUE
      */
-    static final LargeInteger LONG_MIN_VALUE = new LargeInteger(2);
+    static final DecimalInteger LONG_MIN_VALUE = new DecimalInteger(2);
     static {
         LONG_MIN_VALUE._words[1] = 1;
         LONG_MIN_VALUE._size = 2;
@@ -162,7 +162,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * Holds five.
      */
-    static final LargeInteger FIVE = new LargeInteger(1);
+    static final DecimalInteger FIVE = new DecimalInteger(1);
     static {
         FIVE._words[0] = 5;
         FIVE._size = 1;
@@ -171,7 +171,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * Holds the remainder after a {@link #divide} operation.
      */
-    private LargeInteger _remainder;
+    private DecimalInteger _remainder;
 
     /**
      * Indicates if this large integer is negative.
@@ -193,7 +193,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     /**
      * Default constructor (no words array).
      */
-    private LargeInteger() {
+    private DecimalInteger() {
     }
 
     /**
@@ -201,7 +201,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * 
      * @link wordLength the internal positive <code>long</code> array length.
      */
-    private LargeInteger(int wordLength) {
+    private DecimalInteger(int wordLength) {
         _words = new long[wordLength];
     }
 
@@ -211,12 +211,12 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param  value the <code>long</code> value.
      * @return the corresponding large integer number.
      */
-    public static LargeInteger valueOf(long value) {
+    public static DecimalInteger valueOf(long value) {
         if (value == 0)
             return ZERO;
         if (value == Long.MIN_VALUE)
             return LONG_MIN_VALUE;
-        LargeInteger li = ARRAY_FACTORY.array(1);
+        DecimalInteger li = ARRAY_FACTORY.array(1);
         boolean negative = li._isNegative = value < 0;
         li._words[0] = negative ? -value : value;
         li._size = 1;
@@ -236,10 +236,10 @@ public final class LargeInteger extends Number<LargeInteger> {
      *         if <code>offset + length > bytes.length</code>  
      * @see    #toByteArray
      */
-    public static LargeInteger valueOf(byte[] bytes, int offset, int length) {
+    public static DecimalInteger valueOf(byte[] bytes, int offset, int length) {
         // Ensures result is large enough (takes into account potential
         // extra bits during negative to positive conversion).
-        LargeInteger li = ARRAY_FACTORY.array(((length * 8 + 1) / 63) + 1);
+        DecimalInteger li = ARRAY_FACTORY.array(((length * 8 + 1) / 63) + 1);
         final boolean isNegative = bytes[offset] < 0;
         int wordIndex = 0;
         int bitIndex = 0;
@@ -256,16 +256,15 @@ public final class LargeInteger extends Number<LargeInteger> {
         }
         // Calculates size.
         while (li._words[wordIndex] == 0) {
-            if (--wordIndex <= 0)
+            if (--wordIndex < 0)
                 break;
         }
-        if (isNegative && wordIndex < 0) wordIndex = 0; // special case for -1
         li._size = wordIndex + 1;
         li._isNegative = isNegative;
 
         // Converts one's-complement to two's-complement if negative.
         if (isNegative) { // Adds ONE.
-            li._size = Calculus.add(li._words, li._size, ONE._words, 1,
+            li._size = CalculusDecimal.add(li._words, li._size, ONE._words, 1,
                     li._words);
         }
         return li;
@@ -338,8 +337,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>TextFormat.getInstance(LargeInteger.class).parse(csq)</code>
      * @throws NumberFormatException if error when parsing.
      */
-    public static LargeInteger valueOf(CharSequence csq) {
-        return TextFormat.getInstance(LargeInteger.class).parse(csq);
+    public static DecimalInteger valueOf(CharSequence csq) {
+        return TextFormat.getInstance(DecimalInteger.class).parse(csq);
     }
 
     /**
@@ -351,10 +350,10 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>LargeInteger.parse(csq, radix, cursor)</code>
      * @throws NumberFormatException if error when parsing.
      */
-    public static LargeInteger valueOf(CharSequence csq, int radix) {
+    public static DecimalInteger valueOf(CharSequence csq, int radix) {
         Cursor cursor = Cursor.newInstance(0, csq.length());
         try {
-            return LargeInteger.parse(csq, radix, cursor);
+            return DecimalInteger.parse(csq, radix, cursor);
         } finally {
             if (cursor.hasNext())
                 throw new NumberFormatException("Cannot parse " + csq + " at "
@@ -370,9 +369,9 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param  bigInteger the big integer instance.
      * @return the large integer having the same value.
      */
-    public static LargeInteger valueOf(java.math.BigInteger bigInteger) {
+    public static DecimalInteger valueOf(java.math.BigInteger bigInteger) {
         byte[] bytes = bigInteger.toByteArray();
-        return LargeInteger.valueOf(bytes, 0, bytes.length);
+        return DecimalInteger.valueOf(bytes, 0, bytes.length);
     }
 
     /**
@@ -458,7 +457,7 @@ public final class LargeInteger extends Number<LargeInteger> {
         int max = (int) (bitLength * BITS_TO_DIGITS) + 1;
         if (min == max)
             return min;
-        return (LargeInteger.ONE.times10pow(min).isLargerThan(this)) ? min
+        return (DecimalInteger.ONE.times10pow(min).isLargerThan(this)) ? min
                 : min + 1;
     }
 
@@ -512,7 +511,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return the remainder of the division for which this large integer
      *         is the quotient.
      */
-    public LargeInteger getRemainder() {
+    public DecimalInteger getRemainder() {
         return _remainder;
     }
 
@@ -523,9 +522,9 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param that the integer to be compared with.
      * @return <code>this.abs().compareTo(that.abs()) > 0</code>.
      */
-    public boolean isLargerThan(LargeInteger that) {
+    public boolean isLargerThan(DecimalInteger that) {
         return (this._size > that._size)
-                || ((this._size == that._size) && Calculus.compare(this._words,
+                || ((this._size == that._size) && CalculusDecimal.compare(this._words,
                         that._words, this._size) > 0);
     }
 
@@ -534,7 +533,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * 
      * @return <code>|this|</code>.
      */
-    public LargeInteger abs() {
+    public DecimalInteger abs() {
         if (_isNegative)
             return this.opposite();
         return this;
@@ -545,8 +544,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      * 
      * @return <code>-this</code>.
      */
-    public LargeInteger opposite() {
-        LargeInteger li = NO_ARRAY_FACTORY.object();
+    public DecimalInteger opposite() {
+        DecimalInteger li = NO_ARRAY_FACTORY.object();
         li._words = _words;
         li._size = _size;
         li._isNegative = !_isNegative && (_size != 0);
@@ -560,8 +559,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param value the <code>long</code> integer being added.
      * @return <code>this + value</code>.
      */
-    public LargeInteger plus(long value) {
-        return this.plus(LargeInteger.valueOf(value));
+    public DecimalInteger plus(long value) {
+        return this.plus(DecimalInteger.valueOf(value));
     }
 
     /**
@@ -570,13 +569,13 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param that the integer to be added.
      * @return <code>this + that</code>.
      */
-    public LargeInteger plus(LargeInteger that) {
+    public DecimalInteger plus(DecimalInteger that) {
         if (this._size < that._size) // Adds smallest in size to largest. 
             return that.plus(this);
         if ((this._isNegative != that._isNegative) && (that._size != 0))
             return this.minus(that.opposite()); // Switches that sign.
-        LargeInteger li = ARRAY_FACTORY.array(_size + 1);
-        li._size = Calculus.add(_words, _size, that._words, that._size,
+        DecimalInteger li = ARRAY_FACTORY.array(_size + 1);
+        li._size = CalculusDecimal.add(_words, _size, that._words, that._size,
                 li._words);
         li._isNegative = _isNegative;
         return li;
@@ -589,13 +588,13 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param that the integer to be subtracted.
      * @return <code>this - that</code>.
      */
-    public LargeInteger minus(LargeInteger that) {
+    public DecimalInteger minus(DecimalInteger that) {
         if ((this._isNegative != that._isNegative) && (that._size != 0))
             return this.plus(that.opposite()); // Switches that sign.
         if (that.isLargerThan(this)) // Always subtract the smallest to the largest. 
             return that.minus(this).opposite();
-        LargeInteger li = ARRAY_FACTORY.array(this._size);
-        li._size = Calculus.subtract(_words, _size, that._words, that._size,
+        DecimalInteger li = ARRAY_FACTORY.array(this._size);
+        li._size = CalculusDecimal.subtract(_words, _size, that._words, that._size,
                 li._words);
         li._isNegative = this._isNegative && (li._size != 0);
         return li;
@@ -608,8 +607,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param value the value to be subtracted.
      * @return <code>this - value</code>.
      */
-    public LargeInteger minus(long value) {
-        return this.minus(LargeInteger.valueOf(value));
+    public DecimalInteger minus(long value) {
+        return this.minus(DecimalInteger.valueOf(value));
     }
 
     /**
@@ -618,43 +617,43 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param that the large integer multiplier.
      * @return <code>this · that</code>.
      */
-    public LargeInteger times(LargeInteger that) {
+    public DecimalInteger times(DecimalInteger that) {
         if (that._size > this._size) // Always multiply the smallest to the largest.
             return that.times(this);
         if (that._size <= 1) // Direct times(long) multiplication.
             return this.times(that.longValue());
         if (that._size < 10) { // Conventional multiplication.
-            LargeInteger li = ARRAY_FACTORY.array(this._size + that._size);
-            li._size = Calculus.multiply(this._words, this._size, that._words,
+            DecimalInteger li = ARRAY_FACTORY.array(this._size + that._size);
+            li._size = CalculusDecimal.multiply(this._words, this._size, that._words,
                     that._size, li._words);
             li._isNegative = (this._isNegative != that._isNegative);
             return li;
         } else if (that._size < 20) { // Karatsuba (sequential).
             int n = (that._size >> 1) + (that._size & 1);
             // this = a + 2^(n*63) b, that = c + 2^(n*63) d
-            LargeInteger b = this.high(n);
-            LargeInteger a = this.low(n);
+            DecimalInteger b = this.high(n);
+            DecimalInteger a = this.low(n);
             // Optimization for square (a == c, b == d).
-            LargeInteger d = (this == that) ? b : that.high(n);
-            LargeInteger c = (this == that) ? a : that.low(n);
-            LargeInteger ab = a.plus(b);
-            LargeInteger cd = (this == that) ? ab : c.plus(d);
-            LargeInteger abcd = ab.times(cd);
-            LargeInteger ac = a.times(c);
-            LargeInteger bd = b.times(d);
+            DecimalInteger d = (this == that) ? b : that.high(n);
+            DecimalInteger c = (this == that) ? a : that.low(n);
+            DecimalInteger ab = a.plus(b);
+            DecimalInteger cd = (this == that) ? ab : c.plus(d);
+            DecimalInteger abcd = ab.times(cd);
+            DecimalInteger ac = a.times(c);
+            DecimalInteger bd = b.times(d);
             // li = a*c + ((a+b)*(c+d)-(a*c+b*d)) 2^n + b*d 2^2n 
             return ac.plus(abcd.minus(ac.plus(bd)).shiftWordLeft(n)).plus(
                     bd.shiftWordLeft(n << 1));
         } else { // Karatsuba (concurrent).
             int n = (that._size >> 1) + (that._size & 1);
             // this = a + 2^(63*n) b, that = c + 2^(63*n) d
-            LargeInteger b = this.high(n);
-            LargeInteger a = this.low(n);
+            DecimalInteger b = this.high(n);
+            DecimalInteger a = this.low(n);
             // Optimization for square (a == c, b == d).
-            LargeInteger d = (this == that) ? b : that.high(n);
-            LargeInteger c = (this == that) ? a : that.low(n);
-            LargeInteger ab = a.plus(b);
-            LargeInteger cd = (this == that) ? ab : c.plus(d);
+            DecimalInteger d = (this == that) ? b : that.high(n);
+            DecimalInteger c = (this == that) ? a : that.low(n);
+            DecimalInteger ab = a.plus(b);
+            DecimalInteger cd = (this == that) ? ab : c.plus(d);
             MultiplyLogic abcd = MultiplyLogic.newInstance(ab, cd);
             MultiplyLogic ac = MultiplyLogic.newInstance(a, c);
             MultiplyLogic bd = MultiplyLogic.newInstance(b, d);
@@ -667,7 +666,7 @@ public final class LargeInteger extends Number<LargeInteger> {
                 ConcurrentContext.exit();
             }
             // result = a*c + ((a+b)*(c+d)-(a*c+b*d)) 2^n + b*d 2^2n 
-            LargeInteger result = ac.value().plus(
+            DecimalInteger result = ac.value().plus(
                     abcd.value().minus(ac.value().plus(bd.value()))
                             .shiftWordLeft(n)).plus(
                     bd.value().shiftWordLeft(n << 1));
@@ -675,16 +674,16 @@ public final class LargeInteger extends Number<LargeInteger> {
         }
     }
 
-    private LargeInteger high(int w) { // this.shiftRight(w * 63)
-        LargeInteger li = ARRAY_FACTORY.array(_size - w);
+    private DecimalInteger high(int w) { // this.shiftRight(w * 63)
+        DecimalInteger li = ARRAY_FACTORY.array(_size - w);
         li._isNegative = _isNegative;
         li._size = _size - w;
         System.arraycopy(_words, w, li._words, 0, _size - w);
         return li;
     }
 
-    private LargeInteger low(int w) { // this.minus(high(w).shiftLeft(w * 63));
-        LargeInteger li = NO_ARRAY_FACTORY.object();
+    private DecimalInteger low(int w) { // this.minus(high(w).shiftLeft(w * 63));
+        DecimalInteger li = NO_ARRAY_FACTORY.object();
         li._words = _words;
         li._isNegative = _isNegative;
         for (int i = w; i > 0; i--) {
@@ -693,13 +692,13 @@ public final class LargeInteger extends Number<LargeInteger> {
                 return li;
             }
         } // Else zero.
-        return LargeInteger.ZERO;
+        return DecimalInteger.ZERO;
     }
 
-    private LargeInteger shiftWordLeft(int w) { // this.minus(high(w).shiftLeft(w * 63));
+    private DecimalInteger shiftWordLeft(int w) { // this.minus(high(w).shiftLeft(w * 63));
         if (_size == 0)
-            return LargeInteger.ZERO;
-        LargeInteger li = ARRAY_FACTORY.array(w + _size);
+            return DecimalInteger.ZERO;
+        DecimalInteger li = ARRAY_FACTORY.array(w + _size);
         li._isNegative = _isNegative;
         li._size = w + _size;
         for (int i = 0; i < w;) {
@@ -716,15 +715,15 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param multiplier the <code>long</code> multiplier.
      * @return <code>this · multiplier</code>.
      */
-    public LargeInteger times(long multiplier) {
+    public DecimalInteger times(long multiplier) {
         if ((this._size == 0) || (multiplier == 0))
-            return LargeInteger.ZERO;
+            return DecimalInteger.ZERO;
         if (multiplier == Long.MIN_VALUE)
             return times(LONG_MIN_VALUE); // Size 2.
         boolean isNegative = _isNegative ^ (multiplier < 0);
         multiplier = MathLib.abs(multiplier);
-        LargeInteger li = ARRAY_FACTORY.array(_size + 1);
-        li._size = Calculus.multiply(_words, _size, multiplier, li._words);
+        DecimalInteger li = ARRAY_FACTORY.array(_size + 1);
+        li._size = CalculusDecimal.multiply(_words, _size, multiplier, li._words);
         li._isNegative = isNegative;
         return li;
     }
@@ -739,19 +738,19 @@ public final class LargeInteger extends Number<LargeInteger> {
      *        ({@link #getRemainder})
      * @throws ArithmeticException if <code>that.equals(ZERO)</code>
      */
-    public LargeInteger divide(LargeInteger that) {
+    public DecimalInteger divide(DecimalInteger that) {
         if ((that._size <= 1) && ((that._words[0] >> 32) == 0))
             return divide(that.intValue());
-        LargeInteger result;
-        LargeInteger remainder;
-        LargeInteger thisAbs = this.abs();
-        LargeInteger thatAbs = that.abs();
+        DecimalInteger result;
+        DecimalInteger remainder;
+        DecimalInteger thisAbs = this.abs();
+        DecimalInteger thatAbs = that.abs();
         int precision = thisAbs.bitLength() - thatAbs.bitLength() + 1;
         if (precision <= 0) {
-            result = LargeInteger.ZERO;
+            result = DecimalInteger.ZERO;
             remainder = this;
         } else {
-            LargeInteger thatReciprocal = thatAbs.inverseScaled(precision);
+            DecimalInteger thatReciprocal = thatAbs.inverseScaled(precision);
             result = thisAbs.times(thatReciprocal);
             result = result.shiftRight(thisAbs.bitLength() + 1);
 
@@ -759,7 +758,7 @@ public final class LargeInteger extends Number<LargeInteger> {
             remainder = thisAbs.minus(thatAbs.times(result));
             if (remainder.compareTo(thatAbs) >= 0) {
                 remainder = remainder.minus(thatAbs);
-                result = result.plus(LargeInteger.ONE);
+                result = result.plus(DecimalInteger.ONE);
                 if (remainder.compareTo(thatAbs) >= 0)
                     throw new Error("Verification error for " + this + "/"
                             + that + ", please submit a bug report.");
@@ -772,7 +771,7 @@ public final class LargeInteger extends Number<LargeInteger> {
             }
         }
         // Setups result and remainder.
-        LargeInteger li = NO_ARRAY_FACTORY.object();
+        DecimalInteger li = NO_ARRAY_FACTORY.object();
         li._words = result._words;
         li._size = result._size;
         li._isNegative = (this._isNegative != that._isNegative)
@@ -791,24 +790,24 @@ public final class LargeInteger extends Number<LargeInteger> {
      *        ({@link #getRemainder})
      * @throws ArithmeticException if <code>divisor == 0</code>
      */
-    public LargeInteger divide(int divisor) {
+    public DecimalInteger divide(int divisor) {
         if (divisor == 0)
             throw new ArithmeticException("Division by zero");
         if (divisor == Integer.MIN_VALUE) { // abs(divisor) would overflow.
-            LargeInteger li = this.times2pow(-31).copy();
+            DecimalInteger li = this.times2pow(-31).copy();
             li._isNegative = !_isNegative && (li._size != 0);
-            li._remainder = _isNegative ? LargeInteger
-                    .valueOf(-(_words[0] & MASK_31)) : LargeInteger
+            li._remainder = _isNegative ? DecimalInteger
+                    .valueOf(-(_words[0] & MASK_31)) : DecimalInteger
                     .valueOf(_words[0] & MASK_31);
             return li;
         }
-        LargeInteger li = ARRAY_FACTORY.array(_size);
-        long rem = Calculus.divide(_words, _size, MathLib.abs(divisor),
+        DecimalInteger li = ARRAY_FACTORY.array(_size);
+        long rem = CalculusDecimal.divide(_words, _size, MathLib.abs(divisor),
                 li._words);
         li._size = (_size > 0) && (li._words[_size - 1] == 0L) ? _size - 1
                 : _size;
         li._isNegative = (_isNegative != (divisor < 0)) && (li._size != 0);
-        li._remainder = LargeInteger.valueOf(_isNegative ? -rem : rem);
+        li._remainder = DecimalInteger.valueOf(_isNegative ? -rem : rem);
         return li;
     }
 
@@ -821,9 +820,9 @@ public final class LargeInteger extends Number<LargeInteger> {
      *        remainder returned.
      * @return <code>this % that</code>
      * @throws ArithmeticException if <code>that.equals(ZERO)</code>
-     * @see #divide(LargeInteger)
+     * @see #divide(DecimalInteger)
      */
-    public LargeInteger remainder(LargeInteger that) {
+    public DecimalInteger remainder(DecimalInteger that) {
         return this.divide(that).getRemainder();
     }
 
@@ -834,20 +833,20 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>2<sup>(precision + this.bitLength())</sup> / this</code>
      * @throws ArithmeticException if <code>this.isZero()</code>
      */
-    public LargeInteger inverseScaled(int precision) {
+    public DecimalInteger inverseScaled(int precision) {
         if (precision <= 30) { // Straight calculation.
             long divisor = this.shiftRight(this.bitLength() - precision - 1)._words[0];
             long dividend = 1L << (precision * 2 + 1);
-            return (this.isNegative()) ? LargeInteger.valueOf(-dividend
-                    / divisor) : LargeInteger.valueOf(dividend / divisor);
+            return (this.isNegative()) ? DecimalInteger.valueOf(-dividend
+                    / divisor) : DecimalInteger.valueOf(dividend / divisor);
         } else { // Newton iteration (x = 2 * x - x^2 * this).
-            LargeInteger x = inverseScaled(precision / 2 + 1); // Estimate.
-            LargeInteger thisTrunc = shiftRight(bitLength() - (precision + 2));
-            LargeInteger prod = thisTrunc.times(x).times(x);
+            DecimalInteger x = inverseScaled(precision / 2 + 1); // Estimate.
+            DecimalInteger thisTrunc = shiftRight(bitLength() - (precision + 2));
+            DecimalInteger prod = thisTrunc.times(x).times(x);
             int diff = 2 * (precision / 2 + 2);
-            LargeInteger prodTrunc = prod.shiftRight(diff);
-            LargeInteger xPad = x.shiftLeft(precision - precision / 2 - 1);
-            LargeInteger tmp = xPad.minus(prodTrunc);
+            DecimalInteger prodTrunc = prod.shiftRight(diff);
+            DecimalInteger xPad = x.shiftLeft(precision - precision / 2 - 1);
+            DecimalInteger tmp = xPad.minus(prodTrunc);
             return xPad.plus(tmp);
         }
     }
@@ -858,16 +857,16 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>k<code> such as <code>k^2 <= this < (k + 1)^2</code>
      * @throws ArithmeticException if this integer is negative.
      */
-    public LargeInteger sqrt() {
+    public DecimalInteger sqrt() {
         if (this.isNegative())
             throw new ArithmeticException("Square root of negative integer");
         int bitLength = this.bitLength();
         StackContext.enter();
         try {
             // First approximation.
-            LargeInteger k = this.times2pow(-((bitLength >> 1) + (bitLength & 1)));
+            DecimalInteger k = this.times2pow(-((bitLength >> 1) + (bitLength & 1)));
             while (true) {
-                LargeInteger newK = (k.plus(this.divide(k))).times2pow(-1);
+                DecimalInteger newK = (k.plus(this.divide(k))).times2pow(-1);
                 if (newK.equals(k))
                     return StackContext.outerCopy(k);
                 k = newK;
@@ -887,8 +886,8 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>this mod m</code>
      * @see #getRemainder()
      */
-    public LargeInteger mod(LargeInteger m) {
-        final LargeInteger li = m.isLargerThan(this) ? this : this.divide(m)
+    public DecimalInteger mod(DecimalInteger m) {
+        final DecimalInteger li = m.isLargerThan(this) ? this : this.divide(m)
                 .getRemainder();
         return (this._isNegative == m._isNegative) ? li : li.plus(m);
     }
@@ -903,26 +902,26 @@ public final class LargeInteger extends Number<LargeInteger> {
      *         has no multiplicative inverse mod m (that is, this integer
      *         is not <i>relatively prime</i> to m).
      */
-    public LargeInteger modInverse(LargeInteger m) {
+    public DecimalInteger modInverse(DecimalInteger m) {
         if (!m.isPositive())
             throw new ArithmeticException("Modulus is not a positive number");
         StackContext.enter();
         try {
             // Extended Euclidian Algorithm
-            LargeInteger a = this;
-            LargeInteger b = m;
-            LargeInteger p = ONE;
-            LargeInteger q = ZERO;
-            LargeInteger r = ZERO;
-            LargeInteger s = ONE;
+            DecimalInteger a = this;
+            DecimalInteger b = m;
+            DecimalInteger p = ONE;
+            DecimalInteger q = ZERO;
+            DecimalInteger r = ZERO;
+            DecimalInteger s = ONE;
             while (!b.isZero()) {
-                LargeInteger quot = a.divide(b);
-                LargeInteger c = quot.getRemainder();
+                DecimalInteger quot = a.divide(b);
+                DecimalInteger c = quot.getRemainder();
                 a = b;
                 b = c;
                 
-                LargeInteger new_r = p.minus(quot.times(r));
-                LargeInteger new_s = q.minus(quot.times(s));
+                DecimalInteger new_r = p.minus(quot.times(r));
+                DecimalInteger new_s = q.minus(quot.times(s));
                 p = r;
                 q = s;
                 r = new_r;
@@ -947,14 +946,14 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @throws ArithmeticException <code>m &lt;= 0</code>
      * @see    #modInverse
      */
-    public LargeInteger modPow(LargeInteger exp, LargeInteger m) {
+    public DecimalInteger modPow(DecimalInteger exp, DecimalInteger m) {
         if (!m.isPositive())
             throw new ArithmeticException("Modulus is not a positive number");
         if (exp.isPositive()) {
             StackContext.enter();
             try {
-                LargeInteger result = null;
-                LargeInteger pow2 = this.mod(m);
+                DecimalInteger result = null;
+                DecimalInteger pow2 = this.mod(m);
                 while (exp.compareTo(ONE) >= 0) { // Iteration.
                     if (exp.isOdd()) {
                         result = (result == null) ? pow2 : result.times(pow2)
@@ -970,7 +969,7 @@ public final class LargeInteger extends Number<LargeInteger> {
         } else if (exp.isNegative()) {
             return this.modPow(exp.opposite(), m).modInverse(m);
         } else { // exp == 0
-            return LargeInteger.ONE;
+            return DecimalInteger.ONE;
         }
     }
 
@@ -982,21 +981,21 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return a positive number or {@link #ZERO} if
      *         <code>(this.isZero() && that.isZero())</code>.
      */
-    public LargeInteger gcd(LargeInteger that) {
+    public DecimalInteger gcd(DecimalInteger that) {
         if (this.isZero())
             return that;
         if (that.isZero())
             return this;
         // Works with local (modifiable) copies of the inputs.
-        LargeInteger u = this.copy();
+        DecimalInteger u = this.copy();
         u._isNegative = false; // abs()
-        LargeInteger v = that.copy();
+        DecimalInteger v = that.copy();
         v._isNegative = false; // abs()
 
         // Euclidian algorithm until u, v about the same size.
         while (MathLib.abs(u._size - v._size) > 1) {
-            LargeInteger tmp = u.divide(v);
-            LargeInteger rem = tmp.getRemainder();
+            DecimalInteger tmp = u.divide(v);
+            DecimalInteger rem = tmp.getRemainder();
             u = v;
             v = rem;
             if (v.isZero())
@@ -1018,7 +1017,7 @@ public final class LargeInteger extends Number<LargeInteger> {
                 v.subtract(u);
             } else {
                 u.subtract(v);
-                LargeInteger tmp = u;
+                DecimalInteger tmp = u;
                 u = v;
                 v = tmp; // Swaps. 
             }
@@ -1033,7 +1032,7 @@ public final class LargeInteger extends Number<LargeInteger> {
     private void shiftRightSelf() {
         if (_size == 0)
             return;
-        _size = Calculus.shiftRight(0, 1, _words, _size, _words);
+        _size = CalculusDecimal.shiftRight(0, 1, _words, _size, _words);
     }
 
     private void shiftRightSelf(int n) {
@@ -1041,11 +1040,11 @@ public final class LargeInteger extends Number<LargeInteger> {
             return;
         int wordShift = n < 63 ? 0 : n / 63;
         int bitShift = n - ((wordShift << 6) - wordShift); // n - wordShift * 63
-        _size = Calculus.shiftRight(wordShift, bitShift, _words, _size, _words);
+        _size = CalculusDecimal.shiftRight(wordShift, bitShift, _words, _size, _words);
     }
 
-    private void subtract(LargeInteger that) { // this >= that
-        _size = Calculus.subtract(_words, _size, that._words, that._size,
+    private void subtract(DecimalInteger that) { // this >= that
+        _size = CalculusDecimal.subtract(_words, _size, that._words, that._size,
                 _words);
     }
 
@@ -1058,16 +1057,16 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>this &lt;&lt; n</code>.
      * @see #shiftRight
      */
-    public LargeInteger shiftLeft(int n) {
+    public DecimalInteger shiftLeft(int n) {
         if (n < 0)
             return shiftRight(-n);
         if (_size == 0)
-            return LargeInteger.ZERO;
+            return DecimalInteger.ZERO;
         final int wordShift = n < 63 ? 0 : n / 63;
         final int bitShift = n - wordShift * 63;
-        LargeInteger li = ARRAY_FACTORY.array(_size + wordShift + 1);
+        DecimalInteger li = ARRAY_FACTORY.array(_size + wordShift + 1);
         li._isNegative = _isNegative;
-        li._size = Calculus.shiftLeft(wordShift, bitShift, _words, _size,
+        li._size = CalculusDecimal.shiftLeft(wordShift, bitShift, _words, _size,
                 li._words);
         return li;
     }
@@ -1081,10 +1080,10 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param n the shift distance, in bits.
      * @return <code>this &gt;&gt; n</code>.
      */
-    public LargeInteger shiftRight(int n) {
-        LargeInteger li = this.times2pow(-n);
+    public DecimalInteger shiftRight(int n) {
+        DecimalInteger li = this.times2pow(-n);
         return (_isNegative) && (n > 0) && (isShiftRightCorrection(n)) ? li
-                .minus(LargeInteger.ONE) : li;
+                .minus(DecimalInteger.ONE) : li;
     }
 
     // Indicates if bits lost when shifting right the two's-complement
@@ -1111,16 +1110,16 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param n the power of 2 exponent.
      * @return <code>this · 2<sup>n</sup></code>.
      */
-    public LargeInteger times2pow(int n) {
+    public DecimalInteger times2pow(int n) {
         if (n >= 0)
             return shiftLeft(n);
         n = -n; // Works with positive n.
         int wordShift = n < 63 ? 0 : n / 63;
         int bitShift = n - ((wordShift << 6) - wordShift); // n - wordShift * 63
         if (_size <= wordShift) // All bits have been shifted.
-            return LargeInteger.ZERO;
-        LargeInteger li = ARRAY_FACTORY.array(_size - wordShift);
-        li._size = Calculus.shiftRight(wordShift, bitShift, _words, _size,
+            return DecimalInteger.ZERO;
+        DecimalInteger li = ARRAY_FACTORY.array(_size - wordShift);
+        li._size = CalculusDecimal.shiftRight(wordShift, bitShift, _words, _size,
                 li._words);
         li._isNegative = _isNegative && (li._size != 0);
         return li;
@@ -1135,25 +1134,25 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @param n the decimal exponent.
      * @return <code>this · 10<sup>n</sup></code>
      */
-    public LargeInteger times10pow(int n) {
+    public DecimalInteger times10pow(int n) {
         if (this._size == 0)
-            return LargeInteger.ZERO;
+            return DecimalInteger.ZERO;
         if (n >= 0) {
             int bitLength = (int) (n * DIGITS_TO_BITS);
-            LargeInteger li = ARRAY_FACTORY.array(_size + (bitLength / 63) + 1); // Approx.
+            DecimalInteger li = ARRAY_FACTORY.array(_size + (bitLength / 63) + 1); // Approx.
             li._isNegative = _isNegative;
             int i = (n >= LONG_POW_5.length) ? LONG_POW_5.length - 1 : n;
-            li._size = Calculus.multiply(_words, _size, LONG_POW_5[i],
+            li._size = CalculusDecimal.multiply(_words, _size, LONG_POW_5[i],
                     li._words);
             for (int j = n - i; j != 0; j -= i) {
                 i = (j >= LONG_POW_5.length) ? LONG_POW_5.length - 1 : j;
-                li._size = Calculus.multiply(li._words, li._size,
+                li._size = CalculusDecimal.multiply(li._words, li._size,
                         LONG_POW_5[i], li._words);
             }
             // Multiplies by 2^n
             final int wordShift = n < 63 ? 0 : n / 63;
             final int bitShift = n - ((wordShift << 6) - wordShift); // n - 63 * wordShift
-            li._size = Calculus.shiftLeft(wordShift, bitShift, li._words,
+            li._size = CalculusDecimal.shiftLeft(wordShift, bitShift, li._words,
                     li._size, li._words);
             return li;
         } else {// n < 0
@@ -1162,13 +1161,13 @@ public final class LargeInteger extends Number<LargeInteger> {
             final int wordShift = n < 63 ? 0 : n / 63;
             final int bitShift = n - ((wordShift << 6) - wordShift); // n - 63 * wordShift
             if (_size <= wordShift) // All bits would be shifted. 
-                return LargeInteger.ZERO;
-            LargeInteger li = ARRAY_FACTORY.array(_size - wordShift);
-            li._size = Calculus.shiftRight(wordShift, bitShift, _words, _size,
+                return DecimalInteger.ZERO;
+            DecimalInteger li = ARRAY_FACTORY.array(_size - wordShift);
+            li._size = CalculusDecimal.shiftRight(wordShift, bitShift, _words, _size,
                     li._words);
             for (int j = n; j != 0;) { // Divides by 5^n
                 int i = (j >= INT_POW_5.length) ? INT_POW_5.length - 1 : j;
-                Calculus.divide(li._words, li._size, INT_POW_5[i], li._words);
+                CalculusDecimal.divide(li._words, li._size, INT_POW_5[i], li._words);
                 if ((li._size > 0) && (li._words[li._size - 1] == 0L)) {
                     li._size--;
                 }
@@ -1201,9 +1200,9 @@ public final class LargeInteger extends Number<LargeInteger> {
      *         otherwise.
      */
     public boolean equals(Object that) {
-        if (!(that instanceof LargeInteger))
+        if (!(that instanceof DecimalInteger))
             return false;
-        LargeInteger li = (LargeInteger) that;
+        DecimalInteger li = (DecimalInteger) that;
         return (_size == li._size) && (_isNegative == li._isNegative)
                 && (compare(_words, li._words, _size) == 0);
     }
@@ -1273,7 +1272,7 @@ public final class LargeInteger extends Number<LargeInteger> {
 
         // Keep 63 most significant bits.
         int shift = 63 - bitLength;
-        LargeInteger int63 = this.times2pow(shift);
+        DecimalInteger int63 = this.times2pow(shift);
         double d = MathLib.toDoublePow2(int63._words[0], -shift);
         return _isNegative ? -d : d;
     }
@@ -1287,7 +1286,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @throws ClassCastException <code>that</code> is not a 
      *         large integer.
      */
-    public int compareTo(LargeInteger that) {
+    public int compareTo(DecimalInteger that) {
         // Compares sign.
         if (_isNegative && !that._isNegative)
             return -1;
@@ -1320,8 +1319,8 @@ public final class LargeInteger extends Number<LargeInteger> {
     }
 
     @Override
-    public LargeInteger copy() {
-        LargeInteger li = ARRAY_FACTORY.array(_size);
+    public DecimalInteger copy() {
+        DecimalInteger li = ARRAY_FACTORY.array(_size);
         li._isNegative = _isNegative;
         li._size = _size;
         if (_size <= 1) {
@@ -1343,7 +1342,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return <code>TextFormat.getInstance(LargeInteger.class).format(this)</code>
      */
     public Text toText() {
-        return TextFormat.getInstance(LargeInteger.class).format(this);
+        return TextFormat.getInstance(DecimalInteger.class).format(this);
     }
 
     /**
@@ -1374,11 +1373,11 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @return the corresponding large integer.
      * @throws NumberFormatException if error when parsing.
      */
-    public static LargeInteger parse(CharSequence csq, int radix, Cursor cursor) {
+    public static DecimalInteger parse(CharSequence csq, int radix, Cursor cursor) {
         final int end = cursor.getEndIndex();
         boolean isNegative = cursor.at('-', csq);
         cursor.increment(isNegative || cursor.at('+', csq) ? 1 : 0);
-        LargeInteger li = null;
+        DecimalInteger li = null;
         final int maxDigits = (radix <= 10) ? 18 : (radix <= 16) ? 15 : 12;
         while (true) { // Reads up to digitsCount at a time.
             int start = cursor.getIndex();
@@ -1386,19 +1385,19 @@ public final class LargeInteger extends Number<LargeInteger> {
             long l = TypeFormat.parseLong(csq, radix, cursor);
             int readCount = cursor.getIndex() - start;
             if (li == null) {
-                li = LargeInteger.valueOf(l);
+                li = DecimalInteger.valueOf(l);
             } else {
                 if (li._words.length < li._size + 2) { // Resizes.
-                    LargeInteger tmp = ARRAY_FACTORY.array(li._size + 2);
+                    DecimalInteger tmp = ARRAY_FACTORY.array(li._size + 2);
                     System.arraycopy(li._words, 0, tmp._words, 0, li._size);
                     tmp._isNegative = li._isNegative;
                     tmp._size = li._size;
                     li = tmp;
                 }
                 long factor = pow(radix, readCount);
-                li._size = Calculus.multiply(li._words, li._size, factor,
+                li._size = CalculusDecimal.multiply(li._words, li._size, factor,
                         li._words);
-                li._size = Calculus.add(li._words, li._size, l);
+                li._size = CalculusDecimal.add(li._words, li._size, l);
             }
             if (cursor.getIndex() == end)
                 break; // Reached end.
@@ -1447,7 +1446,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @throws  IllegalArgumentException if radix is not in [2 .. 36] range.
      * @throws IOException if an I/O exception occurs.
      */
-    public static Appendable format(LargeInteger li, int radix, Appendable out)
+    public static Appendable format(DecimalInteger li, int radix, Appendable out)
             throws IOException {
         if (li._isNegative) {
             out.append('-');
@@ -1456,11 +1455,11 @@ public final class LargeInteger extends Number<LargeInteger> {
         return write(li.copy(), radix, (int) pow(radix, maxDigits), out);
     }
 
-    private static Appendable write(LargeInteger li, int radix, int divisor,
+    private static Appendable write(DecimalInteger li, int radix, int divisor,
             Appendable out) throws IOException {
         if (li._size <= 1) // Direct long formatting.
             return TypeFormat.format(li._size == 0 ? 0 : li._words[0], radix, out);
-        int rem = (int) Calculus
+        int rem = (int) CalculusDecimal
                 .divide(li._words, li._size, divisor, li._words);
         if (li._words[li._size - 1] == 0L) {
             li._size--;
