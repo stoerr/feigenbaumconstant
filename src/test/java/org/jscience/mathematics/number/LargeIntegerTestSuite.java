@@ -10,10 +10,12 @@ package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
+import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Random;
 
 import javolution.testing.TestCase;
 
@@ -23,7 +25,7 @@ import javolution.testing.TestCase;
  * tests that are specific to {@link LargeInteger}.
  * </p>
  * <p>
- * We do not test the trivial methods plus(long), minus(long).
+ * We do not test the trivial methods plus(long), minus(long). FIXME: Missing test für Karazuba
  * </p>
  * <p>
  * TODO: Test the special values LargeInteger.FIVE, LargeInteger.LONG_MIN_VALUE, LargeInteger.ONE, LargeInteger.ZERO
@@ -33,6 +35,8 @@ import javolution.testing.TestCase;
  * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  */
 public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger> {
+
+    private final Random rnd = new Random();
 
     /** Sets the {@link NumberHelper}. */
     public LargeIntegerTestSuite() {
@@ -50,6 +54,19 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 "-9876543212345678985432123456789876543210" }) {
             values.add(Pair.make(Double.valueOf(s), _helper.valueOf(s)));
         }
+    }
+
+    protected void testConstants() {
+        info(" constants");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                assertEquals(LargeInteger.valueOf(1), LargeInteger.ONE);
+                assertEquals(LargeInteger.valueOf(0), LargeInteger.ZERO);
+                assertEquals(LargeInteger.valueOf(5), LargeInteger.FIVE);
+                assertEquals(LargeInteger.valueOf(Long.MIN_VALUE), LargeInteger.LONG_MIN_VALUE);
+            }
+        });
     }
 
     /** Tests that the hashCode is equal to mod(1327144033). */
@@ -220,19 +237,47 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
     }
 
-    protected void dtestDivideLong() { // FIXME
+    protected void testDivideLong() {
         info(" divideInt");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final int qi = q._x.intValue();
-                test(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper) {
-                    @Override
-                    LargeInteger operation() throws Exception {
-                        return p._y.times(qi).divide(qi);
-                    }
-                });
+                if (0 != qi) {
+                    test(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper) {
+                        @Override
+                        LargeInteger operation() throws Exception {
+                            return p._y.times(qi).divide(qi);
+                        }
+                    });
+                }
             }
         }
     }
 
+    /** This is a probabilistic test - it micht fail very rarely */
+    protected void testGCD() {
+        info(" gcd");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                for (int i = 0; i < 10; ++i) {
+                    BigInteger bi1 = makePrime(133);
+                    BigInteger bi2 = makePrime(95);
+                    BigInteger bi3 = makePrime(52);
+                    final LargeInteger f = _helper.valueOf(bi3);
+                    assertEquals(bi1 + "\n" + bi2 + "\n" + bi3, f, _helper.valueOf(bi1).times(f).gcd(
+                            _helper.valueOf(bi2).times(f)));
+                }
+            }
+        });
+    }
+
+    private BigInteger makePrime(int bits) {
+        BigInteger res;
+        do {
+            res = new BigInteger(bits, rnd).nextProbablePrime();
+        } while (!res.isProbablePrime(20));
+        return res;
+    }
+    
 }

@@ -9,6 +9,7 @@
 package org.jscience.mathematics.number;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 
 import javolution.lang.MathLib;
 
@@ -105,6 +106,11 @@ public class NumberHelper<T extends Number<T>> {
     /** Provides access to the static valueOf(CharSequence) method. */
     public T valueOf(CharSequence s) {
         return invokeStaticMethod("valueOf", CharSequence.class, s);
+    }
+    
+    /** Transform from BigInteger via toString. */
+    public T valueOf(BigInteger bi) {
+        return valueOf(bi.toString());
     }
 
     /** Invokes a method without arguments on arg. */

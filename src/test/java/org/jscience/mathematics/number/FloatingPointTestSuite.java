@@ -9,6 +9,8 @@
 package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
+import static javolution.testing.TestContext.assertEquals;
+import static javolution.testing.TestContext.assertTrue;
 import static javolution.testing.TestContext.test;
 
 import java.util.List;
@@ -43,6 +45,18 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
         values.add(Pair.make(0.7234938, FloatingPoint.valueOf("0.72349380000000000000000000000000000000")));
     }
 
+    protected void testConstants() {
+        info(" constants");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                assertEquals(FloatingPoint.valueOf(1), FloatingPoint.ONE);
+                assertEquals(FloatingPoint.valueOf(0), FloatingPoint.ZERO);
+                assertTrue(FloatingPoint.NaN.isNaN());
+            }
+        });        
+    }
+    
     protected void testRound() {
         info("  round");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
