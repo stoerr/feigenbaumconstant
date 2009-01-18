@@ -1,0 +1,9 @@
+Evtl:. LargeInteger._words should be modulo 
+1000000000000000000 instead of 2**63 == 
+9223372036854775808
+Or better: words should be int modulo 1000000000 .
+
+Test LargeInteger.toByteArray.
+Report LargeInteger.valueOf(bytes,offset,length)
+if (isNegative && wordIndex < 0) wordIndex = 0; // special case for -1
+ 

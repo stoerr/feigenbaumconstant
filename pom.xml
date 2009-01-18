@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hps-feigenbaum</groupId>
+  <artifactId>hps-feigenbaum</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description>Kalkulation der Feigenbaumkonstante</description>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.5</version>
+    </dependency>
+  </dependencies>
+</project>
