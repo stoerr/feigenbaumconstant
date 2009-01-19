@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 public class LibrariesSpeedtest extends TestCase {
 
     final int rounds = 100;
-    final int precision = 2000;
+    final int precision = 10000;
 
     /**
      * 100r 10000p : 1.3s , 20000p : 3.3s, 40000p: 5s , 80000p: 16532, 160000p:

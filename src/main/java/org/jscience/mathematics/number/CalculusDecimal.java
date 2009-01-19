@@ -209,7 +209,7 @@ final class CalculusDecimal {
             // Adds carry.
             long zz = (shift == 0) ? carry : z[j] + carry; // 63 bits.
             carry = zz / MOD;
-            zz /= MOD; // 63 bits.
+            zz %= MOD; // 63 bits.
 
             // Splits words in [31 bits][32 bits]
             final long w = x[i++];
@@ -221,17 +221,17 @@ final class CalculusDecimal {
             carry += tmp / MOD;
             zz += tmp % MOD; // 64 bits.
             carry += zz / MOD;
-            zz /= MOD;
+            zz %= MOD;
 
             // Adds middle.
             tmp = wl * kh + wh * kl; // 64 bits.
-            carry += tmp % HALFMOD;
+            carry += tmp / HALFMOD;
             zz += (tmp * HALFMOD) % MOD; // 64 bits.
             carry += zz / MOD;
             z[j++] = zz % MOD;
 
             // Adds high to carry.
-            carry += (wh * kh); // <<1?
+            carry += wh * kh;
 
         }
         int size = shift + xSize;
@@ -251,15 +251,15 @@ final class CalculusDecimal {
         for (int i = xSize; i > 0;) {
             long w = x[--i];
 
-            long wh = (r * HALFMOD) | (w / HALFMOD);
+            long wh = (r * HALFMOD) + (w / HALFMOD);
             long qh = wh / y;
             r = wh - qh * y;
 
-            long wl = (r * HALFMOD) | (w / HALFMOD);
+            long wl = (r * HALFMOD) + (w % HALFMOD);
             long ql = wl / y;
             r = wl - ql * y;
 
-            z[i] = (qh * HALFMOD) | ql;
+            z[i] = (qh * HALFMOD) + ql;
         }
         return r;
     }

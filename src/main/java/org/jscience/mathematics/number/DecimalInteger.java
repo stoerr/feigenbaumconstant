@@ -1292,7 +1292,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      *         to type <code>double</code>.
      */
     public double doubleValue() {
-        if (_size == 0) return 0;
+        throw new UnsupportedOperationException();
+        /* if (_size == 0) return 0;
         if (_size <= 1) 
             return _isNegative ? -_words[0] : _words[0];
             
@@ -1304,7 +1305,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         int shift = 63 - bitLength;
         DecimalInteger int63 = this.times2pow(shift);
         double d = MathLib.toDoublePow2(int63._words[0], -shift);
-        return _isNegative ? -d : d;
+        return _isNegative ? -d : d; */
     }
 
     /**

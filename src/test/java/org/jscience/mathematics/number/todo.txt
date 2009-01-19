@@ -3,6 +3,11 @@ Evtl:. LargeInteger._words should be modulo
 9223372036854775808
 Or better: words should be int modulo 1000000000 .
 
+New bug:
+LargeInteger.valueOf(Long.MIN_VALUE).compareTo(Long.MIN_VALUE)
+(int) -1
+
+
 Bugs to discover / fix
 
 https://jscience.dev.java.net/issues/show_bug.cgi?id=64
@@ -21,3 +26,4 @@ scheint gefixt zu sein.
 Andere : Verify
 
 https://jscience.dev.java.net/issues/show_bug.cgi?id=102
+

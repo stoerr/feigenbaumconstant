@@ -54,6 +54,8 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 "-9876543212345678985432123456789876543210" }) {
             values.add(Pair.make(Double.valueOf(s), _helper.valueOf(s)));
         }
+        values.add(Pair.make(Double.valueOf(Long.MIN_VALUE), _helper.valueOf(Long.MIN_VALUE)));
+        values.add(Pair.make(Double.valueOf(Long.MAX_VALUE), _helper.valueOf(Long.MAX_VALUE)));
     }
 
     protected void testConstants() {
@@ -194,11 +196,13 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         info(" compareToLong");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
+                final long ql = q._x.longValue();
                 test(new TestCase() {
                     @Override
                     public void execute() {
-                        int expected = p._x.compareTo(new Double(q._x.longValue()));
-                        int res = p._y.compareTo(q._x.longValue());
+                        final Double qd = new Double(ql);
+                        int expected = p._x.compareTo(qd);
+                        int res = p._y.compareTo(ql);
                         assertEquals(p + "," + q, expected, res);
                     }
                 });

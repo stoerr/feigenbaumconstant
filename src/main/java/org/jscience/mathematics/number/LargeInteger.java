@@ -1313,7 +1313,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      */
     public int compareTo(long value) {
         if (_size > 1)
-            return (value == Long.MAX_VALUE) && (this.equals(Long.MIN_VALUE)) ? 0
+            return (value == Long.MIN_VALUE) && (this.equals(Long.MIN_VALUE)) ? 0
                     : (_isNegative ? -1 : 1);
         // size <= 1
         long thisValue = _isNegative ? -_words[0] : _words[0];
