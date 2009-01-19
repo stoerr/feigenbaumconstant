@@ -3,7 +3,21 @@ Evtl:. LargeInteger._words should be modulo
 9223372036854775808
 Or better: words should be int modulo 1000000000 .
 
-Test LargeInteger.toByteArray.
-Report LargeInteger.valueOf(bytes,offset,length)
-if (isNegative && wordIndex < 0) wordIndex = 0; // special case for -1
- 
+Bugs to discover / fix
+
+https://jscience.dev.java.net/issues/show_bug.cgi?id=64
+: XML geht nicht für ERROR.
+
+Precision of Real
+https://jscience.dev.java.net/issues/show_bug.cgi?id=71
+
+https://jscience.dev.java.net/issues/show_bug.cgi?id=76
+LargeInteger.sqrt(8)
+
+https://jscience.dev.java.net/issues/show_bug.cgi?id=98
+scheint gefixt zu sein.
+
+
+Andere : Verify
+
+https://jscience.dev.java.net/issues/show_bug.cgi?id=102
