@@ -8,9 +8,29 @@
  */
 package org.jscience.mathematics.number;
 
-import static org.jscience.mathematics.number.CalculusDecimal.MASK_31;
-import static org.jscience.mathematics.number.CalculusDecimal.MASK_63;
-import static org.jscience.mathematics.number.CalculusDecimal.MASK_8;
+import static org.jscience.mathematics.number.CalculusDecimal.MOD;
+import static org.jscience.mathematics.number.CalculusDecimal.MODDIGITS;
+import static org.jscience.mathematics.number.CalculusDecimal.HALFMOD;
+import static org.jscience.mathematics.number.CalculusDecimal.compare;
+
+import java.io.IOException;
+
+import javolution.context.ArrayFactory;
+import javolution.context.ConcurrentContext;
+import javolution.context.ObjectFactory;
+import javolution.context.StackContext;
+import javolution.lang.Configurable;
+import javolution.lang.MathLib;
+import javolution.text.Text;
+import javolution.text.TextBuilder;
+import javolution.text.TextFormat;
+import javolution.text.TypeFormat;
+import javolution.text.TextFormat.Cursor;
+import javolution.xml.XMLFormat;
+import javolution.xml.stream.XMLStreamException;
+
+import org.jscience.mathematics.number.CalculusDecimal.MultiplyLogic;
+import static org.jscience.mathematics.number.CalculusDecimal.HALFMOD;
 import static org.jscience.mathematics.number.CalculusDecimal.compare;
 
 import java.io.IOException;
@@ -237,9 +257,10 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @see    #toByteArray
      */
     public static DecimalInteger valueOf(byte[] bytes, int offset, int length) {
+        throw new UnsupportedOperationException();
         // Ensures result is large enough (takes into account potential
         // extra bits during negative to positive conversion).
-        DecimalInteger li = ARRAY_FACTORY.array(((length * 8 + 1) / 63) + 1);
+        /* DecimalInteger li = ARRAY_FACTORY.array(((length * 8 + 1) / 63) + 1);
         final boolean isNegative = bytes[offset] < 0;
         int wordIndex = 0;
         int bitIndex = 0;
@@ -267,7 +288,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             li._size = CalculusDecimal.add(li._words, li._size, ONE._words, 1,
                     li._words);
         }
-        return li;
+        return li; */
     }
 
     /**
@@ -285,7 +306,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @see    #bitLength
      */
     public int toByteArray(byte[] bytes, int offset) {
-        int bytesLength = (bitLength() >> 3) + 1;
+        throw new UnsupportedOperationException();
+        /* int bytesLength = (bitLength() >> 3) + 1;
         int wordIndex = 0;
         int bitIndex = 0;
         if (_isNegative) {
@@ -326,7 +348,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
                 bytes[offset] = 0;
             }
         }
-        return bytesLength;
+        return bytesLength; */
     }
 
     /**
@@ -436,14 +458,14 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * 
      * @return the length of this integer in bits (sign excluded).
      */
-    public int bitLength() {
+    /* public int bitLength() {
         if (_size == 0)
             return 0;
         final int n = _size - 1;
         final int bitLength = MathLib.bitLength(_words[n]) + (n << 6) - n;
         return (this.isNegative() && this.isPowerOfTwo()) ? bitLength - 1
                 : bitLength;
-    }
+    } */
 
     /**
      * Returns the minimal number of decimal digits necessary to represent 
@@ -452,13 +474,15 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @return the maximum number of digits.
      */
     public int digitLength() {
-        int bitLength = this.bitLength();
-        int min = (int) ((bitLength-1) * BITS_TO_DIGITS) + 1;
-        int max = (int) (bitLength * BITS_TO_DIGITS) + 1;
-        if (min == max)
-            return min;
-        return (DecimalInteger.ONE.times10pow(min).isLargerThan(this)) ? min
-                : min + 1;
+        if (_size == 0)
+            return 0;
+        int n = (_size - 1)*MODDIGITS;
+        long last = _words[_size-1];
+        while (0 != last) {
+            n++;
+            last = last /10;
+        }
+        return n;
     }
 
     private static final double BITS_TO_DIGITS = MathLib.LOG2 / MathLib.LOG10;
@@ -470,7 +494,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @return <code>true</code> if this number is a power of two; 
      *         <code>false</code> otherwise.
      */
-    public boolean isPowerOfTwo() {
+    /* public boolean isPowerOfTwo() {
         if (_size == 0)
             return false;
         final int n = _size - 1;
@@ -480,7 +504,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         }
         final int bitLength = MathLib.bitLength(_words[n]);
         return _words[n] == (1L << (bitLength - 1));
-    }
+    } */
 
     /**
      * Returns the index of the lowest-order one bit in this large integer
@@ -739,7 +763,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @throws ArithmeticException if <code>that.equals(ZERO)</code>
      */
     public DecimalInteger divide(DecimalInteger that) {
-        if ((that._size <= 1) && ((that._words[0] >> 32) == 0))
+        throw new UnsupportedOperationException();
+        /* if ((that._size <= 1) && ((that._words[0] >> 32) == 0))
             return divide(that.intValue());
         DecimalInteger result;
         DecimalInteger remainder;
@@ -777,7 +802,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         li._isNegative = (this._isNegative != that._isNegative)
                 && (result._size != 0);
         li._remainder = _isNegative ? remainder.opposite() : remainder;
-        return li;
+        return li; */
     }
 
     /**
@@ -791,14 +816,15 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @throws ArithmeticException if <code>divisor == 0</code>
      */
     public DecimalInteger divide(int divisor) {
-        if (divisor == 0)
+        throw new UnsupportedOperationException();
+        /* if (divisor == 0)
             throw new ArithmeticException("Division by zero");
         if (divisor == Integer.MIN_VALUE) { // abs(divisor) would overflow.
             DecimalInteger li = this.times2pow(-31).copy();
             li._isNegative = !_isNegative && (li._size != 0);
             li._remainder = _isNegative ? DecimalInteger
-                    .valueOf(-(_words[0] & MASK_31)) : DecimalInteger
-                    .valueOf(_words[0] & MASK_31);
+                    .valueOf(-(_words[0] % HALFMOD)) : DecimalInteger
+                    .valueOf(_words[0] % HALFMOD);
             return li;
         }
         DecimalInteger li = ARRAY_FACTORY.array(_size);
@@ -808,7 +834,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
                 : _size;
         li._isNegative = (_isNegative != (divisor < 0)) && (li._size != 0);
         li._remainder = DecimalInteger.valueOf(_isNegative ? -rem : rem);
-        return li;
+        return li; */
     }
 
     /**
@@ -834,7 +860,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @throws ArithmeticException if <code>this.isZero()</code>
      */
     public DecimalInteger inverseScaled(int precision) {
-        if (precision <= 30) { // Straight calculation.
+        throw new UnsupportedOperationException();
+        /* if (precision <= 30) { // Straight calculation.
             long divisor = this.shiftRight(this.bitLength() - precision - 1)._words[0];
             long dividend = 1L << (precision * 2 + 1);
             return (this.isNegative()) ? DecimalInteger.valueOf(-dividend
@@ -848,7 +875,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             DecimalInteger xPad = x.shiftLeft(precision - precision / 2 - 1);
             DecimalInteger tmp = xPad.minus(prodTrunc);
             return xPad.plus(tmp);
-        }
+        } */
     }
 
     /**
@@ -858,7 +885,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @throws ArithmeticException if this integer is negative.
      */
     public DecimalInteger sqrt() {
-        if (this.isNegative())
+        throw new UnsupportedOperationException();
+        /* if (this.isNegative())
             throw new ArithmeticException("Square root of negative integer");
         int bitLength = this.bitLength();
         StackContext.enter();
@@ -873,7 +901,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             }
         } finally {
             StackContext.exit();
-        }
+        } */
     }
 
     /**
@@ -947,7 +975,8 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @see    #modInverse
      */
     public DecimalInteger modPow(DecimalInteger exp, DecimalInteger m) {
-        if (!m.isPositive())
+        throw new UnsupportedOperationException();
+        /* if (!m.isPositive())
             throw new ArithmeticException("Modulus is not a positive number");
         if (exp.isPositive()) {
             StackContext.enter();
@@ -970,7 +999,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             return this.modPow(exp.opposite(), m).modInverse(m);
         } else { // exp == 0
             return DecimalInteger.ONE;
-        }
+        } */
     }
 
     /**
@@ -981,7 +1010,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @return a positive number or {@link #ZERO} if
      *         <code>(this.isZero() && that.isZero())</code>.
      */
-    public DecimalInteger gcd(DecimalInteger that) {
+    /* public DecimalInteger gcd(DecimalInteger that) {
         if (this.isZero())
             return that;
         if (that.isZero())
@@ -1041,7 +1070,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         int wordShift = n < 63 ? 0 : n / 63;
         int bitShift = n - ((wordShift << 6) - wordShift); // n - wordShift * 63
         _size = CalculusDecimal.shiftRight(wordShift, bitShift, _words, _size, _words);
-    }
+    } */
 
     private void subtract(DecimalInteger that) { // this >= that
         _size = CalculusDecimal.subtract(_words, _size, that._words, that._size,
@@ -1057,7 +1086,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @return <code>this &lt;&lt; n</code>.
      * @see #shiftRight
      */
-    public DecimalInteger shiftLeft(int n) {
+    /* public DecimalInteger shiftLeft(int n) {
         if (n < 0)
             return shiftRight(-n);
         if (_size == 0)
@@ -1069,7 +1098,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         li._size = CalculusDecimal.shiftLeft(wordShift, bitShift, _words, _size,
                 li._words);
         return li;
-    }
+    } */
 
     /**
      * Returns the value of this large integer after performing a binary
@@ -1080,15 +1109,15 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @param n the shift distance, in bits.
      * @return <code>this &gt;&gt; n</code>.
      */
-    public DecimalInteger shiftRight(int n) {
+    /* public DecimalInteger shiftRight(int n) {
         DecimalInteger li = this.times2pow(-n);
         return (_isNegative) && (n > 0) && (isShiftRightCorrection(n)) ? li
                 .minus(DecimalInteger.ONE) : li;
-    }
+    } */
 
     // Indicates if bits lost when shifting right the two's-complement
     // representation (affects only negative numbers).
-    private boolean isShiftRightCorrection(int n) {
+    /* private boolean isShiftRightCorrection(int n) {
         int wordShift = n < 63 ? 0 : n / 63;
         int bitShift = n - ((wordShift << 6) - wordShift); // n - wordShift * 63
         int i = wordShift;
@@ -1098,7 +1127,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             bitsLost = _words[i--] != 0;
         }
         return bitsLost;
-    }
+    } */
 
     /**
      * Returns the value of this large integer after multiplication by 
@@ -1110,7 +1139,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @param n the power of 2 exponent.
      * @return <code>this · 2<sup>n</sup></code>.
      */
-    public DecimalInteger times2pow(int n) {
+    /* public DecimalInteger times2pow(int n) {
         if (n >= 0)
             return shiftLeft(n);
         n = -n; // Works with positive n.
@@ -1123,7 +1152,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
                 li._words);
         li._isNegative = _isNegative && (li._size != 0);
         return li;
-    }
+    } */
 
     /**
      * Returns the value of this large integer after multiplication by 
@@ -1134,7 +1163,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
      * @param n the decimal exponent.
      * @return <code>this · 10<sup>n</sup></code>
      */
-    public DecimalInteger times10pow(int n) {
+    /* public DecimalInteger times10pow(int n) {
         if (this._size == 0)
             return DecimalInteger.ZERO;
         if (n >= 0) {
@@ -1176,7 +1205,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             li._isNegative = _isNegative && (li._size != 0);
             return li;
         }
-    }
+    } */
 
     private static final double DIGITS_TO_BITS = MathLib.LOG10 / MathLib.LOG2;
 
@@ -1190,7 +1219,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
             152587890625L, 762939453125L, 3814697265625L, 19073486328125L,
             95367431640625L, 476837158203125L, 2384185791015625L,
             11920928955078125L, 59604644775390625L, 298023223876953125L,
-            1490116119384765625L, 7450580596923828125L };
+            /* 1490116119384765625L, 7450580596923828125L */ };
 
     /**
      * Compares this large integer against the specified object.
@@ -1253,6 +1282,7 @@ public final class DecimalInteger extends Number<DecimalInteger> {
         return (_size <= 1) ? (_isNegative ? -_words[0] : _words[0])
                 : (_isNegative ? -((_words[1] << 63) | _words[0])
                         : (_words[1] << 63) | _words[0]); // bitLength > 63 bits.
+        // FIXME _size>1 is broken on decimal.
     }
 
     /**

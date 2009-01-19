@@ -24,13 +24,12 @@ final class CalculusDecimal {
     private CalculusDecimal() {
     }
 
-    static final long MASK_63 = 0x7FFFFFFFFFFFFFFFL;
+    /** Modulus: all words are between 0 and MOD-1. Largest power of 10 less than Long.MAX_VALUE.*/
+    static final long MOD = 1000000000000000000L;
+    static final int MODDIGITS = 18;
 
-    static final long MASK_32 = 0xFFFFFFFFL;
-
-    static final long MASK_31 = 0x7FFFFFFFL;
-
-    static final long MASK_8 = 0xFFL;
+    /** Square root of MOD */
+    static final long HALFMOD = 1000000000L;
 
     /**
      * x += y
@@ -38,17 +37,17 @@ final class CalculusDecimal {
      */
     static int add(long[] x, int xSize, long y) {
         long sum = x[0] + y;
-        x[0] = sum & MASK_63;
+        x[0] = sum % MOD;
         int i = 1;
-        sum >>>= 63;
+        sum /= MOD;
         while (sum != 0) {
             if (i == xSize) {
                 x[xSize] = sum;
                 return xSize + 1;
             }
             sum += x[i];
-            x[i++] = sum & MASK_63;
-            sum >>>= 63;
+            x[i++] = sum % MOD;
+            sum /= MOD;
         }
         return xSize;
     }
@@ -63,8 +62,8 @@ final class CalculusDecimal {
         int i = 0;
         while (i < ySize) {
             sum += x[i] + y[i];
-            z[i++] = sum & MASK_63;
-            sum >>>= 63;
+            z[i++] = sum % MOD;
+            sum /= MOD;
         }
         while (true) {
             if (sum == 0) {
@@ -78,8 +77,8 @@ final class CalculusDecimal {
                 return xSize + 1;
             }
             sum += x[i];
-            z[i++] = sum & MASK_63;
-            sum >>>= 63;
+            z[i++] = sum % MOD;
+            sum /= MOD;
         }
     }
 
@@ -93,13 +92,15 @@ final class CalculusDecimal {
         int i = 0;
         while (i < ySize) {
             diff += x[i] - y[i];
-            z[i++] = diff & MASK_63;
-            diff >>= 63; // Equals to -1 if borrow.
+            final long h = (diff + MOD) % MOD;
+            z[i++] = h;
+            diff = (diff - h) / MOD; // Equals to -1 if borrow.
         }
         while (diff != 0) {
             diff += x[i];
-            z[i++] = diff & MASK_63;
-            diff >>= 63; // Equals to -1 if borrow.
+            final long h = (diff + MOD) % MOD;
+            z[i++] = h;
+            diff = (diff - h) / MOD; // Equals to -1 if borrow.
         }
         // Copies rest of x to z.
         while (i < xSize) {
@@ -133,7 +134,7 @@ final class CalculusDecimal {
      * Preconditions: xSize != 0
      * @return z size 
      */
-    static int shiftLeft(int wordShift, int bitShift, long[] x, int xSize,
+    /* static int shiftLeft(int wordShift, int bitShift, long[] x, int xSize,
             long[] z) {
         final int shiftRight = 63 - bitShift;
         int i = xSize;
@@ -152,14 +153,14 @@ final class CalculusDecimal {
             z[--j] = 0;
         }
         return (high != 0) ? xSize + wordShift + 1 : xSize + wordShift;
-    }
+    } */
 
     /**
      * x >> n
      * Preconditions: xSize > wordShift
      * @return z size 
      */
-    static int shiftRight(int wordShift, int bitShift, long[] x, int xSize,
+    /* static int shiftRight(int wordShift, int bitShift, long[] x, int xSize,
             long[] z) {
         final int shiftLeft = 63 - bitShift;
         int i = wordShift;
@@ -172,7 +173,7 @@ final class CalculusDecimal {
         tmp >>>= bitShift;
         z[j] = tmp;
         return (tmp != 0) ? j + 1 : j;
-    }
+    } */
 
     /**
      * z = x * y
@@ -199,38 +200,38 @@ final class CalculusDecimal {
     // Multiplies by k, add to z if shift != 0
     private static int multiply(long[] x, int xSize, long k, long[] z, int shift) {
 
-        final long kl = k & MASK_32; // 32 bits.
-        final long kh = k >> 32; // 31 bits
+        final long kl = k % HALFMOD; // 32 bits.
+        final long kh = k / HALFMOD; // 31 bits
 
         long carry = 0; // 63 bits
         for (int i = 0, j = shift; i < xSize;) {
 
             // Adds carry.
             long zz = (shift == 0) ? carry : z[j] + carry; // 63 bits.
-            carry = zz >>> 63;
-            zz &= MASK_63; // 63 bits.
+            carry = zz / MOD;
+            zz /= MOD; // 63 bits.
 
             // Splits words in [31 bits][32 bits]
             final long w = x[i++];
-            final long wl = w & MASK_32; // 32 bits
-            final long wh = w >> 32; // 31 bits
+            final long wl = w % HALFMOD; // 32 bits
+            final long wh = w / HALFMOD; // 31 bits
 
             // Adds low.
             long tmp = wl * kl; // 64 bits
-            carry += tmp >>> 63;
-            zz += tmp & MASK_63; // 64 bits.
-            carry += zz >>> 63;
-            zz &= MASK_63;
+            carry += tmp / MOD;
+            zz += tmp % MOD; // 64 bits.
+            carry += zz / MOD;
+            zz /= MOD;
 
             // Adds middle.
             tmp = wl * kh + wh * kl; // 64 bits.
-            carry += tmp >>> 31;
-            zz += (tmp << 32) & MASK_63; // 64 bits.
-            carry += zz >>> 63;
-            z[j++] = zz & MASK_63;
+            carry += tmp % HALFMOD;
+            zz += (tmp * HALFMOD) % MOD; // 64 bits.
+            carry += zz / MOD;
+            z[j++] = zz % MOD;
 
             // Adds high to carry.
-            carry += (wh * kh) << 1;
+            carry += (wh * kh); // <<1?
 
         }
         int size = shift + xSize;
@@ -250,15 +251,15 @@ final class CalculusDecimal {
         for (int i = xSize; i > 0;) {
             long w = x[--i];
 
-            long wh = (r << 31) | (w >>> 32);
+            long wh = (r * HALFMOD) | (w / HALFMOD);
             long qh = wh / y;
             r = wh - qh * y;
 
-            long wl = (r << 32) | (w & MASK_32);
+            long wl = (r * HALFMOD) | (w / HALFMOD);
             long ql = wl / y;
             r = wl - ql * y;
 
-            z[i] = (qh << 32) | ql;
+            z[i] = (qh * HALFMOD) | ql;
         }
         return r;
     }
