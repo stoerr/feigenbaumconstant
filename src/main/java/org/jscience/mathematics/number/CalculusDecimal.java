@@ -226,7 +226,7 @@ final class CalculusDecimal {
             // Adds middle.
             tmp = wl * kh + wh * kl; // 64 bits.
             carry += tmp / HALFMOD;
-            zz += (tmp * HALFMOD) % MOD; // 64 bits.
+            zz += (tmp % HALFMOD) * HALFMOD; // 64 bits.
             carry += zz / MOD;
             z[j++] = zz % MOD;
 
