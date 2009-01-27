@@ -1,5 +1,7 @@
 package org.jscience.mathematics.number;
 
+import net.stoerr.common.test.Timing;
+import net.stoerr.common.test.Timing.Timed;
 import javolution.context.LocalContext;
 import javolution.lang.MathLib;
 import javolution.testing.TestSuite;
@@ -8,8 +10,11 @@ public class PerformanceTestSuite extends TestSuite {
 
     protected final NumberHelper<FloatingPoint> _helper = NumberHelper.FLOATINGPOINT;
 
-    /** Executes all testsuites as regression tests. */
-    public static void main(String[] args) {
+    /**
+     * Executes all testsuites as regression tests.
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
         // enter(REGRESSION);
         /*
          * enter(LoggingTestContext.LOGGINGTESTCONTEXT); try { new PerformanceTestSuite().run(); } finally { exit(); }
@@ -22,10 +27,27 @@ public class PerformanceTestSuite extends TestSuite {
         // testGeometricRow();
         // testDecimal();
         // testBinary();
-        /*
-         * testDecimal(); testBinary(); testDecimal(); testBinary();
-         */
-        testStuff();
+        // testStuff();
+        for (int i = 0; i < 10; ++i) {
+            System.out.println("binary: " + Timing.timingNS(new Timed() {
+                @Override
+                public Object run(int runs) {
+                    return testBinary(runs);
+                }
+            }));
+            System.out.println("binary: " + Timing.timingNS(new Timed() {
+                @Override
+                public Object run(int runs) {
+                    return testBinary(runs);
+                }
+            }));
+            System.out.println("decimal: " + Timing.timingNS(new Timed() {
+                @Override
+                public Object run(int runs) {
+                    return testDecimal(runs);
+                }
+            }));
+        }
     }
 
     private void testGeometricRow() {
@@ -45,10 +67,9 @@ public class PerformanceTestSuite extends TestSuite {
         }
     }
 
-    final int size = 2000;
-    final int rounds = 500;
+    final int size = 5000;
 
-    protected void testDecimal() {
+    protected Object testDecimal(final int rounds) {
         Long begin = System.nanoTime();
         LargeInteger ten = LargeInteger.valueOf(11);
         LargeInteger l1 = ten;
@@ -57,10 +78,11 @@ public class PerformanceTestSuite extends TestSuite {
         for (int i = 0; i < rounds; ++i)
             l1.times(l1);
         // System.out.println(l1.times(l1));
-        System.out.println("LargeInteger: " + 1e-9 * (System.nanoTime() - begin));
+        // System.out.println("LargeInteger: " + 1e-9 * (System.nanoTime() - begin));
+        return l1;
     }
 
-    protected void testBinary() {
+    protected Object testBinary(final int rounds) {
         Long begin = System.nanoTime();
         DecimalInteger ten = DecimalInteger.valueOf(11);
         DecimalInteger l1 = ten;
@@ -69,9 +91,10 @@ public class PerformanceTestSuite extends TestSuite {
         for (int i = 0; i < rounds; ++i)
             l1.times(l1);
         // System.out.println(l1.times(l1));
-        System.out.println("DecimalInteger: " + 1e-9 * (System.nanoTime() - begin));
+        // System.out.println("DecimalInteger: " + 1e-9 * (System.nanoTime() - begin));
+        return l1;
     }
-    
+
     protected void testStuff() {
         Long begin = System.nanoTime();
         long a = 4399224589879L;

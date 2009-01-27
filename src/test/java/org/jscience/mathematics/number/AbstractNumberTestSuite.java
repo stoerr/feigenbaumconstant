@@ -354,8 +354,8 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
                     String xml = wr.toString();
                     final StringReader rd = new StringReader(xml);
                     XMLObjectReader r = XMLObjectReader.newInstance(rd);
-                    T res = r.read();
-                    return res;
+                    Object res = r.read();
+                    return (T) res;
                 }
             });
         }        
