@@ -54,6 +54,8 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 "-9876543212345678985432123456789876543210" }) {
             values.add(Pair.make(Double.valueOf(s), _helper.valueOf(s)));
         }
+        values.add(Pair.make(Double.valueOf(Integer.MIN_VALUE), _helper.valueOf(Integer.MIN_VALUE)));
+        values.add(Pair.make(Double.valueOf(Integer.MAX_VALUE), _helper.valueOf(Integer.MAX_VALUE)));
         values.add(Pair.make(Double.valueOf(Long.MIN_VALUE), _helper.valueOf(Long.MIN_VALUE)));
         values.add(Pair.make(Double.valueOf(Long.MAX_VALUE), _helper.valueOf(Long.MAX_VALUE)));
     }
