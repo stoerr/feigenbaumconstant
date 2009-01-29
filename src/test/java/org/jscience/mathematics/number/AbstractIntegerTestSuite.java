@@ -54,6 +54,8 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
                 if (0 != q._x) {
                     double expected = p._x / q._x;
                     expected = 0 > expected ? -MathLib.floor(-expected) : MathLib.floor(expected);
+                    // insufficient precision of double :
+                    if (Long.MAX_VALUE == p._x && Long.MIN_VALUE == q._x) expected = 0;
                     test(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, expected, _helper) {
                         @SuppressWarnings("unchecked")
                         @Override
