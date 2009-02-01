@@ -1472,7 +1472,11 @@ public final class LargeInteger extends Number<LargeInteger> {
             out.append('0');
             divisor /= radix;
         }
-        return TypeFormat.format(rem, radix, out); // Writes low.
+        if (0 != rem) {
+            return TypeFormat.format(rem, radix, out); // Writes low.
+        } else {
+            return out;
+        }
     }
 
     private static final long serialVersionUID = 1L;
