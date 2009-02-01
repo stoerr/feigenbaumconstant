@@ -27,10 +27,6 @@ import javolution.testing.TestCase;
  * <p>
  * We do not test the trivial methods plus(long), minus(long). FIXME: Missing test für Karazuba
  * </p>
- * <p>
- * TODO: Test the special values LargeInteger.FIVE, LargeInteger.LONG_MIN_VALUE, LargeInteger.ONE, LargeInteger.ZERO
- * etc. but we are in the wrong package. 8-}
- * </p>
  * @since 23.12.2008
  * @author <a href="http://www.stoerr.net/">Hans-Peter Störr</a>
  */

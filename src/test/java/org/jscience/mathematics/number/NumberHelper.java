@@ -157,11 +157,7 @@ public class NumberHelper<T extends Number<T>> {
          */
         @Override
         public T valueOf(double d) {
-            try {
-                return (T) _numberClass.getDeclaredMethod("valueOf", long.class).invoke(null, MathLib.round(d));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            return valueOf(MathLib.round(d));
         }
     }
 
@@ -171,6 +167,15 @@ public class NumberHelper<T extends Number<T>> {
     /** The {@link NumberHelper} for {@link Integer64}. */
     public static final NumberHelper<Integer64> INTEGER64 = new IntegerHelper<Integer64>(Integer64.class);
 
+    /** The {@link NumberHelper} for {@link LargeInteger}. */
+    public static final NumberHelper<ModuloInteger> MODULOINTEGER = new IntegerHelper<ModuloInteger>(
+            ModuloInteger.class) {
+        @Override
+        public ModuloInteger valueOf(long arg0) {
+            return ModuloInteger.valueOf(LargeInteger.valueOf(arg0));
+        }
+    };
+    
     /** The {@link NumberHelper} for {@link FloatingPoint}. */
     public static final NumberHelper<FloatingPoint> FLOATINGPOINT = new NumberHelper<FloatingPoint>(FloatingPoint.class);
 
