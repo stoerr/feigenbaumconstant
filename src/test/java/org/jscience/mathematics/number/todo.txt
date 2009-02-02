@@ -1,3 +1,7 @@
+modulo tests
+real complex tests
+bugs
+
 Evtl:. LargeInteger._words should be modulo 
 1000000000000000000 instead of 2**63 == 
 9223372036854775808

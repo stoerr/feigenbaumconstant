@@ -1,11 +1,13 @@
 package org.jscience.mathematics.number;
 
+import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.test;
-import static javolution.testing.TestContext.info;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import javolution.lang.MathLib;
+import javolution.testing.TestCase;
 
 public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
 
@@ -66,5 +68,17 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
                 }
             });
         }
+    }
+
+    protected void testNormalization() {
+        info(" normalization");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                Rational norm = Rational.valueOf(123 * 43423, 839 * 43423);
+                assertEquals(" normalize " + norm, 123, norm.getDividend().longValue());
+                assertEquals(" normalize " + norm, 839, norm.getDivisor().longValue());
+            }
+        });
     }
 }
