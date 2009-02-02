@@ -22,9 +22,11 @@ public class AllNumberTests extends TestSuite {
     /** Here all test suites of the package org.jscience.mathematics.number should be executed. */
     @Override
     public void run() {
-        new ModuloIntegerTestSuite().run();
+        new RationalTestSuite().run();
         new Integer64TestSuite().run();
         new Float64TestSuite().run();
+        new SimpleComplexTestSuite().run();
+        new ModuloIntegerTestSuite().run();
         new LargeIntegerTestSuite().run();
         new FloatingPointTestSuite().run();
         new RealTestSuite().run();

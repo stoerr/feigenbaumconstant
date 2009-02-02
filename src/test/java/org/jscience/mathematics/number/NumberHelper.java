@@ -44,7 +44,7 @@ public class NumberHelper<T extends Number<T>> {
      * Makes a {@link RuntimeException} of e and throws it. If it is an {@link Error} it is just rethrown as well, if it
      * is an {@link InvocationTargetException} we throw the cause to get rid of the annoying wrapping.
      */
-    private RuntimeException rethrowException(Throwable t) {
+    private static RuntimeException rethrowException(Throwable t) {
         if (t instanceof RuntimeException) { throw (RuntimeException) t; }
         if (t instanceof InvocationTargetException) {
             InvocationTargetException te = (InvocationTargetException) t;
@@ -107,7 +107,7 @@ public class NumberHelper<T extends Number<T>> {
     public T valueOf(CharSequence s) {
         return invokeStaticMethod("valueOf", CharSequence.class, s);
     }
-    
+
     /** Transform from BigInteger via toString. */
     public T valueOf(BigInteger bi) {
         return valueOf(bi.toString());
@@ -175,7 +175,7 @@ public class NumberHelper<T extends Number<T>> {
             return ModuloInteger.valueOf(LargeInteger.valueOf(arg0));
         }
     };
-    
+
     /** The {@link NumberHelper} for {@link FloatingPoint}. */
     public static final NumberHelper<FloatingPoint> FLOATINGPOINT = new NumberHelper<FloatingPoint>(FloatingPoint.class);
 
@@ -184,4 +184,33 @@ public class NumberHelper<T extends Number<T>> {
 
     /** The {@link NumberHelper} for {@link Float64}. */
     public static final NumberHelper<Float64> FLOAT64 = new NumberHelper<Float64>(Float64.class);
+
+    public static final NumberHelper<Complex> COMPLEX = new NumberHelper<Complex>(Complex.class) {
+        @Override
+        public Complex valueOf(double arg) {
+            return Complex.valueOf(arg, 0);
+        }
+    };
+
+    public static final NumberHelper<Rational> RATIONAL = new NumberHelper<Rational>(Rational.class) {
+        @Override
+        public Rational valueOf(long arg) {
+            return Rational.valueOf(arg, 1);
+        }
+
+        /**
+         * Returns a crude approximation of the double value.
+         */
+        @Override
+        public Rational valueOf(double arg) {
+            if (1.0 / Long.MAX_VALUE > MathLib.abs(arg)) return Rational.ZERO;
+            double divisor = 1;
+            double dividend = arg * divisor;
+            while (MathLib.abs(dividend) < Long.MAX_VALUE / 2) {
+                divisor *= 2;
+                dividend *= 2;
+            }
+            return Rational.valueOf(MathLib.round(dividend), MathLib.round(divisor));
+        }
+    };
 }
