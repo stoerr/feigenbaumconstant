@@ -148,7 +148,7 @@ public final class Rational extends Number<Rational> implements Field<Rational>{
                     sep + 1, chars.length()));
             return valueOf(dividend, divisor);
         } else { // No divisor.
-            return valueOf(LargeInteger.valueOf(txt.subtext(0, sep)),
+            return valueOf(LargeInteger.valueOf(txt),
                     LargeInteger.ONE);
         }
     }
