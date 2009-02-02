@@ -206,7 +206,7 @@ public class NumberHelper<T extends Number<T>> {
             if (1.0 / Long.MAX_VALUE > MathLib.abs(arg)) return Rational.ZERO;
             double divisor = 1;
             double dividend = arg * divisor;
-            while (MathLib.abs(dividend) < Long.MAX_VALUE / 2) {
+            while (MathLib.abs(dividend) < Long.MAX_VALUE / 2 && MathLib.abs(divisor) < Long.MAX_VALUE / 2) {
                 divisor *= 2;
                 dividend *= 2;
             }

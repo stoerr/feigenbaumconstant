@@ -350,7 +350,7 @@ public final class Rational extends Number<Rational> implements Field<Rational>{
      * @return the hash code value.
      */
     public int hashCode() {
-        return _dividend.hashCode() - _divisor.hashCode();
+        return 3191 * _dividend.hashCode() + 9811 * _divisor.hashCode();
     }
 
     /**

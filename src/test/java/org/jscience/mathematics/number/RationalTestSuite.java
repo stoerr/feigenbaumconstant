@@ -17,7 +17,12 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
         for (double d : new double[] { 0.0, 1.0, 43234, -9382 }) {
             values.add(Pair.make(d, _helper.valueOf(MathLib.round(d))));
         }
-        // FIXME add misc. rational values.
+        for (long numerator : new long[] { 0, 1, 2, 7, 67, 35 * 67 }) {
+            for (long denominator : new long[] { 1, 2, 67, 23 * 67 }) {
+                values.add(Pair.make(numerator * 1.0 / denominator, Rational.valueOf(numerator, denominator)));
+                values.add(Pair.make(-numerator * 1.0 / denominator, Rational.valueOf(-numerator, denominator)));
+            }
+        }
     }
 
 }

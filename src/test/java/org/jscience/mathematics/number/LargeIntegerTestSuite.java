@@ -152,7 +152,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                     @Override
                     public void execute() {
                         String val = p._y.toText(radix).toString();
-                        assertEquals("hexadecimal (" + radix + ") " + p + " - " + val, p._y, LargeInteger.valueOf(val,
+                        assertEquals("hexadecimal (" + radix + ") " + p + " : " + val, p._y, LargeInteger.valueOf(val,
                                 radix));
                     }
                 });
