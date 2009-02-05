@@ -54,10 +54,26 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     /** Generates a list of values to test with, along with their value as double. */
     protected abstract void initTestValues(List<Pair<Double, T>> values);
 
+    /**
+     * This is called by AbstractNumberTest to normalize the result of {@link AbstractNumberTest#operation()} as a hook
+     * for test customisation by subclasses. The default implementation does nothing.
+     */
+    protected T normalize(T val) {
+        return val;
+    }
+    
+    /**
+     * This is called by AbstractNumberTest to normalize the expected result as a hook for test customisation by
+     * subclasses. The default implementation does nothing.
+     */
+    protected double normalizeExpected(double val) {
+        return val;
+    }
+
     protected void testToString() {
         info("  toString, valueOf(String)");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing toString / valueOf(String) " + p, p._x, _helper) {
+            doTest(new AbstractNumberTest<T>("Testing toString / valueOf(String) " + p, p._x, _helper, this) {
                 @Override
                 T operation() throws Exception {
                     return _helper.valueOf(p._y.toString());
@@ -69,7 +85,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testDoubleValue() {
         info("  doubleValue");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing doubleValue " + p, p._x, _helper) {
+            doTest(new AbstractNumberTest<T>("Testing doubleValue " + p, p._x, _helper, this) {
                 @Override
                 T operation() throws Exception {
                     // doubleValue is called in AbstractNumberTest#compareresult()
@@ -83,7 +99,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  floatValue");
         for (final Pair<Double, T> p : getTestValues()) {
             if (MathLib.abs(p._x) < Float.MAX_VALUE) {
-                test(new AbstractNumberTest<T>("Testing floatValue " + p, p._x, _helper) {
+                doTest(new AbstractNumberTest<T>("Testing floatValue " + p, p._x, _helper, this) {
                     @Override
                     T operation() throws Exception {
                         EPSILON = 1e-7;
@@ -98,7 +114,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  byteValue");
         for (final Pair<Double, T> p : getTestValues()) {
             if (Math.abs(p._x) < Long.MAX_VALUE) {
-                test(new AbstractNumberTest<T>("Testing byteValue " + p, (byte) (p._x.doubleValue() % 256), _helper) {
+                doTest(new AbstractNumberTest<T>("Testing byteValue " + p, (byte) (p._x.doubleValue() % 256), _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return _helper.valueOf(p._y.byteValue());
@@ -112,7 +128,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  shortValue");
         for (final Pair<Double, T> p : getTestValues()) {
             if (Math.abs(p._x) < Long.MAX_VALUE) {
-                test(new AbstractNumberTest<T>("Testing shortValue " + p, (short) (p._x.doubleValue() % 65536), _helper) {
+                doTest(new AbstractNumberTest<T>("Testing shortValue " + p, (short) (p._x.doubleValue() % 65536), _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return _helper.valueOf(p._y.shortValue());
@@ -126,7 +142,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  longValue");
         for (final Pair<Double, T> p : getTestValues()) {
             if (Math.abs(p._x) < Long.MAX_VALUE) {
-                test(new AbstractNumberTest<T>("Testing longValue " + p, (long) p._x.doubleValue(), _helper) {
+                doTest(new AbstractNumberTest<T>("Testing longValue " + p, (long) p._x.doubleValue(), _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return _helper.valueOf(p._y.longValue());
@@ -143,7 +159,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
                 // In the case of Long.M*_VALUE we have a problem with the precision of double:
                 // (double)Long.MIN_VALUE == (double)Long.MAX_VALUE
                 if (p._x != Long.MIN_VALUE && p._x != Long.MAX_VALUE) {
-                    test(new AbstractNumberTest<T>("Testing plus " + p._x + "," + q._x, p._x + q._x, _helper) {
+                    doTest(new AbstractNumberTest<T>("Testing plus " + p._x + "," + q._x, p._x + q._x, _helper, this) {
                         @Override
                         T operation() throws Exception {
                             return p._y.plus(q._y);
@@ -158,7 +174,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  minus");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
-                test(new AbstractNumberTest<T>("Testing minus " + p._x + "," + q._x, p._x - q._x, _helper) {
+                doTest(new AbstractNumberTest<T>("Testing minus " + p._x + "," + q._x, p._x - q._x, _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return p._y.minus(q._y);
@@ -172,7 +188,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  times");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
-                test(new AbstractNumberTest<T>("Testing times " + p._x + "," + q._x, p._x * q._x, _helper) {
+                doTest(new AbstractNumberTest<T>("Testing times " + p._x + "," + q._x, p._x * q._x, _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return p._y.times(q._y);
@@ -186,7 +202,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  compareTo");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         assertEquals(p + "," + q, p._x.compareTo(q._x), p._y.compareTo(q._y));
@@ -199,7 +215,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testOpposite() {
         info("  opposite");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing opposite " + p, -p._x, _helper) {
+            doTest(new AbstractNumberTest<T>("Testing opposite " + p, -p._x, _helper, this) {
                 @Override
                 T operation() throws Exception {
                     return p._y.opposite();
@@ -219,7 +235,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
             for (final int exp : new Integer[] { 1, 3, 7, 8, 9 }) {
                 final double pow = MathLib.pow(p._x, exp);
                 if (getMaxNumber() >= MathLib.abs(pow)) {
-                    test(new AbstractNumberTest<T>("Testing pow " + p + ", " + exp, pow, _helper) {
+                    doTest(new AbstractNumberTest<T>("Testing pow " + p + ", " + exp, pow, _helper, this) {
                         @Override
                         T operation() throws Exception {
                             return p._y.pow(exp);
@@ -234,7 +250,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  equals");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         assertEquals(p + "," + q, p._x.equals(q._x), p._y.equals(q._y));
@@ -251,7 +267,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
                 // In the case of Long.M*_VALUE we have a problem with the precision of double:
                 // (double)Long.MIN_VALUE == (double)Long.MAX_VALUE
                 if (p._x != Long.MIN_VALUE && q._x != Long.MAX_VALUE) {
-                    test(new TestCase() {
+                    doTest(new TestCase() {
                         @Override
                         public void execute() {
                             assertEquals(p + "," + q, MathLib.abs(p._x) > MathLib.abs(q._x), p._y.isLargerThan(q._y));
@@ -267,7 +283,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
                 if (0 != q._x) {
-                    test(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, p._x / q._x, _helper) {
+                    doTest(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, p._x / q._x, _helper, this) {
                         @Override
                         T operation() throws Exception {
                             return _helper.invokeMethod("divide", p._y, q._y);
@@ -281,7 +297,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testAbs() {
         info("  abs");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing abs " + p, MathLib.abs(p._x), _helper) {
+            doTest(new AbstractNumberTest<T>("Testing abs " + p, MathLib.abs(p._x), _helper, this) {
                 @Override
                 T operation() throws Exception {
                     return _helper.invokeMethod("abs", p._y);
@@ -293,7 +309,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testIsPositive() {
         info("  isPositive");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     assertTrue(p.toString(), p._x > 0 == _helper.invokeBooleanMethod("isPositive", p._y));
@@ -305,7 +321,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testIsNegative() {
         info("  isNegative");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     assertTrue(p.toString(), p._x < 0 == _helper.invokeBooleanMethod("isNegative", p._y));
@@ -317,7 +333,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testIsZero() {
         info("  isZero");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     assertTrue(p.toString(), (p._x == 0) == _helper.invokeBooleanMethod("isZero", p._y));
@@ -330,7 +346,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
         info("  hashcode");
         for (final Pair<Double, T> p : getTestValues()) {
             for (final Pair<Double, T> q : getTestValues()) {
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         final int phash = p._y.hashCode();
@@ -352,7 +368,7 @@ public abstract class AbstractNumberTestSuite<T extends Number<T>> extends Abstr
     protected void testXMLEncoding() {
         info("  XML");
         for (final Pair<Double, T> p : getTestValues()) {
-            test(new AbstractNumberTest<T>("Testing XML " + p, p._x, _helper) {
+            doTest(new AbstractNumberTest<T>("Testing XML " + p, p._x, _helper, this) {
                 @Override
                 T operation() throws Exception {
                     StringWriter wr = new StringWriter();

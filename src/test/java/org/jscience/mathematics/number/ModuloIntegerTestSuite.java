@@ -20,12 +20,25 @@ public class ModuloIntegerTestSuite extends AbstractIntegerTestSuite<ModuloInteg
         super(NumberHelper.MODULOINTEGER);
     }
     
+    /**
+     * Calculates the expected value modulo {@link ModuloInteger#getModulus()}.
+     * @see org.jscience.mathematics.number.AbstractNumberTestSuite#normalizeExpected(double)
+     */
     @Override
-    protected void test(TestCase t) {
+    protected double normalizeExpected(double val) {
+        LargeInteger mod = ModuloInteger.getModulus();
+        if (null == mod) return val;
+        double m = mod.longValue();
+        final double res = ((val % m) + m) % m;
+        return res;
+    }
+
+    @Override
+    protected void doTest(TestCase t) {
         LocalContext.enter();
         try {
             ModuloInteger.setModulus(LargeInteger.valueOf(9719));
-            super.test(t);
+            super.doTest(t);
         } finally {
             LocalContext.exit();
         }
@@ -33,7 +46,7 @@ public class ModuloIntegerTestSuite extends AbstractIntegerTestSuite<ModuloInteg
 
     protected void testConstants() {
         info(" constants");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals(ModuloInteger.valueOf(LargeInteger.valueOf(1)), ModuloInteger.ONE);

@@ -48,7 +48,7 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
         info("  inverse");
         for (final Pair<Double, T> p : getTestValues()) {
             if (0 != p._x) {
-                test(new AbstractNumberTest<T>("Testing inverse " + p, 1.0 / p._x, _helper) {
+                doTest(new AbstractNumberTest<T>("Testing inverse " + p, 1.0 / p._x, _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return _helper.invokeMethod("inverse", p._y);
@@ -62,7 +62,7 @@ public abstract class AbstractFloatTestSuite<T extends Number<T>> extends Abstra
         info("  sqrt");
         for (final Pair<Double, T> p : getTestValues()) {
             if (0 <= p._x) {
-                test(new AbstractNumberTest<T>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper) {
+                doTest(new AbstractNumberTest<T>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper, this) {
                     @Override
                     T operation() throws Exception {
                         return _helper.invokeMethod("sqrt", p._y);

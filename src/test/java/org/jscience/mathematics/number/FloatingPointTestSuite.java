@@ -47,7 +47,7 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
 
     protected void testConstants() {
         info(" constants");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals(FloatingPoint.valueOf(1), FloatingPoint.ONE);
@@ -60,7 +60,7 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     protected void testRound() {
         info("  round");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
-            test(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper) {
+            doTest(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper, this) {
                 @Override
                 FloatingPoint operation() throws Exception {
                     final LargeInteger rounded = p._y.round();
@@ -73,7 +73,7 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     protected void testSetDigits() {
         info("  setDigits");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     FloatingPoint v1 = FloatingPoint.valueOf(0.123);

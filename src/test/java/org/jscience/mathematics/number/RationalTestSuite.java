@@ -33,7 +33,7 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
     protected void testRound() {
         info(" round");
         for (final Pair<Double, Rational> p : getTestValues()) {
-            test(new AbstractNumberTest<Rational>("Testing round " + p, MathLib.round(p._x), _helper) {
+            doTest(new AbstractNumberTest<Rational>("Testing round " + p, MathLib.round(p._x), _helper, this) {
                 @Override
                 Rational operation() throws Exception {
                     return Rational.valueOf(p._y.round(), LargeInteger.ONE);
@@ -47,7 +47,7 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
         for (final Pair<Double, Rational> p : getTestValues()) {
             for (final Pair<Double, Rational> q : getTestValues()) {
                 final long ql = q._y.getDividend().longValue();
-                test(new AbstractNumberTest<Rational>("Testing round " + p + ", " + ql, p._x * ql, _helper) {
+                doTest(new AbstractNumberTest<Rational>("Testing round " + p + ", " + ql, p._x * ql, _helper, this) {
                     @Override
                     Rational operation() throws Exception {
                         return p._y.times(ql);
@@ -61,7 +61,7 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
         info(" valueOfNoDiv");
         for (final Pair<Double, Rational> p : getTestValues()) {
             final long v = p._y.getDividend().longValue();
-            test(new AbstractNumberTest<Rational>("Testing[ valueOfNoDiv " + v, v, _helper) {
+            doTest(new AbstractNumberTest<Rational>("Testing[ valueOfNoDiv " + v, v, _helper, this) {
                 @Override
                 Rational operation() throws Exception {
                     return Rational.valueOf(v + "");
@@ -72,7 +72,7 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
 
     protected void testNormalization() {
         info(" normalization");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 Rational norm = Rational.valueOf(123 * 43423, 839 * 43423);

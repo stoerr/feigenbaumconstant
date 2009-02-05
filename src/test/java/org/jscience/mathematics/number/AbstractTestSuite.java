@@ -68,7 +68,7 @@ public abstract class AbstractTestSuite extends TestSuite {
     }
     
     /** Gives the test to the {@link TestContext}. This method is here to provide a hook to do other things here. */
-    protected void test(TestCase t) {
+    protected void doTest(TestCase t) {
         TestContext.test(t);
     }
 

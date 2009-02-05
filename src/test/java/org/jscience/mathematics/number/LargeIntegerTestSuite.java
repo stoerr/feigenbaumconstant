@@ -58,7 +58,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     protected void testConstants() {
         info(" constants");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals(LargeInteger.valueOf(1), LargeInteger.ONE);
@@ -74,7 +74,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         info(" hashCode2");
         final long p = 1327144033;
         final LargeInteger pi = LargeInteger.valueOf(p);
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals("-1", LargeInteger.valueOf(-1), LargeInteger.valueOf(LargeInteger.valueOf(-1).hashCode()));
@@ -95,7 +95,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     protected void testDigitLength() {
         info(" digitLength");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals(1, LargeInteger.ZERO.digitLength());
@@ -116,7 +116,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     protected void testBitLength() {
         info("  bitLength");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals(0, LargeInteger.ZERO.bitLength());
@@ -137,7 +137,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
 
     protected void testHexadecimal() {
         info(" hexadecimal");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 assertEquals("6a8af7ae5a6759aa49fa43b8b4cd49cf655e41795ba270e613a557", LargeInteger.valueOf(
@@ -148,7 +148,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         });
         for (final int radix : new int[] { 2, 10, 16, 36 }) {
             for (final Pair<Double, LargeInteger> p : getTestValues()) {
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         String val = p._y.toText(radix).toString();
@@ -163,7 +163,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     protected void testBigInteger() {
         info(" biginteger");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     String val = p._y.toString();
@@ -177,7 +177,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     protected void testToByteArray() {
         info(" toByteArray");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
-            test(new TestCase() {
+            doTest(new TestCase() {
                 @Override
                 public void execute() {
                     byte[] buf = new byte[1000]; // large enough for everything.
@@ -196,7 +196,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final long ql = q._x.longValue();
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         final Double qd = new Double(ql);
@@ -213,7 +213,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         info(" equalsLong");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
-                test(new TestCase() {
+                doTest(new TestCase() {
                     @Override
                     public void execute() {
                         boolean expected = p._x.equals(new Double(q._x.longValue()));
@@ -230,7 +230,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final long ql = q._x.longValue();
-                test(new AbstractNumberTest<LargeInteger>("Testing timesLong " + p + "," + ql, ql * p._x, _helper) {
+                doTest(new AbstractNumberTest<LargeInteger>("Testing timesLong " + p + "," + ql, ql * p._x, _helper, this) {
                     @Override
                     LargeInteger operation() throws Exception {
                         return p._y.times(ql);
@@ -246,7 +246,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final int qi = q._x.intValue();
                 if (0 != qi) {
-                    test(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper) {
+                    doTest(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper, this) {
                         @Override
                         LargeInteger operation() throws Exception {
                             return p._y.times(qi).divide(qi);
@@ -260,7 +260,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     /** This is a probabilistic test - it micht fail very rarely */
     protected void testGCD() {
         info(" gcd");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 for (int i = 0; i < 10; ++i) {
@@ -286,7 +286,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     /** Test multiplication of very big numbers. */
     protected void testKaratsuba() {
         info(" karatsuba");
-        test(new TestCase() {
+        doTest(new TestCase() {
             @Override
             public void execute() {
                 final long p1 = 8147;

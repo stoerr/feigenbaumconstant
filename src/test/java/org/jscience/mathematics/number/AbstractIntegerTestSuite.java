@@ -56,7 +56,7 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
                     expected = 0 > expected ? -MathLib.floor(-expected) : MathLib.floor(expected);
                     // insufficient precision of double :
                     if (Long.MAX_VALUE == p._x && Long.MIN_VALUE == q._x) expected = 0;
-                    test(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, expected, _helper) {
+                    doTest(new AbstractNumberTest<T>("Testing divide " + p._x + "," + q._x, expected, _helper, this) {
                         @SuppressWarnings("unchecked")
                         @Override
                         T operation() throws Exception {
