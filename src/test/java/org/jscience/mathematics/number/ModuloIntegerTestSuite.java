@@ -3,6 +3,7 @@ package org.jscience.mathematics.number;
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.assertEquals;
 import static javolution.testing.TestContext.test;
+import javolution.context.LocalContext;
 import javolution.testing.TestCase;
 
 /**
@@ -17,6 +18,17 @@ public class ModuloIntegerTestSuite extends AbstractIntegerTestSuite<ModuloInteg
 
     ModuloIntegerTestSuite() {
         super(NumberHelper.MODULOINTEGER);
+    }
+    
+    @Override
+    protected void test(TestCase t) {
+        LocalContext.enter();
+        try {
+            ModuloInteger.setModulus(LargeInteger.valueOf(9719));
+            super.test(t);
+        } finally {
+            LocalContext.exit();
+        }
     }
 
     protected void testConstants() {

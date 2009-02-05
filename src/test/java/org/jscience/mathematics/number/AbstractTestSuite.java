@@ -17,6 +17,8 @@ import java.util.TreeMap;
 
 import org.jscience.mathematics.number.Number;
 
+import javolution.testing.TestCase;
+import javolution.testing.TestContext;
 import javolution.testing.TestSuite;
 
 /**
@@ -47,7 +49,7 @@ public abstract class AbstractTestSuite extends TestSuite {
         while (null != clazz) {
             for (Method m : clazz.getDeclaredMethods()) {
                 final String name = m.getName();
-                if (name.startsWith("test") && !testMethods.containsKey(name)) {
+                if (name.startsWith("test") && !name.equals("test") && !testMethods.containsKey(name)) {
                     testMethods.put(name, m);
                 }
             }
@@ -63,6 +65,11 @@ public abstract class AbstractTestSuite extends TestSuite {
                 throw new RuntimeException(e1.toString(), e1.getTargetException());
             }
         }
+    }
+    
+    /** Gives the test to the {@link TestContext}. This method is here to provide a hook to do other things here. */
+    protected void test(TestCase t) {
+        TestContext.test(t);
     }
 
 }

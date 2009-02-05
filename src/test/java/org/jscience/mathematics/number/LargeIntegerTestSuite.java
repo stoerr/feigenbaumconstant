@@ -283,4 +283,27 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         return res;
     }
     
+    /** Test multiplication of very big numbers. */
+    protected void testKaratsuba() {
+        info(" karatsuba");
+        test(new TestCase() {
+            @Override
+            public void execute() {
+                final long p1 = 8147;
+                final long p2 = 9433;
+                final LargeInteger pl1 = LargeInteger.valueOf(p1);
+                final LargeInteger pl2 = LargeInteger.valueOf(p2);
+                long p = p1;
+                LargeInteger pl = pl1;
+                for (int i = 0; i < 10; ++i) {
+                    pl = pl.times(pl);
+                    p = (p * p) % p2;
+                }
+                LargeInteger pls = pl.mod(pl2);
+                // we check the result is correct modulo p2
+                assertEquals(pls.longValue(), p);
+            }
+        });
+    }
+    
 }
