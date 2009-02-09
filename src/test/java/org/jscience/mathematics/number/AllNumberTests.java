@@ -25,7 +25,7 @@ public class AllNumberTests extends TestSuite {
         new RationalTestSuite().run();
         new Integer64TestSuite().run();
         new Float64TestSuite().run();
-        new SimpleComplexTestSuite().run();
+        new ComplexTestSuite().run();
         new ModuloIntegerTestSuite().run();
         new LargeIntegerTestSuite().run();
         new FloatingPointTestSuite().run();

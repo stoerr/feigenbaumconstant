@@ -6,9 +6,9 @@ package org.jscience.mathematics.number;
  * @author hps
  * @since 02.02.2009
  */
-public class SimpleComplexTestSuite extends AbstractFloatTestSuite<Complex> {
+public class ComplexTestSuite extends AbstractFloatTestSuite<Complex> {
 
-    SimpleComplexTestSuite() {
+    ComplexTestSuite() {
         super(NumberHelper.COMPLEX);
     }
 
