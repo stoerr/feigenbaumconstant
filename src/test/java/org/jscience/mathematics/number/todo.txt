@@ -1,5 +1,5 @@
-modulo tests
 real complex tests
+Real.valueOf("1.2E3±1E-2")
 bugs
 
 Evtl:. LargeInteger._words should be modulo 
@@ -25,4 +25,3 @@ scheint gefixt zu sein.
 Andere : Verify
 
 https://jscience.dev.java.net/issues/show_bug.cgi?id=102
-
