@@ -230,7 +230,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final long ql = q._x.longValue();
-                doTest(new AbstractNumberTest<LargeInteger>("Testing timesLong " + p + "," + ql, ql * p._x, _helper, this) {
+                doTest(new AbstractNumberTest<LargeInteger>("Testing timesLong " + p + "," + ql, ql * p._x, _helper) {
                     @Override
                     LargeInteger operation() throws Exception {
                         return p._y.times(ql);
@@ -246,7 +246,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
             for (final Pair<Double, LargeInteger> q : getTestValues()) {
                 final int qi = q._x.intValue();
                 if (0 != qi) {
-                    doTest(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper, this) {
+                    doTest(new AbstractNumberTest<LargeInteger>("Testing divideInt " + p + "," + qi, p._x, _helper) {
                         @Override
                         LargeInteger operation() throws Exception {
                             return p._y.times(qi).divide(qi);

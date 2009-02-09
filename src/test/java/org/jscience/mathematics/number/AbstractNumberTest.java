@@ -37,21 +37,16 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
     final String _description;
     T _value;
     Exception _exception;
-    AbstractNumberTestSuite<T> _suite;
 
     /**
      * Sets the expected values.
      * @param description a description that can be printed in failures etc.
      * @param helper helper to be used in the test
-     * @param suite the test suite we are running in - we call {@link AbstractNumberTestSuite#normalize(Number)} in
-     *            {@link #compareresult()}.
      */
-    public AbstractNumberTest(String description, double expected, NumberHelper<T> helper,
-            AbstractNumberTestSuite<T> suite) {
+    public AbstractNumberTest(String description, double expected, NumberHelper<T> helper) {
         _expected = expected;
         _helper = helper;
         _description = description;
-        _suite = suite;
     }
 
     /**
@@ -90,8 +85,8 @@ public abstract class AbstractNumberTest<T extends Number<T>> extends TestCase {
      * The result of the comparison is {@link TestContext#assertTrue(String, boolean)}ed.
      */
     void compareresult() {
-        final double result = _suite.normalize(_value).doubleValue();
-        final double expected = _suite.normalizeExpected(_expected);
+        final double result = _value.doubleValue();
+        final double expected = _expected;
         if (0 == _expected) {
             assertTrue(getDescription().toString() + " but got " + result, EPSILON > MathLib.abs(result));
         } else {

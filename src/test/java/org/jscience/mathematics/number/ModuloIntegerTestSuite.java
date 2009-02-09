@@ -22,29 +22,9 @@ public class ModuloIntegerTestSuite extends AbstractIntegerTestSuite<ModuloInteg
         super(NumberHelper.MODULOINTEGER);
     }
 
-    /**
-     * Calculates the expected value modulo {@link ModuloInteger#getModulus()}.
-     * @see org.jscience.mathematics.number.AbstractNumberTestSuite#normalizeExpected(double)
-     */
-    @Override
-    protected double normalizeExpected(double val) {
-        LargeInteger mod = ModuloInteger.getModulus();
-        if (null == mod) return val;
-        double m = mod.longValue();
-        final double res = ((val % m) + m) % m;
-        return res;
-    }
-
     @Override
     protected void doTest(TestCase t) {
-        LocalContext.enter();
         super.doTest(t);
-        try {
-            ModuloInteger.setModulus(LargeInteger.valueOf(9719));
-            super.doTest(t);
-        } finally {
-            LocalContext.exit();
-        }
     }
 
     protected void testConstants() {
@@ -118,7 +98,7 @@ public class ModuloIntegerTestSuite extends AbstractIntegerTestSuite<ModuloInteg
                     pow = (pow + mod) % mod;
                 }
                 if (getMaxNumber() >= MathLib.abs(pow)) {
-                    doTest(new AbstractNumberTest<ModuloInteger>("Testing pow " + p + ", " + exp, pow, _helper, this) {
+                    doTest(new AbstractNumberTest<ModuloInteger>("Testing pow " + p + ", " + exp, pow, _helper) {
                         @Override
                         ModuloInteger operation() throws Exception {
                             return p._y.pow(exp);

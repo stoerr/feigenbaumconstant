@@ -65,7 +65,7 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
     protected void testRound() {
         info("  round");
         for (final Pair<Double, Real> p : getTestValues()) {
-            doTest(new AbstractNumberTest<Real>("Testing round " + p, MathLib.round(p._x), _helper, this) {
+            doTest(new AbstractNumberTest<Real>("Testing round " + p, MathLib.round(p._x), _helper) {
                 @Override
                 Real operation() throws Exception {
                     return Real.valueOf(p._y.round(), 0, 0);
@@ -83,7 +83,7 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
         info("  sqrt");
         for (final Pair<Double, Real> p : getTestValues()) {
             if (0 < p._x || p._y == _helper.getZero()) {
-                doTest(new AbstractNumberTest<Real>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper, this) {
+                doTest(new AbstractNumberTest<Real>("Testing sqrt " + p, MathLib.sqrt(p._x), _helper) {
                     @Override
                     Real operation() throws Exception {
                         return _helper.invokeMethod("sqrt", p._y);

@@ -60,7 +60,7 @@ public class FloatingPointTestSuite extends AbstractFloatTestSuite<FloatingPoint
     protected void testRound() {
         info("  round");
         for (final Pair<Double, FloatingPoint> p : getTestValues()) {
-            doTest(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper, this) {
+            doTest(new AbstractNumberTest<FloatingPoint>("Testing round " + p, MathLib.round(p._x), _helper) {
                 @Override
                 FloatingPoint operation() throws Exception {
                     final LargeInteger rounded = p._y.round();
