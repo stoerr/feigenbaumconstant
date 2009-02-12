@@ -18,7 +18,7 @@ import javolution.testing.TestCase;
  */
 public class ComplexTestSuite extends AbstractFloatTestSuite<Complex> {
 
-    protected static final double EPSILON = 1e-17;
+    protected static final double EPSILON = 1e-14;
     private static final Complex[] TESTVALUES = new Complex[] { Complex.valueOf(3.2, 1.7), Complex.valueOf(-3.72, 2.8),
             Complex.valueOf(-95.3, -4.2), Complex.valueOf(0.3, -4.2), Complex.valueOf(0, 1.7), Complex.valueOf(0, -5),
             Complex.valueOf(3, 0), Complex.valueOf(-42, 0) };
@@ -69,6 +69,12 @@ public class ComplexTestSuite extends AbstractFloatTestSuite<Complex> {
         }
     }
 
+    /** Compares c and d and asserts that the difference or the relative difference is less than EPSILON */
+    protected void assertNear(Complex a, Complex b) {
+        double d = a.minus(b).magnitude();
+        assertTrue(a + " versus " + b + " differ by " + d, d < EPSILON || d / a.magnitude() < EPSILON);
+    }
+
     protected void testToString2() {
         info("  toString2 ");
         for (final Complex c : getComplexTestvalues()) {
@@ -76,7 +82,7 @@ public class ComplexTestSuite extends AbstractFloatTestSuite<Complex> {
                 @Override
                 public void execute() {
                     Complex cn = Complex.valueOf(c.toString());
-                    assertTrue(c.toString(), cn.equals(c, EPSILON));
+                    assertNear(cn, c);
                 }
             });
         }
@@ -91,8 +97,66 @@ public class ComplexTestSuite extends AbstractFloatTestSuite<Complex> {
         doTest(new TestCase() {
             @Override
             public void execute() {
-                // fixme
+                Complex m = Complex.valueOf(0.8, 0.8);
+                Complex s = Complex.ZERO;
+                Complex f = Complex.ONE;
+                for (int i = 0; i < 10; ++i) {
+                    s = s.plus(f);
+                    f = f.times(m);
+                }
+                final Complex scmp = m.pow(10).minus(Complex.ONE).divide(m.minus(Complex.ONE));
+                assertTrue(s.toString(), s.equals(scmp, EPSILON));
+                m = m.conjugate();
+                Complex mi = Complex.ONE;
+                for (int i = 0; i < 10; ++i) {
+                    mi = mi.times(m);
+                    s = s.minus(f.divide(mi));
+                }
+                assertTrue(s.toString(), s.equals(Complex.valueOf(scmp.getReal(), 0).times(2), EPSILON));
             }
         });
+    }
+
+    protected void testPow2() {
+        info("  pow2");
+        for (final Complex c : getComplexTestvalues()) {
+            doTest(new TestCase() {
+                @Override
+                public void execute() {
+                    Complex cx = c.times(c).times(c);
+                    assertNear(cx, c.pow(3));
+                    assertNear(cx, c.pow(3.0));
+                    assertNear(cx, c.pow(Complex.valueOf(3, 0)));
+                }
+            });
+        }
+    }
+
+    protected void testExponentials() {
+        info("  exponentials");
+        for (final Complex c : getComplexTestvalues()) {
+            for (final Complex d : getComplexTestvalues()) {
+                doTest(new TestCase() {
+                    @Override
+                    public void execute() {
+                        Complex cx = c.pow(d);
+                        Complex cy = c.log().times(d).exp();
+                        assertNear(cx, cy);
+                    }
+                });
+            }
+        }
+    }
+
+    protected void testSqrt2() {
+        info("  sqrt2");
+        for (final Complex c : getComplexTestvalues()) {
+            doTest(new TestCase() {
+                @Override
+                public void execute() {
+                    assertNear(c, c.sqrt().times(c.sqrt()));
+                }
+            });
+        }
     }
 }
