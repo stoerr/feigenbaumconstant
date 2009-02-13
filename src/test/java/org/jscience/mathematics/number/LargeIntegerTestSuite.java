@@ -2,7 +2,7 @@
  * JScience - Java(TM) Tools and Libraries for the Advancement of Sciences.
  * Copyright (C) 2007 - JScience (http://jscience.org/)
  * All rights reserved.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
@@ -282,7 +282,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         } while (!res.isProbablePrime(20));
         return res;
     }
-    
+
     /** Test multiplication of very big numbers. */
     protected void testKaratsuba() {
         info(" karatsuba");
@@ -305,5 +305,72 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
             }
         });
     }
-    
+
+    protected void testModInverse() {
+        info("  modInverse");
+        for (final Pair<Double, LargeInteger> p : getTestValues()) {
+            for (final Pair<Double, LargeInteger> m : getTestValues()) {
+                if (!LargeInteger.ZERO.equals(p._y) && m._y.isGreaterThan(LargeInteger.ONE)
+                        && p._y.gcd(m._y).abs().equals(LargeInteger.ONE)) {
+                    doTest(new TestCase() {
+                        @Override
+                        public void execute() {
+                            LargeInteger res = p._y.modInverse(m._y);
+                            LargeInteger pres = p._y.times(res).mod(m._y);
+                            assertTrue(p + "," + m, LargeInteger.ONE.equals(pres));
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /** Tests for bug https://jscience.dev.java.net/issues/show_bug.cgi?id=102 */
+    protected void dtest0Bug102() {
+        info("  bug102");
+        doTest(new TestCase() {
+            @Override
+            public void execute() {
+                String P = "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF";
+                String X = "45a9d2f1bc91fe103bf997089f8d640f28e56a13fd0d24dc8912f85b20d1f2f3";
+                String Y = "fa524f482cc22eb69a395b9cce557b8b026ef82186181299f081f0938292ba94";
+                String Z = "f5c4ecdbbbde6621dc07a9c6bba7ee6222a571bb66dfbc420a6b7a1c5a4cc800";
+
+                System.out.println("BigInteger result:");
+                BigInteger bP = new BigInteger(P, 16);
+                BigInteger bX = new BigInteger(X, 16);
+                BigInteger bY = new BigInteger(Y, 16);
+                BigInteger bZ = new BigInteger(Z, 16);
+
+                BigInteger bT1 = bZ.pow(2).modInverse(bP);
+                BigInteger bT2 = bZ.pow(3).modInverse(bP);
+
+                System.out.println("t1: " + bT1.toString(16));
+                System.out.println("t2: " + bT2.toString(16));
+                System.out.println("x:  " + bX.multiply(bT1).mod(bP).toString(16));
+                System.out.println("y:  " + bY.multiply(bT2).mod(bP).toString(16));
+
+                System.out.println("LargeInteger result:");
+                LargeInteger lP = LargeInteger.valueOf(bP);
+                LargeInteger lX = LargeInteger.valueOf(bX);
+                LargeInteger lY = LargeInteger.valueOf(bY);
+                LargeInteger lZ = LargeInteger.valueOf(bZ);
+
+                LargeInteger lT1 = lZ.pow(2).modInverse(lP);
+                LargeInteger lT2 = lZ.pow(3).modInverse(lP);
+
+                System.out.println("t1: " + lT1.toText(16));
+                System.out.println("t2: " + lT2.toText(16));
+                System.out.println("x:  " + lX.times(lT1).mod(lP).toText(16));
+                System.out.println("y:  " + lY.times(lT2).mod(lP).toText(16));
+
+                assertEquals(bP.toString(), lP.toString());
+                assertEquals(bX.toString(), lX.toString());
+                assertEquals(bY.toString(), lY.toString());
+                assertEquals(bZ.toString(), lZ.toString());
+                assertEquals(bT1.toString(), lT1.toString());
+            }
+        });
+    }
+
 }
