@@ -741,7 +741,7 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @throws ArithmeticException if <code>that.equals(ZERO)</code>
      */
     public LargeInteger divide(LargeInteger that) {
-        if ((that._size <= 1) && ((that._words[0] >> 32) == 0))
+        if ((that._size <= 1) && ((that._words[0] >> 31) == 0))
             return divide(that.intValue());
         LargeInteger result;
         LargeInteger remainder;
@@ -860,17 +860,22 @@ public final class LargeInteger extends Number<LargeInteger> {
      * @throws ArithmeticException if this integer is negative.
      */
     public LargeInteger sqrt() {
-        if (this.isNegative())
-            throw new ArithmeticException("Square root of negative integer");
+        if (this.isNegative()) throw new ArithmeticException("Square root of negative integer");
+        if (equals(ZERO)) return ZERO;
+        if (equals(ONE)) return ONE;
         int bitLength = this.bitLength();
         StackContext.enter();
         try {
             // First approximation.
             LargeInteger k = this.times2pow(-((bitLength >> 1) + (bitLength & 1)));
             while (true) {
-                LargeInteger newK = (k.plus(this.divide(k))).times2pow(-1);
-                if (newK.equals(k))
-                    return StackContext.outerCopy(k);
+                LargeInteger newK = k.plus(this.divide(k)).times2pow(-1);
+                if (!newK.minus(k).isLargerThan(ONE)) {
+                    if (this.divide(newK).isLessThan(newK)) {
+                        newK = newK.minus(ONE);
+                    }
+                    return StackContext.outerCopy(newK);
+                }
                 k = newK;
             }
         } finally {
@@ -910,7 +915,7 @@ public final class LargeInteger extends Number<LargeInteger> {
         StackContext.enter();
         try {
             // Extended Euclidian Algorithm
-            LargeInteger a = this;
+            LargeInteger a = this.mod(m);
             LargeInteger b = m;
             LargeInteger p = ONE;
             LargeInteger q = ZERO;
