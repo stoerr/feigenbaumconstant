@@ -52,6 +52,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         }
         values.add(Pair.make(Double.valueOf(Integer.MIN_VALUE), _helper.valueOf(Integer.MIN_VALUE)));
         values.add(Pair.make(Double.valueOf(Integer.MAX_VALUE), _helper.valueOf(Integer.MAX_VALUE)));
+        values.add(Pair.make(Double.valueOf(Integer.MAX_VALUE + 1L), _helper.valueOf(Integer.MAX_VALUE + 1L)));
         values.add(Pair.make(Double.valueOf(Long.MIN_VALUE), _helper.valueOf(Long.MIN_VALUE)));
         values.add(Pair.make(Double.valueOf(Long.MAX_VALUE), _helper.valueOf(Long.MAX_VALUE)));
     }
@@ -306,6 +307,36 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         });
     }
 
+    protected void testSqrt() {
+        info("  sqrt");
+        LargeInteger n = LargeInteger.valueOf(9);
+        n.sqrt();
+        for (final Pair<Double, LargeInteger> p : getTestValues()) {
+            if (p._x >= 0) {
+                executesqrt(p._y);
+            }
+        }
+        for (int i = 0; i < 64; ++i) {
+            executesqrt(LargeInteger.valueOf(i));
+        }
+    }
+
+    private void executesqrt(final LargeInteger s) {
+        doTest(new TestCase() {
+            @Override
+            public void execute() {
+                info("   " + s);
+                // k^2 <= p._y < (k + 1)^2
+                final LargeInteger k = s.sqrt();
+                assertTrue(s + " -> " + k, !k.isNegative());
+                final LargeInteger k1 = k.plus(1);
+                assertTrue(s + " -> " + k, !s.isLessThan(k.times(k)));
+                assertTrue(s + " -> " + k, s.isLessThan(k1.times(k1)));
+            }
+        });
+    }
+
+    /** This is broken but I haven't yet found the bug. */
     protected void testModInverse() {
         info("  modInverse");
         for (final Pair<Double, LargeInteger> p : getTestValues()) {
@@ -317,7 +348,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                         public void execute() {
                             LargeInteger res = p._y.modInverse(m._y);
                             LargeInteger pres = p._y.times(res).mod(m._y);
-                            assertTrue(p + "," + m, LargeInteger.ONE.equals(pres));
+                            assertTrue(p + "," + m + " -> " + res + " : " + pres, LargeInteger.ONE.equals(pres));
                         }
                     });
                 }
@@ -326,7 +357,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     }
 
     /** Tests for bug https://jscience.dev.java.net/issues/show_bug.cgi?id=102 */
-    protected void dtest0Bug102() {
+    protected void test0Bug102() {
         info("  bug102");
         doTest(new TestCase() {
             @Override
@@ -345,12 +376,12 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 BigInteger bT1 = bZ.pow(2).modInverse(bP);
                 BigInteger bT2 = bZ.pow(3).modInverse(bP);
 
-                System.out.println("t1: " + bT1.toString(16));
-                System.out.println("t2: " + bT2.toString(16));
-                System.out.println("x:  " + bX.multiply(bT1).mod(bP).toString(16));
-                System.out.println("y:  " + bY.multiply(bT2).mod(bP).toString(16));
-
-                System.out.println("LargeInteger result:");
+                // System.out.println("t1: " + bT1.toString(16));
+                // System.out.println("t2: " + bT2.toString(16));
+                // System.out.println("x:  " + bX.multiply(bT1).mod(bP).toString(16));
+                // System.out.println("y:  " + bY.multiply(bT2).mod(bP).toString(16));
+                //
+                // System.out.println("LargeInteger result:");
                 LargeInteger lP = LargeInteger.valueOf(bP);
                 LargeInteger lX = LargeInteger.valueOf(bX);
                 LargeInteger lY = LargeInteger.valueOf(bY);
@@ -359,10 +390,10 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
                 LargeInteger lT1 = lZ.pow(2).modInverse(lP);
                 LargeInteger lT2 = lZ.pow(3).modInverse(lP);
 
-                System.out.println("t1: " + lT1.toText(16));
-                System.out.println("t2: " + lT2.toText(16));
-                System.out.println("x:  " + lX.times(lT1).mod(lP).toText(16));
-                System.out.println("y:  " + lY.times(lT2).mod(lP).toText(16));
+                // System.out.println("t1: " + lT1.toText(16));
+                // System.out.println("t2: " + lT2.toText(16));
+                // System.out.println("x:  " + lX.times(lT1).mod(lP).toText(16));
+                // System.out.println("y:  " + lY.times(lT2).mod(lP).toText(16));
 
                 assertEquals(bP.toString(), lP.toString());
                 assertEquals(bX.toString(), lX.toString());

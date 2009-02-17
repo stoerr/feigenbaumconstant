@@ -9,7 +9,7 @@ Or better: words should be int modulo 1000000000 .
 
 LargeInteger.modPow, modInverse
 
-Bugs to discover / fix
+Real Stuff:
 
 Real:
 https://jscience.dev.java.net/issues/show_bug.cgi?id=64
@@ -19,14 +19,5 @@ Precision of Real
 https://jscience.dev.java.net/issues/show_bug.cgi?id=71
 
 
-https://jscience.dev.java.net/issues/show_bug.cgi?id=76
-LargeInteger.sqrt(8)
-
-
 https://jscience.dev.java.net/issues/show_bug.cgi?id=98
 scheint gefixt zu sein.
-
-
-Andere : Verify
-
-https://jscience.dev.java.net/issues/show_bug.cgi?id=102

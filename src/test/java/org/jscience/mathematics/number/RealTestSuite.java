@@ -92,4 +92,18 @@ public class RealTestSuite extends AbstractFloatTestSuite<Real> {
             }
         }
     }
+    
+    /** This is still broken, but I've given up on Real for now. :-( */
+    protected void fixmetestErrorFromString() {
+        info("  errorfromstring");
+        doTest(new TestCase() {
+            @Override
+            public void execute() {
+                Real r = Real.valueOf("1.2E3±1E-2");
+                System.out.println(r.toString());
+                throw new UnsupportedOperationException();
+            }
+        });
+
+    }
 }

@@ -38,7 +38,7 @@ public abstract class AbstractIntegerTestSuite<T extends Number<T>> extends Abst
         values.add(Pair.make(0.0, _helper.getZero()));
         values.add(Pair.make(1.0, _helper.getOne()));
         values.add(Pair.make(0.0, _helper.valueOf(12345).minus(_helper.valueOf(12345))));
-        for (double d : new double[] { 0, 1, -1, 33, 12345678, -12345678, 87654321 }) {
+        for (double d : new double[] { 0, 1, -1, 8, 33, 12345678, -12345678, 87654321 }) {
             values.add(Pair.make(d, _helper.valueOf(d)));
         }
     }
