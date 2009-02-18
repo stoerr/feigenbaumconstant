@@ -325,7 +325,6 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
         doTest(new TestCase() {
             @Override
             public void execute() {
-                info("   " + s);
                 // k^2 <= p._y < (k + 1)^2
                 final LargeInteger k = s.sqrt();
                 assertTrue(s + " -> " + k, !k.isNegative());
@@ -357,7 +356,7 @@ public class LargeIntegerTestSuite extends AbstractIntegerTestSuite<LargeInteger
     }
 
     /** Tests for bug https://jscience.dev.java.net/issues/show_bug.cgi?id=102 */
-    protected void test0Bug102() {
+    protected void testBug102() {
         info("  bug102");
         doTest(new TestCase() {
             @Override
