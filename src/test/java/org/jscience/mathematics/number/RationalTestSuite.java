@@ -2,7 +2,7 @@ package org.jscience.mathematics.number;
 
 import static javolution.context.LogContext.info;
 import static javolution.testing.TestContext.test;
-import static org.junit.Assert.assertEquals;
+import static javolution.testing.TestContext.assertEquals;
 
 import java.util.List;
 
@@ -76,8 +76,8 @@ public class RationalTestSuite extends AbstractNumberTestSuite<Rational> {
             @Override
             public void execute() {
                 Rational norm = Rational.valueOf(123 * 43423, 839 * 43423);
-                assertEquals(" normalize " + norm, 123, norm.getDividend().longValue());
-                assertEquals(" normalize " + norm, 839, norm.getDivisor().longValue());
+                assertEquals(" normalize " + norm, 123L, norm.getDividend().longValue());
+                assertEquals(" normalize " + norm, 839L, norm.getDivisor().longValue());
             }
         });
     }
