@@ -18,6 +18,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
+
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 import javolution.xml.XMLObjectReader;

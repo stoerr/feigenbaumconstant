@@ -16,6 +16,8 @@ import java.util.List;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.Number;
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
 
 /**
  * Additional tests for all floating point {@link Number} classes that are not covered in

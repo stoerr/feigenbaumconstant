@@ -17,6 +17,9 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
 
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
+
 import javolution.testing.TestCase;
 
 /**

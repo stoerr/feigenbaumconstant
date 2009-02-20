@@ -6,6 +6,9 @@ import static javolution.testing.TestContext.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
+
 import javolution.context.LocalContext;
 import javolution.lang.MathLib;
 import javolution.testing.TestCase;

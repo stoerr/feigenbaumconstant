@@ -16,6 +16,8 @@ import java.util.List;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.Number;
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
 
 /**
  * Common tests for all integer {@link Number} classes.

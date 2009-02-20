@@ -1,5 +1,7 @@
 package org.jscience.mathematics.number;
 
+import org.jscience.mathematics.number.util.NumberHelper;
+
 import net.stoerr.common.test.Timing;
 import net.stoerr.common.test.Timing.Timed;
 import javolution.context.LocalContext;

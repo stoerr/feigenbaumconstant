@@ -11,6 +11,7 @@ package org.jscience.mathematics.number;
 import javolution.lang.MathLib;
 
 import org.jscience.mathematics.number.Integer64;
+import org.jscience.mathematics.number.util.NumberHelper;
 
 /**
  * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Integer64} and some further tests

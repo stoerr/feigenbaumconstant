@@ -9,6 +9,7 @@
 package org.jscience.mathematics.number;
 
 import org.jscience.mathematics.number.Float64;
+import org.jscience.mathematics.number.util.NumberHelper;
 
 /**
  * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Float64} and some further tests
