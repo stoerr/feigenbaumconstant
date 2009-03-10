@@ -7,6 +7,8 @@ import static javolution.testing.TestContext.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jscience.mathematics.number.util.NumberHelper;
+
 import javolution.testing.TestCase;
 
 /**

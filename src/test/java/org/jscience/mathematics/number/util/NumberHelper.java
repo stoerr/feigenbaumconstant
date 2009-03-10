@@ -6,7 +6,7 @@
  * Permission to use, copy, modify, and distribute this software is
  * freely granted, provided that this notice is preserved.
  */
-package org.jscience.mathematics.number;
+package org.jscience.mathematics.number.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;

@@ -18,6 +18,7 @@ import javolution.testing.TestCase;
 import javolution.testing.TestContext;
 
 import org.jscience.mathematics.number.Number;
+import org.jscience.mathematics.number.util.NumberHelper;
 
 /**
  * A testcase that executes an operation and compares the {@link Number#doubleValue()} of the result with a given

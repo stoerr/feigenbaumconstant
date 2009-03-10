@@ -15,6 +15,8 @@ import javolution.lang.MathLib;
 import javolution.testing.TestCase;
 
 import org.jscience.mathematics.number.Real;
+import org.jscience.mathematics.number.util.NumberHelper;
+import org.jscience.util.Pair;
 
 /**
  * Instantiation of the generic tests of the {@link AbstractFloatTestSuite} for {@link Real} and some further tests that
